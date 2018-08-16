@@ -24,6 +24,9 @@ class App
      */
     protected $generalOptionManager;
 
+    /** @var \DaveBaker\Core\WP\Installer\Manager object */
+    protected $installerManager;
+
     /**
      * @var
      */
@@ -46,12 +49,21 @@ class App
         // singletons across different app definitions
         $this->objectManager->setNamespace($this->getNamespace());
         $this->pageManager = $this->objectManager->get('\DaveBaker\Core\WP\Page\Manager', [$this]);
+        $this->installerManager = $this->objectManager->get('\DaveBaker\Core\WP\Installer\Manager', [$this]);
 
         /** @var  generalOptionManager
          * A general store for options, local versions of the option manager should be used for
          * More localised namespacing
          */
 //        $this->generalOptionManager = new WP\Option\Manager(DEFAULT_NAMESPACE . $this->generalNamespaceSuffix);
+
+        $this->install();
+        
+    }
+    
+    protected function install()
+    {
+        $this->installerManager->checkInstall();
     }
 
     /**

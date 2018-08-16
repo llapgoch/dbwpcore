@@ -24,7 +24,7 @@ class Manager
      * @param null $default
      * @return mixed|void
      */
-    public function getOption($option, $default = null){
+    public function get($option, $default = null){
         return get_option($this->getNamespace() . $option, $default);
     }
 
@@ -32,14 +32,14 @@ class Manager
      * @param $option
      * @param $value
      */
-    public function updateOption($option, $value){
+    public function set($option, $value){
         update_option($this->getNamespace() . $option, $value);
     }
 
     /**
      * @param $option
      */
-    public function removeOption($option){
+    public function remove($option){
         delete_option($this->getNamespace() . $option);
     }
 

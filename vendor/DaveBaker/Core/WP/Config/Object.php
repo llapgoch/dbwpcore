@@ -12,6 +12,10 @@ class Object extends Base
         '\DaveBaker\Core\WP\Page\Manager' => [
             'definition' => '\DaveBaker\Core\WP\Page\Manager',
             'singleton' => false
+        ],
+        '\DaveBaker\Core\WP\Config\Installer' => [
+            'definition' => '\DaveBaker\Core\WP\Config\Installer',
+            'singleton' => true
         ]
     ];
 

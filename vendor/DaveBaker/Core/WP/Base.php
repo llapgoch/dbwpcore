@@ -6,6 +6,9 @@ class Base
 {
     /** @var \DaveBaker\Core\App  */
     protected $app;
+    /**
+     * @var \DaveBaker\Core\WP\Option\Manager
+     */
     protected $optionManager;
 
     /**
@@ -41,5 +44,13 @@ class Base
     public function getNamespace()
     {
         return $this->app->getNamespace() . $this->namespaceSuffix;
+    }
+
+    /**
+     * @return \DaveBaker\Core\WP\Option\Manager
+     */
+    protected function getOptionManager()
+    {
+        return $this->optionManager;
     }
 }

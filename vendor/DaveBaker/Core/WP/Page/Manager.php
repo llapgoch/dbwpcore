@@ -48,13 +48,5 @@ class Manager extends \DaveBaker\Core\WP\Base
 
         return null;
     }
-
-    /**
-     * @return \DaveBaker\Core\WP\Option\Manager
-     */
-    protected function getOptionManager()
-    {
-        return $this->app->getOptionManager();
-    }
-
+    
 }
