@@ -5,8 +5,7 @@ namespace DaveBaker\Core;
 class App
 {
     const DEFAULT_OBJECT_MANAGER = '\DaveBaker\Core\WP\Object\Manager';
-
-    protected $generalNamespaceSuffix = 'default_';
+    const GENERAL_NAMESPACE_SUFFIX = 'general_';
     /**
      * @var string
      */
@@ -51,16 +50,22 @@ class App
         $this->pageManager = $this->objectManager->get('\DaveBaker\Core\WP\Page\Manager', [$this]);
         $this->installerManager = $this->objectManager->get('\DaveBaker\Core\WP\Installer\Manager', [$this]);
 
+
         /** @var  generalOptionManager
          * A general store for options, local versions of the option manager should be used for
          * More localised namespacing
          */
-//        $this->generalOptionManager = new WP\Option\Manager(DEFAULT_NAMESPACE . $this->generalNamespaceSuffix);
+        $this->generalOptionManager = $this->objectManager->get(
+            '\DaveBaker\Core\WP\Option\Manager',
+            [$this->getNamespace() . self::GENERAL_NAMESPACE_SUFFIX]
+        );
 
         $this->install();
-        
     }
-    
+
+    /**
+     * @throws WP\Installer\Exception
+     */
     protected function install()
     {
         $this->installerManager->checkInstall();
@@ -92,6 +97,8 @@ class App
 
     /**
      * @return WP\Option\Manager
+     *
+     * Only use for general options, use more specifically namespaced versions for other options
      */
     public function getGeneralOptionManager()
     {
