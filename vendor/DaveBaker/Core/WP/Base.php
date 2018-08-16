@@ -18,10 +18,12 @@ class Base
         \DaveBaker\Core\WP\Option\Manager $optionManager = null
     ) {
         $this->app = $app;
-        
+
         if(!$optionManager){
-            $className = $this->app->getObjectManager()->getDefaultClassName('\DaveBaker\Core\WP\Option\Manager');
-            $this->optionManager = new $className($this->getNamespace());
+            $this->optionManager = $this->app->getObjectManager()->get(
+                '\DaveBaker\Core\WP\Option\Manager',
+                [$this->namespaceSuffix]
+            );
         }
     }
 

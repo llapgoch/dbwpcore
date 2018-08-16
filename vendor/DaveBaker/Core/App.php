@@ -35,13 +35,17 @@ class App
     ) {
         $this->namespace = $namespace . "_";
         $this->controller = new Controller\Front($this);
-        $this->pageManager = new WP\Page\Manager($this);
         $this->objectManager = $objectManager;
-        
+
         if(!$objectManager){
-            var_dump(self::DEFAULT_OBJECT_MANAGER);exit;
-            $this->objectManager = new self::$DEFAULT_OBJECT_MANAGER();
+            $manager = self::DEFAULT_OBJECT_MANAGER;
+            $this->objectManager = new $manager();
         }
+
+        // For any singleton objects, they'll be stored against the namespace, allowing for multiple
+        // singletons across different app definitions
+        $this->objectManager->setNamespace($this->getNamespace());
+        $this->pageManager = $this->objectManager->get('\DaveBaker\Core\WP\Page\Manager', [$this]);
 
         /** @var  generalOptionManager
          * A general store for options, local versions of the option manager should be used for
