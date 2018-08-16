@@ -15,6 +15,15 @@ class Base implements ConfigInterface
     {
         return $this->config;
     }
+    
+    public function getConfigValue($key)
+    {
+        if(isset($this->config[$key])){
+            return $this->config[$key];
+        }
+
+        return null;
+    }
 
     protected function mergeConfig($config = [])
     {

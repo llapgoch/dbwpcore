@@ -17,9 +17,9 @@ class Manager extends \DaveBaker\Core\WP\Base
         /** @var $config \DaveBaker\Core\WP\Config\Installer */
         $config = $this->getApp()->getObjectManager()->get('\DaveBaker\Core\WP\Config\Installer');
         $installedVersion = $this->getOptionManager()->get(self::VERSION_OPTION);
-        $currentVersion = $config->getConfig(self::VERSION_OPTION);
+        $currentVersion = $config->getConfigValue(self::VERSION_OPTION);
 
-        if($currentVersion !== $installedVersion){
+        if(version_compare($currentVersion, $installedVersion, ">")){
             try {
                 $this->install();
 
@@ -29,6 +29,5 @@ class Manager extends \DaveBaker\Core\WP\Base
                 throw new Exception($e->getMessage(), $e->getCode());
             }
         }
-        
     }
 }
