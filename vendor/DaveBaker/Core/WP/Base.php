@@ -25,7 +25,7 @@ class Base
         if(!$optionManager){
             $this->optionManager = $this->app->getObjectManager()->get(
                 '\DaveBaker\Core\WP\Option\Manager',
-                [$this->namespaceSuffix]
+                [$this->getNamespace()]
             );
         }
     }
@@ -43,7 +43,7 @@ class Base
      */
     public function getNamespace()
     {
-        return $this->app->getNamespace() . $this->namespaceSuffix;
+        return $this->getApp()->getNamespace() . $this->namespaceSuffix;
     }
 
     /**
