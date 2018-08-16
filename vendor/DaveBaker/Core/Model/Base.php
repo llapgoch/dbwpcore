@@ -2,7 +2,7 @@
 
 namespace DaveBaker\Core\Model;
 
-class BaseObject
+class Base
 {
 
     protected $_hasDataChanges = false;

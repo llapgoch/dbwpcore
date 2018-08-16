@@ -1,8 +1,8 @@
 <?php
 
-namespace DaveBaker\Impressario\Model\Db;
+namespace DaveBaker\Core\Model\Db;
 
-class Base extends \DaveBaker\Core\Model\BaseObject
+class Base extends \DaveBaker\Core\Model\Base
 {
     /**
      * @param $id

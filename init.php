@@ -29,4 +29,15 @@ require_once("bootstrap.php");
 
 // Create the app locally in the core module's initialisation:
 // This allows for an alternative defaults object to be used, and namespacing local to the plugin
-// $NAMESPACE_CORE_APP = new DaveBaker\Core\App();
+// $NAMESPACE_CORE_APP = new DaveBaker\Core\App('namespace');
+
+/* To use with custom objects and defaults, use the following, where the config object merges its own config:
+
+add_action('plugins_loaded', function(){
+    $app = new DaveBaker\Core\App('namespace',
+         new \DaveBaker\Core\WP\Object\Manager(
+            new \Namespace\Plugin\WP\Config\Object
+        )
+    );
+);
+*/
