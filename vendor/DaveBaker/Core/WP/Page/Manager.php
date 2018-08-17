@@ -48,5 +48,25 @@ class Manager extends \DaveBaker\Core\WP\Base
 
         return null;
     }
+
+    /**
+     * @param $pageCode
+     * @return bool
+     */
+    public function isOnPage($pageCode){
+        if(!$this->post){
+            return false;
+        }
+
+        if(!$this->post){
+            return false;
+        }
+
+        if(self::getOption($pageCode) == $this->post->ID){
+            return true;
+        }
+
+        return false;
+    }
     
 }

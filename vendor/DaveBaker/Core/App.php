@@ -36,7 +36,6 @@ class App
         \DaveBaker\Core\WP\Object\Manager $objectManager = null
     ) {
         $this->namespace = $namespace . "_";
-        $this->controller = new Controller\Front($this);
         $this->objectManager = $objectManager;
 
         if(!$objectManager){
@@ -47,9 +46,9 @@ class App
         // For any singleton objects, they'll be stored against the namespace, allowing for multiple
         // singletons across different app definitions
         $this->objectManager->setNamespace($this->getNamespace());
-        $this->pageManager = $this->objectManager->get('\DaveBaker\Core\WP\Page\Manager', [$this]);
-        $this->installerManager = $this->objectManager->get('\DaveBaker\Core\WP\Installer\Manager', [$this]);
-
+        $this->pageManager = $this->getObjectManager()->get('\DaveBaker\Core\WP\Page\Manager', [$this]);
+        $this->installerManager = $this->getObjectManager()->get('\DaveBaker\Core\WP\Installer\Manager', [$this]);
+        $this->controller = $this->getObjectManager()->get('\DaveBaker\Core\WP\Controller\Front', [$this]);
 
         /** @var  generalOptionManager
          * A general store for options, local versions of the option manager should be used for

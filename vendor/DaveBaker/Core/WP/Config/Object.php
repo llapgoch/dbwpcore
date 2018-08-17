@@ -16,6 +16,10 @@ class Object extends Base
         '\DaveBaker\Core\WP\Config\Installer' => [
             'definition' => '\DaveBaker\Core\WP\Config\Installer',
             'singleton' => true
+        ],
+         '\DaveBaker\Core\WP\Event\Manager' => [
+            'definition' => 'DaveBaker\Core\WP\Event\Manager',
+            'singleton' => false
         ]
     ];
 
