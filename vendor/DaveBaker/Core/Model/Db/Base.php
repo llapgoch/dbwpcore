@@ -53,6 +53,14 @@ abstract class Base extends \DaveBaker\Core\Model\Base
     }
 
     /**
+     * @return mixed
+     */
+    public function getId()
+    {
+        return $this->getData($this->idColumn);
+    }
+
+    /**
      * @return string
      */
     public function getTableName()
@@ -60,10 +68,28 @@ abstract class Base extends \DaveBaker\Core\Model\Base
         return $this->wpdb->base_prefix . $this->tableName;
     }
 
+    public function delete()
+    {
+        if(!$this->getId()){
+            return;
+        }
+
+        $this->wpdb->delete(
+            $this->getTableName(),
+            [$this->idColumn => $this->getId()]
+        );
+
+        $this->unsetData();
+    }
+
     public function save()
     {
+        if(!$this->getData()){
+            return;
+        }
+
         try {
-            if ($this->getData($this->idColumn)) {
+            if ($this->getId()) {
                 return $this->updateSave();
             }
 
@@ -76,9 +102,6 @@ abstract class Base extends \DaveBaker\Core\Model\Base
 
     protected function insertSave()
     {
-        $this->setHorse("gorse");
-
-
         $res = $this->wpdb->insert(
             $this->getTableName(),
             $this->getTableSaveData()
@@ -96,7 +119,7 @@ abstract class Base extends \DaveBaker\Core\Model\Base
         $this->wpdb->update(
             $this->getTableName(),
             $this->getTableSaveData(),
-            [$this->idColumn => $this->getData($this->idColumn)]
+            [$this->idColumn => $this->getId()]
         );
     }
 
@@ -111,7 +134,7 @@ abstract class Base extends \DaveBaker\Core\Model\Base
     /**
      * @param \stdClass $data
      */
-    protected function setObjectData(\stdClass $data)
+    public function setObjectData(\stdClass $data)
     {
         foreach(get_object_vars($data) as $k=>$d){
             $this->setData($k, $d);

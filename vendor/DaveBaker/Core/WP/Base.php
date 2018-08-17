@@ -2,7 +2,7 @@
 
 namespace DaveBaker\Core\WP;
 
-class Base
+abstract class Base
 {
     /** @var \DaveBaker\Core\App  */
     protected $app;

@@ -11,7 +11,15 @@ spl_autoload_register(function ( $className ) {
     $results = glob($base . $content);
 
     if(count($results)) {
-        require_once $results[0];
+        return require_once $results[0];
     }
+
+    $content = str_replace("_", "/", $className) . ".php";
+    $results = glob($base . $content);
+
+    if(count($results)) {
+        return require_once $results[0];
+    }
+
 });
 
