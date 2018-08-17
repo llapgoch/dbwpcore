@@ -9,6 +9,7 @@ class Manager extends \DaveBaker\Core\WP\Base
     const PUBLISH_STATUS = 'publish';
     const POST_TITLE_CONFIG_KEY = 'post_title';
     const POST_CONTENT_KEY = 'post_content';
+    const POST_CONTENT_BODY_SUFFIX = "body";
 
     /** @var \DaveBaker\Core\WP\Config\ConfigInterface */
     protected $config;
@@ -71,7 +72,7 @@ class Manager extends \DaveBaker\Core\WP\Base
 
         // Create page content using shortcodes
         if (!isset($pageValues[self::POST_CONTENT_KEY]) || !$pageValues[self::POST_CONTENT_KEY]) {
-            $pageValues[self::POST_CONTENT_KEY] = '[' . $pageIdentifier . "]";
+            $pageValues[self::POST_CONTENT_KEY] = '[' . $pageIdentifier . "_" . self::POST_CONTENT_BODY_SUFFIX . "]";
         }
 
         if (!($pageId = wp_insert_post($pageValues))) {
