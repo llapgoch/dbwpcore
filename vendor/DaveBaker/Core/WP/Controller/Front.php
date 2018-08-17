@@ -35,7 +35,6 @@ class Front extends \DaveBaker\Core\WP\Base
     protected function addEvents()
     {
         foreach($this->eventRegisters as $eventRegister) {
-            var_dump($eventRegister);
             add_action($eventRegister, [
                 $this,
                 'fireEventForPost',

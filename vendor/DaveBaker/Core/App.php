@@ -46,7 +46,16 @@ class App
         // For any singleton objects, they'll be stored against the namespace, allowing for multiple
         // singletons across different app definitions
         $this->objectManager->setNamespace($this->getNamespace());
-        $this->pageManager = $this->getObjectManager()->get('\DaveBaker\Core\WP\Page\Manager', [$this]);
+
+        $this->pageManager = $this->getObjectManager()->get(
+            '\DaveBaker\Core\WP\Page\Manager',
+            [
+                $this,
+                null,
+                $this->getObjectManager()->get('\DaveBaker\Core\WP\Config\Page')
+            ]
+        );
+
         $this->installerManager = $this->getObjectManager()->get('\DaveBaker\Core\WP\Installer\Manager', [$this]);
         $this->controller = $this->getObjectManager()->get('\DaveBaker\Core\WP\Controller\Front', [$this]);
 
@@ -59,7 +68,14 @@ class App
             [$this->getNamespace() . self::GENERAL_NAMESPACE_SUFFIX]
         );
 
-        $this->install();
+        $this->addEvents();
+    }
+
+    protected function addEvents()
+    {
+        add_action('init', function(){
+            $this->install();
+        });
     }
 
     /**

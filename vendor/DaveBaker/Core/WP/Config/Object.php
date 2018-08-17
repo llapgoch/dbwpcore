@@ -20,6 +20,10 @@ class Object extends Base
          '\DaveBaker\Core\WP\Event\Manager' => [
             'definition' => 'DaveBaker\Core\WP\Event\Manager',
             'singleton' => false
+        ],
+        '\DaveBaker\Core\WP\Config\Page' => [
+            'definition' => 'DaveBaker\Core\WP\Config\Page',
+            'singleton' => true
         ]
     ];
 

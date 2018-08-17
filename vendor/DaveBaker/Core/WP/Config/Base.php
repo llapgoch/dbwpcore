@@ -27,6 +27,6 @@ class Base implements ConfigInterface
 
     protected function mergeConfig($config = [])
     {
-        $this->config = array_merge($this->getConfig(), $config);
+        $this->config = array_replace_recursive($this->getConfig(), $config);
     }
 }
