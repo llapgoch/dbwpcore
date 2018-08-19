@@ -24,6 +24,7 @@ abstract class Base extends \DaveBaker\Core\Object\Base
     /**
      * @param $type
      * @param $blockName
+     * @return $this
      * @throws Exception
      */
     public function setOrder($type = self::ORDER_TYPES_BEFORE, $blockName)
@@ -34,6 +35,8 @@ abstract class Base extends \DaveBaker\Core\Object\Base
 
         $this->orderBlock = (string) $blockName;
         $this->orderType = (string) $type;
+
+        return $this;
     }
 
     /**
@@ -70,6 +73,18 @@ abstract class Base extends \DaveBaker\Core\Object\Base
 
     abstract public function toHtml();
 
-    public function preDispatch(){}
-    public function postDispatch(){}
+    /**
+     * @return $this
+     */
+    public function preDispatch(){
+        return $this;
+    }
+
+    /**
+     * @return $this
+     */
+    public function postDispatch()
+    {
+        return $this;
+    }
 }

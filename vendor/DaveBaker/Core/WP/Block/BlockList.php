@@ -36,42 +36,16 @@ class BlockList implements \IteratorAggregate, \Countable
      */
     public function order()
     {
-        uasort($this->blocks, function($block1, $block2){
-            $orderOutput = 0;
+        $ordered = [];
+        /** @var \DaveBaker\Core\WP\Block\BlockInterface $block */
+        foreach($this->blocks as $block){
+            if($block->getOrderType() == 'before'){
+                if(!$block->getOrderBlock()){
 
-            /** @var \DaveBaker\Core\WP\Block\BlockInterface $block1 */
-            /** @var \DaveBaker\Core\WP\Block\BlockInterface $block2 */
-
-            if($block1->getOrderBlock() == $block2->getName()){
-                if(($block1->getOrderType() == 'before') ||
-                    ($block1->getOrderBlock() === "" && $block1->getOrderType() == 'before')
-                ){
-                    $orderOutput--;
-                }
-
-                if(($block1->getOrderType() == 'after') ||
-                    ($block1->getOrderBlock() === "" && $block1->getOrderType() == 'after')
-                ){
-                    $orderOutput++;
                 }
             }
+        }
 
-            if($block2->getOrderBlock() == $block1->getName()){
-                if(($block2->getOrderType() == 'before') ||
-                    ($block2->getOrderBlock() === "" && $block2->getOrderType() == 'before'))
-                {
-                    $orderOutput++;
-                }
-
-                if(($block2->getOrderType() == 'after') ||
-                    ($block2->getOrderBlock() === "" && $block2->getOrderType() == 'after'))
-                {
-                    $orderOutput--;
-                }
-            }
-            
-            return $orderOutput;
-        });
 
         return $this;
     }
