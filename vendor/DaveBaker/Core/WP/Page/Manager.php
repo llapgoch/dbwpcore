@@ -61,7 +61,15 @@ class Manager extends \DaveBaker\Core\WP\Base
                     $this->blocks[$tag] = [];
                 }
 
-                $this->blocks[$tag] = array_merge($this->blocks[$tag], $blocks);
+                if(!is_array($blocks)){
+                    $blocks = [$blocks];
+                }
+
+                /** @var \DaveBaker\Core\WP\Block\BlockInterface $block */
+                foreach($blocks as $block){
+                    $this->blocks[$tag][$block->getName()] = $block;
+                }
+
                 add_shortcode($tag, function(){});
             }
         }
@@ -190,28 +198,49 @@ class Manager extends \DaveBaker\Core\WP\Base
     {
         global $shortcode_tags;
 
-        $post = $this->getCurrentPost();
-
-
-
         if($shortcode_tags) {
             $this->shortcodeTags = $shortcode_tags;
         }
 
+        /*
+        Render Blocks here -----------------------
+        */
         foreach($this->shortcodeTags as $k => $tag){
             add_shortcode($k, function() use ($k){
                 $html = "";
-               if(isset($this->blocks[$k])){
-                   /** @var \DaveBaker\Core\WP\Block\BlockInterface $block */
-                   foreach($this->blocks[$k] as $block) {
-                       $html .= $block->render();
-                  }
 
-                   return $html;
-               }
+               /** @var \DaveBaker\Core\WP\Block\BlockInterface $block */
+               foreach($this->getBlocksForShortcode($k) as $block) {
+                   $html .= $block->render();
+              }
+
+                return $html;
             });
         };
 
+    }
+
+    /**
+     * @param $shortcode string
+     * @return array
+     */
+    protected function getBlocksForShortcode($shortcode){
+        $blocks = [];
+        $post = $post = $this->getCurrentPost();
+
+        if(isset($this->blocks[$shortcode])){
+            $blocks = array_merge($blocks, $this->blocks[$shortcode]);
+        }
+
+        if($post){
+            $pageSuffix = str_replace("-", "_", $post->post_name);
+
+            if(isset($this->blocks[$shortcode . "_" . $pageSuffix])){
+                $blocks = array_merge($blocks, $this->blocks[$shortcode . "_" . $pageSuffix]);
+            }
+        }
+
+        return $blocks;
     }
 
     /**
