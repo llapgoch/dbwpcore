@@ -8,4 +8,6 @@ interface BaseInterface
     public function preDispatch();
     public function postDispatch();
     public function getName();
+    public function getOrderType();
+    public function getOrderBlock();
 }

@@ -77,17 +77,7 @@ class Manager extends \DaveBaker\Core\WP\Base
 
     public function preDispatch()
     {
-        /* TODO: Order blocks before this*/
-        /**
-         * @var  $tag string
-         * @var  $tagBlocks array
-         */
-        foreach($this->blocks as $tag => $tagBlocks){
-            /** @var \DaveBaker\Core\WP\Block\BlockInterface $block */
-            foreach($tagBlocks as $block){
-                $block->preDispatch();
-            }
-        }
+
     }
 
     public function postDispatch()
@@ -206,6 +196,11 @@ class Manager extends \DaveBaker\Core\WP\Base
         Render Blocks here -----------------------
         */
         foreach($this->shortcodeTags as $k => $tag){
+            /** @var  \DaveBaker\Core\WP\Block\BlockInterface $block */
+            foreach($this->getBlocksForShortcode($k) as $block){
+                $block->preDispatch();
+            }
+
             add_shortcode($k, function() use ($k){
                 $html = "";
 
@@ -221,26 +216,32 @@ class Manager extends \DaveBaker\Core\WP\Base
     }
 
     /**
-     * @param $shortcode string
-     * @return array
+     * @param $shortcode
+     * @return \DaveBaker\Core\WP\Block\BlockList
+     * @throws \DaveBaker\Core\WP\Object\Exception
      */
     protected function getBlocksForShortcode($shortcode){
-        $blocks = [];
+        /** @var \DaveBaker\Core\WP\Block\BlockList $blockList */
+        $blockList = $this->getApp()->getObjectManager()->get('\DaveBaker\Core\WP\Block\BlockList');
         $post = $post = $this->getCurrentPost();
 
         if(isset($this->blocks[$shortcode])){
-            $blocks = array_merge($blocks, $this->blocks[$shortcode]);
+            $blockList->add($this->blocks[$shortcode]);
         }
 
         if($post){
             $pageSuffix = str_replace("-", "_", $post->post_name);
 
             if(isset($this->blocks[$shortcode . "_" . $pageSuffix])){
-                $blocks = array_merge($blocks, $this->blocks[$shortcode . "_" . $pageSuffix]);
+                $blockList->add($this->blocks[$shortcode . "_" . $pageSuffix]);
             }
         }
+        
+        if(count($blockList)) {
+            $blockList->order();
+        }
 
-        return $blocks;
+        return $blockList;
     }
 
     /**
