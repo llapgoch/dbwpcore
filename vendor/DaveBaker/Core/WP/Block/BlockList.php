@@ -5,6 +5,8 @@ namespace DaveBaker\Core\WP\Block;
 class BlockList implements \IteratorAggregate, \Countable
 {
     protected $blocks = [];
+    protected $orderedBlocks = [];
+    protected $isOrdered = false;
 
     /**
      * @return \ArrayIterator
@@ -33,9 +35,13 @@ class BlockList implements \IteratorAggregate, \Countable
 
     public function order()
     {
-        for($i = 0; $i < round(count($this->blocks) * 10); $i++){
-            $this->orderAll();
+        if(!$this->isOrdered) {
+            for ($i = 0; $i < round(count($this->blocks)); $i++) {
+                $this->orderAll();
+            }
         }
+
+        $this->isOrdered = true;
 
         return $this;
     }
@@ -45,73 +51,58 @@ class BlockList implements \IteratorAggregate, \Countable
      */
     protected function orderAll()
     {
-        //TODO: Caching!
 
+        $a = 10;
+        foreach($this->blocks as $block){
+            $block->setIndex($a);
+            $a += 10;
+        }
 
-        $ordered = array_values($this->blocks);
-        $orderedOrig = $ordered;
+        /** @var \DaveBaker\Core\WP\Block\BaseInterface $block */
+        foreach($this->blocks as $block){
+            if(isset($this->blocks[$block->getOrderBlock()])){
+                $orderBlock = $this->blocks[$block->getOrderBlock()];
 
-        var_dump(count($this->blocks));
+                if($block->getOrderType() == 'before'){
+                    $block->setIndex($orderBlock->getIndex() - 1);
 
-        /** @var \DaveBaker\Core\WP\Block\BlockInterface $block */
-        foreach ($orderedOrig as $blockKey => $block) {
-            $found = false;
-
-            if (!$block->getOrderBlock()) {
-                if ($block->getOrderType() == 'before') {
-                    array_unshift($ordered, [$block]);
-//                    $found = true;
-                }
-
-                if ($block->getOrderType() == 'after') {
-                    $ordered[] = $block;
-//                    $found = true;
-                }
-
-            }
-
-            /** @var \DaveBaker\Core\WP\Block\BlockInterface $orderBlock */
-            if(!$found) {
-                foreach ($ordered as $k => $orderBlock) {
-
-                    if ($block->getOrderBlock() == $orderBlock->getName()) {
-                        if ($block->getOrderType() == 'before') {
-                            array_splice($ordered, $k, 0, [$block]);
-                            $found = true;
-                            break;
+                    foreach($this->blocks as $blockReorder){
+                        if($blockReorder->getIndex() <  $orderBlock->getIndex()){
+                            $blockReorder->setIndex($blockReorder->getIndex() - 1);
                         }
+                    }
+                }
 
+                if($block->getOrderType() == 'after'){
+                    $block->setIndex($orderBlock->getIndex() + 1);
 
-                        if ($block->getOrderType() == 'after') {
-                            array_splice($ordered, $k + 1, 0, [$block]);
-                            $found = true;
-                            break;
+                    foreach($this->blocks as $blockReorder){
+                        if($blockReorder->getIndex() >  $orderBlock->getIndex()){
+                            $blockReorder->setIndex($blockReorder->getIndex() + 1);
                         }
                     }
                 }
             }
 
-            if(!$found){
-//                $ordered[] = $block;
-            }
-
-            if ($found) {
-                array_splice($ordered, $blockKey, 1);
-            }
-
         }
 
-        $assoc = [];
-        foreach ($ordered as $item) {
-            $assoc[$item->getName()] = $item;
+        $ordered = [];
+        foreach($this->blocks as $block){
+            $ordered[$block->getIndex()] = $block;
         }
 
-        $this->blocks = $assoc;
+        ksort($ordered);
 
-        var_dump(count($assoc));
-exit;
-        return $this;
+        $newBlocks = [];
+
+
+        foreach($ordered as $block){
+            $newBlocks[$block->getName()] = $block;
+        }
+
+        $this->blocks = $newBlocks;
     }
+
 
     /**
      * @return int
