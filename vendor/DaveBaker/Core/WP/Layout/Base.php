@@ -7,18 +7,13 @@ abstract class Base
     /** @var  \DaveBaker\Core\WP\Page\Manager  */
     protected $manager;
 
+    /**
+     * @param \DaveBaker\Core\WP\Page\Manager $manager
+     */
     public function setManager(
         \DaveBaker\Core\WP\Page\Manager $manager
     ) {
         $this->manager = $manager;
-    }
-
-    /**
-     * @return \DaveBaker\Core\WP\Page\Manager
-     */
-    public function getManager()
-    {
-        return $this->manager;
     }
 
     /**
@@ -29,4 +24,11 @@ abstract class Base
         return $this->getManager()->getApp();
     }
 
+    /**
+     * @return \DaveBaker\Core\WP\Page\Manager
+     */
+    public function getManager()
+    {
+        return $this->manager;
+    }
 }

@@ -87,10 +87,16 @@ class App
     {
         add_action('init', function(){
             $this->install();
+
+            $this->getPageManager()->preDispatch();
         });
         
         add_action('wp', function(){
             $this->getPageManager()->registerShortcodes();
+        });
+
+        add_action('shutdown', function(){
+            $this->getPageManager()->postDispatch();
         });
     }
 

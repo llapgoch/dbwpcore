@@ -2,24 +2,18 @@
 
 namespace DaveBaker\Core\WP\Block;
 
-abstract class Base
+abstract class Base extends \DaveBaker\Core\Object\Base
 {
-    public function preDispatch()
-    {
-
-    }
-
-    public function postDispatch()
-    {
-
-    }
-
+    /**
+     * @return string
+     */
     public final function render()
     {
         return $this->toHtml();
     }
 
-    public function toHtml(){
-        return "";
-    }
+    abstract public function toHtml();
+
+    public function preDispatch(){}
+    public function postDispatch(){}
 }

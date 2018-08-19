@@ -22,8 +22,6 @@ class Manager extends \DaveBaker\Core\WP\Base
      * @var string
      */
 
-    protected $registeredLayouts = [];
-
     protected $shortcodeTags = [];
     protected $namespaceSuffix = "page_";
     protected $authorCache = [];
@@ -57,8 +55,6 @@ class Manager extends \DaveBaker\Core\WP\Base
                 $tag = $util->camelToUnderscore($method);
 
                 $tag = preg_replace("/_action$/", "", $tag);
-
-
                 $blocks = $layout->{$method}();
 
                 if(!isset($this->blocks[$tag])){
@@ -66,29 +62,38 @@ class Manager extends \DaveBaker\Core\WP\Base
                 }
 
                 $this->blocks[$tag] = array_merge($this->blocks[$tag], $blocks);
-
-                add_shortcode($tag, function(){
-
-                });
-
-                /* @var \DaveBaker\Core\WP\Layout\Container $layoutContainer */
-//                $layoutContainer = $this->getApp()->getObjectManager()->get('\DaveBaker\Core\WP\Layout\Container');
-//                $layoutContainer->setLayout($layout)
-//                    ->setTag($tag)
-//                    ->setMethod($method);
-//
-//                if(!isset($this->registeredLayouts[$tag])){
-//                    $this->registeredLayouts[$tag] = [];
-//                }
-//
-//                add_shortcode($tag, function() use($tag){
-//                    var_dump("ADD");exit;
-//                });
-//
-//                $this->registeredLayouts[$tag][] = $layoutContainer;
+                add_shortcode($tag, function(){});
             }
         }
+    }
 
+    public function preDispatch()
+    {
+        /* TODO: Order blocks before this*/
+        /**
+         * @var  $tag string
+         * @var  $tagBlocks array
+         */
+        foreach($this->blocks as $tag => $tagBlocks){
+            /** @var \DaveBaker\Core\WP\Block\BlockInterface $block */
+            foreach($tagBlocks as $block){
+                $block->preDispatch();
+            }
+        }
+    }
+
+    public function postDispatch()
+    {
+        /**
+         * @var  $tag string
+         * @var  $tagBlocks array
+         */
+        foreach($this->blocks as $tag => $tagBlocks){
+            /** @var \DaveBaker\Core\WP\Block\BlockInterface $block */
+            foreach($tagBlocks as $block){
+                $block->postDispatch();
+            }
+        }
     }
 
     /**
@@ -264,5 +269,4 @@ class Manager extends \DaveBaker\Core\WP\Base
 
         return $user->ID;
     }
-    
 }
