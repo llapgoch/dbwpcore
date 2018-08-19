@@ -53,10 +53,14 @@ class BlockList implements \IteratorAggregate, \Countable
     {
 
         $a = 10;
+        $lowest = $a;
+
         foreach($this->blocks as $block){
             $block->setIndex($a);
             $a += 10;
         }
+
+        $highest = $a;
 
         /** @var \DaveBaker\Core\WP\Block\BaseInterface $block */
         foreach($this->blocks as $block){
@@ -84,6 +88,18 @@ class BlockList implements \IteratorAggregate, \Countable
                 }
             }
 
+            if($block->getOrderBlock() === ''){
+                if($block->getOrderType() == 'before'){
+                    $block->setIndex($lowest - 10);
+                }
+
+                if($block->getOrderType() == 'after'){
+                    $block->setIndex($highest + 10);
+                }
+            }
+
+            $lowest = min($block->getIndex(), $lowest);
+            $highest = max($block->getIndex(), $highest);
         }
 
         $ordered = [];
