@@ -6,6 +6,8 @@ class Manager
 {
     const SINGLETON_KEY = 'singleton';
     const DEFINITION_KEY = 'definition';
+
+    const BASE_HELPER_DEFINITION = '\DaveBaker\Core\Helper\{{helperName}}';
     /**
      * @var string
      */
@@ -32,6 +34,11 @@ class Manager
     public function getDefaults()
     {
         return $this->config->getConfig();
+    }
+
+    public function getHelper($helperName){
+        $helperPath = str_replace('{{helperName}}', $helperName, self::BASE_HELPER_DEFINITION);
+        return $this->get($helperPath);
     }
     
     /**

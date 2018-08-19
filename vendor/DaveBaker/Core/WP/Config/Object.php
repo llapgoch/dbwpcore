@@ -18,11 +18,15 @@ class Object extends Base
             'singleton' => true
         ],
          '\DaveBaker\Core\WP\Event\Manager' => [
-            'definition' => 'DaveBaker\Core\WP\Event\Manager',
+            'definition' => '\DaveBaker\Core\WP\Event\Manager',
             'singleton' => false
         ],
         '\DaveBaker\Core\WP\Config\Page' => [
-            'definition' => 'DaveBaker\Core\WP\Config\Page',
+            'definition' => '\DaveBaker\Core\WP\Config\Page',
+            'singleton' => true
+        ],
+        '\DaveBaker\Core\Helper\Util' => [
+            'definition' => '\DaveBaker\Core\Helper\Util',
             'singleton' => true
         ]
     ];

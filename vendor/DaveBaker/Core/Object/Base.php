@@ -1,6 +1,6 @@
 <?php
 
-namespace DaveBaker\Core\Model;
+namespace DaveBaker\Core\Object;
 
 class Base
 {

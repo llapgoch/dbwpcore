@@ -11,7 +11,7 @@ class App
      */
     protected $namespace;
     /**
-     * @var Controller\Front
+     * @var \DaveBaker\Core\WP\Controller\Front
      */
     protected $controller;
     /**
@@ -26,6 +26,9 @@ class App
     /** @var \DaveBaker\Core\WP\Installer\Manager object */
     protected $installerManager;
 
+    /** @var \DaveBaker\Core\WP\Main\MainInterface  */
+    protected $main;
+
     /**
      * @var
      */
@@ -33,10 +36,14 @@ class App
 
     public function __construct(
         $namespace,
+        \DaveBaker\Core\WP\Main\MainInterface $main,
         \DaveBaker\Core\WP\Object\Manager $objectManager = null
     ) {
         $this->namespace = $namespace . "_";
         $this->objectManager = $objectManager;
+        $this->main = $main;
+
+        $this->main->setApp($this);
 
         if(!$objectManager){
             $manager = self::DEFAULT_OBJECT_MANAGER;
@@ -59,6 +66,7 @@ class App
         $this->installerManager = $this->getObjectManager()->get('\DaveBaker\Core\WP\Installer\Manager', [$this]);
         $this->controller = $this->getObjectManager()->get('\DaveBaker\Core\WP\Controller\Front', [$this]);
 
+
         /** @var  generalOptionManager
          * A general store for options, local versions of the option manager should be used for
          * More localised namespacing
@@ -68,13 +76,21 @@ class App
             [$this->getNamespace() . self::GENERAL_NAMESPACE_SUFFIX]
         );
 
+        $this->getMain()->init();
+
         $this->addEvents();
+
+        $this->getMain()->registerLayouts();
     }
 
     protected function addEvents()
     {
         add_action('init', function(){
             $this->install();
+        });
+        
+        add_action('wp', function(){
+            $this->getPageManager()->registerShortcodes();
         });
     }
 
@@ -87,11 +103,28 @@ class App
     }
 
     /**
+     * @return WP\Main\MainInterface
+     */
+    public function getMain()
+    {
+        return $this->main;
+    }
+
+    /**
      * @return string
      */
     public function getNamespace()
     {
         return $this->namespace;
+    }
+
+    /**
+     * @param $helperName
+     * @return \DaveBaker\Core\Helper\Base
+     */
+    public function getHelper($helperName)
+    {
+        return $this->getObjectManager()->getHelper($helperName);
     }
 
     /**

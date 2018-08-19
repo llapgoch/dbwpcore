@@ -9,7 +9,8 @@ class Manager extends \DaveBaker\Core\WP\Base
     const PUBLISH_STATUS = 'publish';
     const POST_TITLE_CONFIG_KEY = 'post_title';
     const POST_CONTENT_KEY = 'post_content';
-    const POST_CONTENT_BODY_SUFFIX = "body";
+    const POST_CONTENT_SUFFIX = "content";
+    const PAGE_CONTENT_SHORTCODE = "body_content";
 
     /** @var \DaveBaker\Core\WP\Config\ConfigInterface */
     protected $config;
@@ -20,8 +21,13 @@ class Manager extends \DaveBaker\Core\WP\Base
     /**
      * @var string
      */
+
+    protected $registeredLayouts = [];
+
+    protected $shortcodeTags = [];
     protected $namespaceSuffix = "page_";
     protected $authorCache = [];
+    protected $blocks = [];
 
     public function __construct(
         \DaveBaker\Core\App $app,
@@ -33,6 +39,68 @@ class Manager extends \DaveBaker\Core\WP\Base
         $this->config = $config;
     }
 
+
+    /**
+     * @param \DaveBaker\Core\WP\Layout\Base $layout
+     */
+    public function registerLayout(
+        \DaveBaker\Core\WP\Layout\Base $layout
+    )
+    {
+        $layout->setManager($this);
+
+        /** @var \DaveBaker\Core\Helper\Util $util */
+        $util = $this->getApp()->getHelper('Util');
+
+        foreach(get_class_methods($layout) as $method){
+            if(preg_match("/Action$/", $method)){
+                $tag = $util->camelToUnderscore($method);
+
+                $tag = preg_replace("/_action$/", "", $tag);
+
+
+                $blocks = $layout->{$method}();
+
+                if(!isset($this->blocks[$tag])){
+                    $this->blocks[$tag] = [];
+                }
+
+                $this->blocks[$tag] = array_merge($this->blocks[$tag], $blocks);
+
+                add_shortcode($tag, function(){
+
+                });
+
+                /* @var \DaveBaker\Core\WP\Layout\Container $layoutContainer */
+//                $layoutContainer = $this->getApp()->getObjectManager()->get('\DaveBaker\Core\WP\Layout\Container');
+//                $layoutContainer->setLayout($layout)
+//                    ->setTag($tag)
+//                    ->setMethod($method);
+//
+//                if(!isset($this->registeredLayouts[$tag])){
+//                    $this->registeredLayouts[$tag] = [];
+//                }
+//
+//                add_shortcode($tag, function() use($tag){
+//                    var_dump("ADD");exit;
+//                });
+//
+//                $this->registeredLayouts[$tag][] = $layoutContainer;
+            }
+        }
+
+    }
+
+    /**
+     * @param array $layouts
+     */
+    public function registerLayouts($layouts = [])
+    {
+        /** @var \DaveBaker\Core\WP\Layout\Base $layout */
+        foreach($layouts as $layout){
+            $this->registerLayout($layout);
+        }
+    }
     /**
      * @param $pageIdentifier
      * @param array $pageValues
@@ -72,7 +140,7 @@ class Manager extends \DaveBaker\Core\WP\Base
 
         // Create page content using shortcodes
         if (!isset($pageValues[self::POST_CONTENT_KEY]) || !$pageValues[self::POST_CONTENT_KEY]) {
-            $pageValues[self::POST_CONTENT_KEY] = '[' . $pageIdentifier . "_" . self::POST_CONTENT_BODY_SUFFIX . "]";
+            $pageValues[self::POST_CONTENT_KEY] = '[' . self::PAGE_CONTENT_SHORTCODE . "]";
         }
 
         if (!($pageId = wp_insert_post($pageValues))) {
@@ -111,6 +179,34 @@ class Manager extends \DaveBaker\Core\WP\Base
         }
 
         return $page;
+    }
+
+    public function registerShortcodes()
+    {
+        global $shortcode_tags;
+
+        $post = $this->getCurrentPost();
+
+
+
+        if($shortcode_tags) {
+            $this->shortcodeTags = $shortcode_tags;
+        }
+
+        foreach($this->shortcodeTags as $k => $tag){
+            add_shortcode($k, function() use ($k){
+                $html = "";
+               if(isset($this->blocks[$k])){
+                   /** @var \DaveBaker\Core\WP\Block\BlockInterface $block */
+                   foreach($this->blocks[$k] as $block) {
+                       $html .= $block->render();
+                  }
+
+                   return $html;
+               }
+            });
+        };
+
     }
 
     /**

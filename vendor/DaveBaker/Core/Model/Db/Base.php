@@ -2,7 +2,7 @@
 
 namespace DaveBaker\Core\Model\Db;
 
-abstract class Base extends \DaveBaker\Core\Model\Base
+abstract class Base extends \DaveBaker\Core\Object\Base
 {
     /** @var  \wpdb */
     protected $wpdb;
