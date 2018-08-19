@@ -31,22 +31,85 @@ class BlockList implements \IteratorAggregate, \Countable
         return $this;
     }
 
+    public function order()
+    {
+        for($i = 0; $i < round(count($this->blocks) * 10); $i++){
+            $this->orderAll();
+        }
+
+        return $this;
+    }
+
     /**
      * @return $this
      */
-    public function order()
+    protected function orderAll()
     {
-        $ordered = [];
-        /** @var \DaveBaker\Core\WP\Block\BlockInterface $block */
-        foreach($this->blocks as $block){
-            if($block->getOrderType() == 'before'){
-                if(!$block->getOrderBlock()){
+        //TODO: Caching!
 
+
+        $ordered = array_values($this->blocks);
+        $orderedOrig = $ordered;
+
+        var_dump(count($this->blocks));
+
+        /** @var \DaveBaker\Core\WP\Block\BlockInterface $block */
+        foreach ($orderedOrig as $blockKey => $block) {
+            $found = false;
+
+            if (!$block->getOrderBlock()) {
+                if ($block->getOrderType() == 'before') {
+                    array_unshift($ordered, [$block]);
+//                    $found = true;
+                }
+
+                if ($block->getOrderType() == 'after') {
+                    $ordered[] = $block;
+//                    $found = true;
+                }
+
+            }
+
+            /** @var \DaveBaker\Core\WP\Block\BlockInterface $orderBlock */
+            if(!$found) {
+                foreach ($ordered as $k => $orderBlock) {
+
+                    if ($block->getOrderBlock() == $orderBlock->getName()) {
+                        if ($block->getOrderType() == 'before') {
+                            array_splice($ordered, $k, 0, [$block]);
+                            $found = true;
+                            break;
+                        }
+
+
+                        if ($block->getOrderType() == 'after') {
+                            array_splice($ordered, $k + 1, 0, [$block]);
+                            $found = true;
+                            break;
+                        }
+                    }
                 }
             }
+
+            if(!$found){
+//                $ordered[] = $block;
+            }
+
+            if ($found) {
+                array_splice($ordered, $blockKey, 1);
+            }
+
         }
 
+        $assoc = [];
+        foreach ($ordered as $item) {
+            $assoc[$item->getName()] = $item;
+        }
 
+        $this->blocks = $assoc;
+
+        var_dump(count($assoc));
+exit;
         return $this;
     }
 
