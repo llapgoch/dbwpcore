@@ -4,9 +4,25 @@ namespace DaveBaker\Core\WP\Layout;
 
 class Manager extends \DaveBaker\Core\WP\Base
 {
+    const TEMPLATE_BASE_DIR =  "templates";
+
     protected $blocks = [];
     protected $shortcodeTags = [];
-    protected $namespaceSuffix = "page_";
+    protected $namespaceSuffix = "layout_";
+    protected $templatePaths = [];
+    /** @var \DaveBaker\Core\WP\Config\ConfigInterface */
+    protected $config;
+
+    public function __construct(
+        \DaveBaker\Core\App $app,
+        \DaveBaker\Core\WP\Option\Manager $optionManager = null,
+        \DaveBaker\Core\WP\Config\ConfigInterface $config
+    ) {
+        parent::__construct($app, $optionManager);
+        $this->config = $config;
+
+        $this->registerTemplatePaths();
+    }
 
     /**
      * @param \DaveBaker\Core\WP\Layout\Base $layout
@@ -45,11 +61,33 @@ class Manager extends \DaveBaker\Core\WP\Base
         }
     }
 
-    public function preDispatch()
+    /**
+     * @param $directory
+     * @return $this
+     * @throws Exception
+     */
+    public function addTemplateDirectory($directory)
     {
+        if(!file_exists($directory)){
+            throw new Exception("Tempate directory '{$directory}' not found.");
+        }
+        $this->templateDirectories = $directory;
 
+        return $this;
     }
 
+
+    /**
+     * @return $this
+     */
+    public function preDispatch()
+    {
+        return $this;
+    }
+
+    /**
+     * @return $this
+     */
     public function postDispatch()
     {
         /**
@@ -62,6 +100,8 @@ class Manager extends \DaveBaker\Core\WP\Base
                 $block->postDispatch();
             }
         }
+
+        return $this;
     }
 
     /**
@@ -109,7 +149,50 @@ class Manager extends \DaveBaker\Core\WP\Base
                 return $html;
             });
         };
-        
+
+    }
+
+    /**
+     * @return string
+     */
+    public function getCurrentThemeDirectory()
+    {
+        return get_stylesheet_directory();
+    }
+
+    /**
+     * @return array
+     */
+    public function getTemplatePaths()
+    {
+        return $this->templatePaths;
+    }
+
+    /**
+     * @return $this
+     */
+    protected function registerTemplatePaths()
+    {
+        if(is_array($this->config->getConfigValue('templates'))){
+            $templates = array_reverse($this->config->getConfigValue('templates'));
+
+            foreach($templates as $template){
+                $fullPath = WP_CONTENT_DIR . DS . "plugins" . DS . $template;
+
+                if(file_exists($fullPath)){
+                    $this->templatePaths[] = $fullPath;
+                }
+            }
+        }
+
+        // Try the theme directory first
+        $themeLocation = $this->getCurrentThemeDirectory() . DS . self::TEMPLATE_BASE_DIR;
+
+        if(file_exists($themeLocation)){
+            array_unshift($this->templatePaths, $themeLocation);
+        }
+
+        return $this;
     }
 
     /**

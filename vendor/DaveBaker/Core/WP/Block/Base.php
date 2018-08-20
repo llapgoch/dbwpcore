@@ -87,18 +87,35 @@ abstract class Base extends \DaveBaker\Core\Object\Base
     }
 
     /**
+     * @param string $blockName
      * @return string
      */
-    public final function render()
+    public function getChildHtml($blockName = '')
     {
         $this->getChildBlocks()->order();
+        
+        if($blockName){
+            if($block = $this->childBlocks->get($blockName)){
+                return $block->render();
+            }
+
+            return '';
+        }
 
         $html = '';
         foreach($this->getChildBlocks() as $block){
             $html .= $block->render();
         }
-        
-        return $html . $this->toHtml();
+
+        return $html;
+    }
+
+    /**
+     * @return string
+     */
+    public final function render()
+    {
+        return $this->getChildHtml() . $this->toHtml();
     }
 
     abstract public function toHtml();

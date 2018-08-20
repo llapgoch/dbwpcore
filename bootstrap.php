@@ -6,7 +6,7 @@
 
 spl_autoload_register(function ( $className ) {
     $content = str_replace("\\", "/", $className) . ".php";
-    $base = WP_CONTENT_DIR . '/plugins/*/vendor/';
+    $base = WP_CONTENT_DIR . DS . 'plugins' . DS . '*' . DS . 'vendor/';
     
     $results = glob($base . $content);
 

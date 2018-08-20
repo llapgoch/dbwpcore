@@ -73,8 +73,15 @@ class BlockList implements \IteratorAggregate, \Countable
         return $this;
     }
 
-
-
+    /**
+     * @param $blockName
+     * @return \DaveBaker\Core\WP\Block\BlockInterface|null
+     */
+    public function get($blockName)
+    {
+        return $this->blocks[$blockName];
+    }
+    
     /**
      * @return int
      */

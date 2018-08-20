@@ -76,7 +76,14 @@ class App
         $this->installerManager = $this->getObjectManager()->get('\DaveBaker\Core\WP\Installer\Manager', [$this]);
         $this->controller = $this->getObjectManager()->get('\DaveBaker\Core\WP\Controller\Front', [$this]);
         $this->blockManager = $this->getObjectManager()->get('\DaveBaker\Core\WP\Block\Manager', [$this]);
-        $this->layoutManager = $this->getObjectManager()->get('\DaveBaker\Core\WP\Layout\Manager', [$this]);
+        $this->layoutManager = $this->getObjectManager()->get(
+            '\DaveBaker\Core\WP\Layout\Manager',
+            [
+                $this,
+                null,
+                $this->getObjectManager()->get('\DaveBaker\Core\WP\Config\Layout')
+            ]);
+
 
         /** @var  generalOptionManager
          * A general store for options, local versions of the option manager should be used for
