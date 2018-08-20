@@ -6,6 +6,8 @@ class App
 {
     const DEFAULT_OBJECT_MANAGER = '\DaveBaker\Core\WP\Object\Manager';
     const GENERAL_NAMESPACE_SUFFIX = 'general_';
+
+    protected static $apps = [];
     /**
      * @var string
      */
@@ -26,6 +28,10 @@ class App
     /** @var \DaveBaker\Core\WP\Installer\Manager object */
     protected $installerManager;
 
+    /** @var \DaveBaker\Core\WP\Block\Manager */
+    protected $blockManager;
+
+
     /** @var \DaveBaker\Core\WP\Main\MainInterface  */
     protected $main;
 
@@ -42,6 +48,7 @@ class App
         $this->namespace = $namespace . "_";
         $this->objectManager = $objectManager;
         $this->main = $main;
+        $this->registerApp($this->namespace, $this);
 
         $this->main->setApp($this);
 
@@ -65,6 +72,7 @@ class App
 
         $this->installerManager = $this->getObjectManager()->get('\DaveBaker\Core\WP\Installer\Manager', [$this]);
         $this->controller = $this->getObjectManager()->get('\DaveBaker\Core\WP\Controller\Front', [$this]);
+        $this->blockManager = $this->getObjectManager()->get('\DaveBaker\Core\WP\Block\Manager', [$this]);
 
 
         /** @var  generalOptionManager
@@ -81,6 +89,35 @@ class App
         $this->addEvents();
 
         $this->getMain()->registerLayouts();
+    }
+
+    /**
+     * @param string $namespace
+     * @return mixed
+     * @throws WP\App\Exception
+     */
+    public static function getApp($namespace = '')
+    {
+        if(count(self::$apps) == 1 && !$namespace){
+            return array_values(self::$apps)[0];
+        }
+
+        if(!isset(self::$apps[$namespace])){
+            throw new \DaveBaker\Core\WP\App\Exception("App not registered {$namespace}");
+        }
+
+        return self::$apps[$namespace];
+    }
+
+    /**
+     * @param $namespace
+     * @param App $app
+     */
+    public static function registerApp(
+        $namespace,
+        App $app)
+    {
+        self::$apps[$namespace] = $app;
     }
 
     protected function addEvents()
@@ -131,6 +168,14 @@ class App
     public function getHelper($helperName)
     {
         return $this->getObjectManager()->getHelper($helperName);
+    }
+
+    /**
+     * @return WP\Block\Manager
+     */
+    public function getBlockManager()
+    {
+        return $this->blockManager;
     }
 
     /**

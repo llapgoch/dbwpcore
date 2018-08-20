@@ -55,22 +55,23 @@ class Manager extends \DaveBaker\Core\WP\Base
                 $tag = $util->camelToUnderscore($method);
 
                 $tag = preg_replace("/_action$/", "", $tag);
-                $blocks = $layout->{$method}();
+                if($blocks = $layout->{$method}()) {
 
-                if(!isset($this->blocks[$tag])){
-                    $this->blocks[$tag] = [];
+                    if (!isset($this->blocks[$tag])) {
+                        $this->blocks[$tag] = [];
+                    }
+
+                    if (!is_array($blocks)) {
+                        $blocks = [$blocks];
+                    }
+
+                    /** @var \DaveBaker\Core\WP\Block\BlockInterface $block */
+                    foreach ($blocks as $block) {
+                        $this->blocks[$tag][$block->getName()] = $block;
+                    }
+
+                    add_shortcode($tag, function () {});
                 }
-
-                if(!is_array($blocks)){
-                    $blocks = [$blocks];
-                }
-
-                /** @var \DaveBaker\Core\WP\Block\BlockInterface $block */
-                foreach($blocks as $block){
-                    $this->blocks[$tag][$block->getName()] = $block;
-                }
-
-                add_shortcode($tag, function(){});
             }
         }
     }
@@ -192,13 +193,19 @@ class Manager extends \DaveBaker\Core\WP\Base
             $this->shortcodeTags = $shortcode_tags;
         }
 
+        $dispatched = [];
+
         /*
         Render Blocks here -----------------------
         */
         foreach($this->shortcodeTags as $k => $tag){
+            
             /** @var  \DaveBaker\Core\WP\Block\BlockInterface $block */
             foreach($this->getBlocksForShortcode($k) as $block){
-                $block->preDispatch();
+                if(!in_array($block->getName(), $dispatched)){
+                    $block->preDispatch();
+                    $dispatched[] = $block->getName();
+                }
             }
 
             add_shortcode($k, function() use ($k){
@@ -206,12 +213,13 @@ class Manager extends \DaveBaker\Core\WP\Base
 
                /** @var \DaveBaker\Core\WP\Block\BlockInterface $block */
                foreach($this->getBlocksForShortcode($k) as $block) {
-                   $html .= $block->render();
+                  $html .= $block->render();
               }
 
                 return $html;
             });
         };
+
 
     }
 
@@ -222,21 +230,21 @@ class Manager extends \DaveBaker\Core\WP\Base
      */
     protected function getBlocksForShortcode($shortcode){
         /** @var \DaveBaker\Core\WP\Block\BlockList $blockList */
-        $blockList = $this->getApp()->getObjectManager()->get('\DaveBaker\Core\WP\Block\BlockList');
+        $blockList = $this->getApp()->getBlockManager()->getBlockList();
         $post = $post = $this->getCurrentPost();
 
         if(isset($this->blocks[$shortcode])){
             $blockList->add($this->blocks[$shortcode]);
         }
 
-        if($post){
+        if ($post) {
             $pageSuffix = str_replace("-", "_", $post->post_name);
 
-            if(isset($this->blocks[$shortcode . "_" . $pageSuffix])){
+            if (isset($this->blocks[$shortcode . "_" . $pageSuffix])) {
                 $blockList->add($this->blocks[$shortcode . "_" . $pageSuffix]);
             }
         }
-        
+
         if(count($blockList)) {
             $blockList->order();
         }

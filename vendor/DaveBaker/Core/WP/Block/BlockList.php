@@ -7,12 +7,36 @@ class BlockList implements \IteratorAggregate, \Countable
     protected $blocks = [];
     protected $orderedBlocks = [];
     protected $isOrdered = false;
+    /**  @var \DaveBaker\Core\WP\Page\Manager */
+    protected $pageManager;
+
+    public function __construct(
+        \DaveBaker\Core\App $app
+    ) {
+        $this->app = $app;
+    }
 
     /**
      * @return \ArrayIterator
      */
-    public function getIterator(){
+    public function getIterator()
+    {
+        $this->update();
         return new \ArrayIterator($this->blocks);
+    }
+
+    public function update()
+    {
+        $filtered = [];
+
+        /** @var \DaveBaker\Core\WP\Block\BlockInterface $block */
+        foreach($this->blocks as $block){
+            if(!$this->getBlockManager()->isRemoved($block->getName())){
+                $filtered[$block->getName()] = $block;
+            }
+        }
+
+        $this->blocks = $filtered;
     }
 
     /**
@@ -33,6 +57,9 @@ class BlockList implements \IteratorAggregate, \Countable
         return $this;
     }
 
+    /**
+     * @return $this
+     */
     public function order()
     {
         if(!$this->isOrdered) {
@@ -42,6 +69,38 @@ class BlockList implements \IteratorAggregate, \Countable
         }
 
         $this->isOrdered = true;
+
+        return $this;
+    }
+
+
+
+    /**
+     * @return int
+     */
+    public function count()
+    {
+        return count($this->blocks);
+    }
+
+    /**
+     * @return Manager
+     */
+    public function getBlockManager()
+    {
+        return $this->app->getBlockManager();
+    }
+
+    /**
+     * @param BlockInterface $block
+     * @return $this
+     */
+    protected function addBlock(
+        \DaveBaker\Core\WP\Block\BlockInterface $block
+    ) {
+        if(!$this->getBlockManager()->isRemoved($block->getName())) {
+            $this->blocks[$block->getName()] = $block;
+        }
 
         return $this;
     }
@@ -120,23 +179,4 @@ class BlockList implements \IteratorAggregate, \Countable
     }
 
 
-    /**
-     * @return int
-     */
-    public function count()
-    {
-        return count($this->blocks);
-    }
-
-    /**
-     * @param BlockInterface $block
-     * @return $this
-     */
-    protected function addBlock(
-        \DaveBaker\Core\WP\Block\BlockInterface $block
-    ) {
-        $this->blocks[$block->getName()] = $block;
-
-        return $this;
-    }
 }

@@ -70,7 +70,7 @@ class Manager
                     return $this->singletonCache[$identifier];
                 }
             }
-
+            
             $reflector = new \ReflectionClass($this->getDefaultClassName($identifier));
             $object = $reflector->newInstanceArgs($args);
 

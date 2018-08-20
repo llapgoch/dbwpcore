@@ -8,17 +8,40 @@ abstract class Base extends \DaveBaker\Core\Object\Base
     protected $orderType = '';
     protected $orderBlock;
     protected $as = '';
+    /** @var  \DaveBaker\Core\WP\Block\BlockList */
+    protected $childBlocks;
+    protected $app;
 
     const ORDER_TYPE_BEFORE = "before";
     const ORDER_TYPE_AFTER = "after";
 
-    public function __construct($name = '')
-    {
+    public function __construct(
+        $name = '',
+        \DaveBaker\Core\App $app
+    ) {
         if(!$name){
             throw new Exception("Block name not set");
         }
 
         $this->blockName = $name;
+        $this->app = $app;
+
+        $this->childBlocks = $this->app->getBlockManager()->getBlockList();
+    }
+
+    public function addChildBlock(
+        \DaveBaker\Core\WP\Block\BlockInterface $block
+    ) {
+        $this->childBlocks->add($block);
+        return $this;
+    }
+
+    /**
+     * @return BlockList
+     */
+    public function getChildBlocks()
+    {
+        return $this->childBlocks;
     }
 
     /**
@@ -68,15 +91,33 @@ abstract class Base extends \DaveBaker\Core\Object\Base
      */
     public final function render()
     {
-        return $this->toHtml();
+        $this->getChildBlocks()->order();
+
+        $html = '';
+        foreach($this->getChildBlocks() as $block){
+            $html .= $block->render();
+        }
+        
+        return $html . $this->toHtml();
     }
 
     abstract public function toHtml();
 
+
+    public function init()
+    {
+        return $this;
+    }
     /**
      * @return $this
      */
-    public function preDispatch(){
+    public function preDispatch()
+    {
+        /** @var \DaveBaker\Core\WP\Block\BlockInterface $child */
+        foreach($this->getChildBlocks() as $child){
+            $child->preDispatch();
+        }
+
         return $this;
     }
 
