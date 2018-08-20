@@ -31,6 +31,9 @@ class App
     /** @var \DaveBaker\Core\WP\Block\Manager */
     protected $blockManager;
 
+    /** @var \DaveBaker\Core\WP\Layout\Manager */
+    protected $layoutManager;
+
 
     /** @var \DaveBaker\Core\WP\Main\MainInterface  */
     protected $main;
@@ -73,7 +76,7 @@ class App
         $this->installerManager = $this->getObjectManager()->get('\DaveBaker\Core\WP\Installer\Manager', [$this]);
         $this->controller = $this->getObjectManager()->get('\DaveBaker\Core\WP\Controller\Front', [$this]);
         $this->blockManager = $this->getObjectManager()->get('\DaveBaker\Core\WP\Block\Manager', [$this]);
-
+        $this->layoutManager = $this->getObjectManager()->get('\DaveBaker\Core\WP\Layout\Manager', [$this]);
 
         /** @var  generalOptionManager
          * A general store for options, local versions of the option manager should be used for
@@ -125,15 +128,15 @@ class App
         add_action('init', function(){
             $this->install();
 
-            $this->getPageManager()->preDispatch();
+            $this->getLayoutManager()->preDispatch();
         });
         
         add_action('wp', function(){
-            $this->getPageManager()->registerShortcodes();
+            $this->getLayoutManager()->registerShortcodes();
         });
 
         add_action('shutdown', function(){
-            $this->getPageManager()->postDispatch();
+            $this->getLayoutManager()->postDispatch();
         });
     }
 
@@ -192,6 +195,14 @@ class App
     public function getObjectManager()
     {
         return $this->objectManager;
+    }
+
+    /**
+     * @return WP\Layout\Manager
+     */
+    public function getLayoutManager()
+    {
+        return $this->layoutManager;
     }
 
     /**

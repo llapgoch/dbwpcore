@@ -4,14 +4,14 @@ namespace DaveBaker\Core\WP\Layout;
 
 abstract class Base
 {
-    /** @var  \DaveBaker\Core\WP\Page\Manager  */
+    /** @var  \DaveBaker\Core\WP\Layout\Manager  */
     protected $manager;
 
     /**
-     * @param \DaveBaker\Core\WP\Page\Manager $manager
+     * @param \DaveBaker\Core\WP\Layout\Manager $manager
      */
     public function setManager(
-        \DaveBaker\Core\WP\Page\Manager $manager
+        \DaveBaker\Core\WP\Layout\Manager $manager
     ) {
         $this->manager = $manager;
     }
@@ -25,7 +25,7 @@ abstract class Base
     }
 
     /**
-     * @return \DaveBaker\Core\WP\Page\Manager
+     * @return \DaveBaker\Core\WP\Layout\Manager
      */
     public function getManager()
     {
