@@ -3,6 +3,7 @@
  * Enable autoloading of classes in modules which are derived from this structure
  * @param $className
  */
+const DS = DIRECTORY_SEPARATOR;
 
 spl_autoload_register(function ( $className ) {
     $content = str_replace("\\", "/", $className) . ".php";

@@ -13,7 +13,6 @@ class Manager extends \DaveBaker\Core\WP\Base
     protected $templatePaths = [];
     /** @var \DaveBaker\Core\WP\Config\ConfigInterface */
     protected $config;
-    protected $handles = ['default'];
 
     public function __construct(
         \DaveBaker\Core\App $app,
@@ -26,56 +25,6 @@ class Manager extends \DaveBaker\Core\WP\Base
         $this->registerTemplatePaths();
     }
 
-    /**
-     * @param Base $layout
-     * @throws Exception
-     */
-    public function registerLayout(
-        \DaveBaker\Core\WP\Layout\Base $layout
-    ) {
-        $layout->setManager($this);
-
-        /** @var \DaveBaker\Core\Helper\Util $util */
-        $util = $this->getApp()->getHelper('Util');
-
-        foreach(get_class_methods($layout) as $method) {
-            if (preg_match("/Action$/", $method)) {
-                $handleTag = $util->camelToUnderscore($method);
-                $handleTag = preg_replace("/_action$/", "", $handleTag);
-
-                if (!in_array($handleTag, $this->handles)) {
-                    continue;
-                }
-
-                // Run each of the action methods for registered handles, creating the blocks
-                $layout->{$method}();
-            }
-        }
-
-        // Get the blocks from the layout
-        if($blocks = $layout->getBlocks()) {
-
-            if (!is_array($blocks)) {
-                $blocks = [$blocks];
-            }
-
-            /** @var \DaveBaker\Core\WP\Block\BlockInterface $block */
-            foreach ($blocks as $block) {
-                if(!$block->getShortcode() && !$block->getAction()){
-                    throw new Exception("Shortcode or action not set for layout block {$block->getName()}");
-                }
-
-                if($block->getShortcode()) {
-                    $this->registerBlockForShortcode($block->getShortcode(), $block);
-                }
-
-                if($block->getAction()){
-                    $this->registerBlockForAction($block->getAction(), $block);
-                }
-            }
-        }
-
-    }
 
     /**
      * @param $directory
@@ -91,7 +40,6 @@ class Manager extends \DaveBaker\Core\WP\Base
 
         return $this;
     }
-
 
     /**
      * @return $this
@@ -122,13 +70,24 @@ class Manager extends \DaveBaker\Core\WP\Base
     }
 
     /**
-     * @param array $layouts
+     * @param $layouts string|array
+     * @throws Exception
      */
-    public function registerLayouts($layouts = [])
+    public function register($layouts)
     {
+        if(!is_array($layouts)){
+            $layouts = [$layouts];
+        }
+
         /** @var \DaveBaker\Core\WP\Layout\Base $layout */
         foreach($layouts as $layout){
-            $this->registerLayout($layout);
+            try{
+                $layoutInstance = $this->getApp()->getObjectManager()->get($layout, [$this->getApp()]);
+            } catch (\Exception $e){
+                throw new Exception($e->getMessage(), $e->getCode());
+            }
+
+            $this->registerLayout($layoutInstance);
         }
     }
 
@@ -175,10 +134,17 @@ class Manager extends \DaveBaker\Core\WP\Base
     {
         $actionCodes = array_keys($this->actionBlocks);
 
+        foreach($actionCodes as $actionCode){
+            $blocks = $this->getBlocksForAction($actionCode);
+            /** @var  \DaveBaker\Core\WP\Block\BlockInterface $block */
+            foreach($blocks as $block){
+                $block->preDispatch();
+            }
+        }
+
+        /** @var string $actionCode */
         foreach($actionCodes  as $actionCode) {
             /** @var  \DaveBaker\Core\WP\Block\BlockInterface $block */
-            foreach ($this->getBlocksForAction($actionCode) as $block) {
-                $block->preDispatch();
 
                 add_action($actionCode, function () use ($actionCode) {
                     $html = "";
@@ -199,7 +165,7 @@ class Manager extends \DaveBaker\Core\WP\Base
                     echo $html;
                 }, 10, self::DEFAULT_ACTION_ARGUMENTS);
             }
-        }
+
 
         return $this;
     }
@@ -220,35 +186,57 @@ class Manager extends \DaveBaker\Core\WP\Base
         return $this->templatePaths;
     }
 
-
     /**
-     * @return $this
-     * @throws \DaveBaker\WP\Event\Exception
+     * @param Base $layout
+     * @throws Exception
      */
-    public function registerHandles()
-    {
-        if($handles = $this->getEventManager()->fire('register_handles')){
-            array_merge($this->handles, $handles);
+    protected function registerLayout(
+        \DaveBaker\Core\WP\Layout\Base $layout
+    ) {
+        /** @var \DaveBaker\Core\Helper\Util $util */
+        $util = $this->getApp()->getHelper('Util');
+
+        foreach(get_class_methods($layout) as $method) {
+            if (preg_match("/Action$/", $method)) {
+                $handleTag = $util->camelToUnderscore($method);
+                $handleTag = preg_replace("/_action$/", "", $handleTag);
+
+                if (!in_array($handleTag, $this->getApp()->getHandleManager()->getHandles())) {
+                    continue;
+                }
+
+                // Run each of the action methods for registered handles, creating the blocks
+                $layout->{$method}();
+            }
         }
 
-        // Add page handle
-        $post = $this->getApp()->getPageManager()->getCurrentPost();
+        // Get the blocks from the layout
+        if($blocks = $layout->getBlocks()) {
 
-        // TODO: add in special pages like homepage here
-        if ($post) {
-            $pageSuffix = str_replace("-", "_", $post->post_name);
-            $this->handles[] = $pageSuffix;
+            if (!is_array($blocks)) {
+                $blocks = [$blocks];
+            }
+
+            /** @var \DaveBaker\Core\WP\Block\BlockInterface $block */
+            foreach ($blocks as $block) {
+                if(!$block->getShortcode() && !$block->getAction()){
+                    throw new Exception("Shortcode or action not set for layout block {$block->getName()}");
+                }
+
+                if($block->getShortcode()) {
+                    $this->registerBlockForShortcode($block->getShortcode(), $block);
+                }
+
+                if($block->getAction()){
+                    $this->registerBlockForAction($block->getAction(), $block);
+                }
+            }
         }
 
-        if(is_home()){
-            $this->handles[] = "index";
-        }
-
-        return $this;
     }
 
     /**
-     * @param $shortcode
+     * @param $shortcode string
      * @param \DaveBaker\Core\WP\Block\BlockInterface $block
      */
     protected function registerBlockForShortcode(
@@ -304,7 +292,7 @@ class Manager extends \DaveBaker\Core\WP\Base
 
 
     /**
-     * @param $shortcode
+     * @param $shortcode string
      * @return \DaveBaker\Core\WP\Block\BlockList
      * @throws \DaveBaker\Core\WP\Object\Exception
      */

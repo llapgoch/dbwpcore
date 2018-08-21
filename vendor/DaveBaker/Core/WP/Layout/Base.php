@@ -2,35 +2,32 @@
 
 namespace DaveBaker\Core\WP\Layout;
 
-abstract class Base
+abstract class Base extends \DaveBaker\Core\WP\Base
 {
-    /** @var  \DaveBaker\Core\WP\Layout\Manager  */
-    protected $manager;
     protected $blocks = [];
-
+    
     /**
-     * @param \DaveBaker\Core\WP\Layout\Manager $manager
+     * @return \DaveBaker\Core\WP\Block\Manager
      */
-    public function setManager(
-        \DaveBaker\Core\WP\Layout\Manager $manager
-    ) {
-        $this->manager = $manager;
+    public function getBlockManager()
+    {
+        return $this->getApp()->getBlockManager();
     }
 
     /**
-     * @return \DaveBaker\Core\App
+     * @return Manager
      */
-    public function getApp()
+    public function getLayoutManager()
     {
-        return $this->getManager()->getApp();
+        return $this->getApp()->getLayoutManager();
     }
 
     /**
-     * @return \DaveBaker\Core\WP\Layout\Manager
+     * @return \DaveBaker\Core\WP\App\Request
      */
-    public function getManager()
+    public function getRequest()
     {
-        return $this->manager;
+        return $this->getApp()->getRequest();
     }
 
     /**

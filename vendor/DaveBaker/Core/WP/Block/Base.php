@@ -182,6 +182,7 @@ abstract class Base extends \DaveBaker\Core\Object\Base
      */
     public function preDispatch()
     {
+        var_dump('predispatch ' . $this->getName());
         /** @var \DaveBaker\Core\WP\Block\BlockInterface $child */
         foreach($this->getChildBlocks() as $child){
             $child->preDispatch();

@@ -12,6 +12,10 @@ class Manager extends \DaveBaker\Core\WP\Base
     const POST_CONTENT_SUFFIX = "content";
     const PAGE_CONTENT_SHORTCODE = "body_content";
 
+    // action is used in the querystring on pages like register
+    const ACTION_PARAM = 'action';
+    const LOGIN_REGISTER_PARAM_VALUE = 'register';
+
     /** @var \DaveBaker\Core\WP\Config\ConfigInterface */
     protected $config;
     /**
@@ -172,5 +176,70 @@ class Manager extends \DaveBaker\Core\WP\Base
         }
 
         return $user->ID;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isOnLoginPage(){
+        global $GLOBALS;
+
+        if(!isset($GLOBALS['pagenow'])){
+            return false;
+        }
+
+        $actionParam = $this->getApp()->getRequest()->getParam(self::ACTION_PARAM);
+
+        if($actionParam == self::LOGIN_REGISTER_PARAM_VALUE){
+            return false;
+        }
+
+        return $this->checkPageNow(['wp-login.php', 'wp-register.php']);
+    }
+
+    /**
+     * @return bool
+     */
+    public function isOnRegisterPage(){
+        if($this->checkPageNow('wp-register.php')){
+            return true;
+        }
+
+        $actionParam = $this->getApp()->getRequest()->getParam(self::ACTION_PARAM);
+
+        if($this->checkPageNow('wp-login.php')
+            && $actionParam == self::LOGIN_REGISTER_PARAM_VALUE){
+
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isOnHomepage()
+    {
+        return is_home();
+    }
+
+    /**
+     * @param $pages string|array
+     * @return bool
+     */
+    public function checkPageNow($pages)
+    {
+        global $GLOBALS;
+
+        if(!is_array($pages)){
+            $pages = [$pages];
+        }
+
+        if(!isset($GLOBALS['pagenow'])){
+            return false;
+        }
+        
+        return in_array($GLOBALS['pagenow'], $pages);
     }
 }

@@ -34,6 +34,12 @@ class App
     /** @var \DaveBaker\Core\WP\Layout\Manager */
     protected $layoutManager;
 
+    /** @var  \DaveBaker\Core\WP\Handle\Manager */
+    protected $handleManager;
+
+    /** @var  \DaveBaker\Core\WP\App\Request */
+    protected $request;
+
 
     /** @var \DaveBaker\Core\WP\Main\MainInterface  */
     protected $main;
@@ -74,8 +80,11 @@ class App
         );
 
         $this->installerManager = $this->getObjectManager()->get('\DaveBaker\Core\WP\Installer\Manager', [$this]);
+        $this->handleManager = $this->getObjectManager()->get('\DaveBaker\Core\WP\Layout\Handle\Manager', [$this]);
         $this->controller = $this->getObjectManager()->get('\DaveBaker\Core\WP\Controller\Front', [$this]);
         $this->blockManager = $this->getObjectManager()->get('\DaveBaker\Core\WP\Block\Manager', [$this]);
+        $this->request = $this->getObjectManager()->get('\DaveBaker\Core\WP\App\Request', [$this]);
+
         $this->layoutManager = $this->getObjectManager()->get(
             '\DaveBaker\Core\WP\Layout\Manager',
             [
@@ -134,8 +143,15 @@ class App
             $this->getLayoutManager()->preDispatch();
         });
         
+        add_action('wp_loaded', function(){
+            $this->getHandleManager()->registerHandles();
+            $this->getMain()->registerLayouts();
+
+            $this->getLayoutManager()->registerShortcodes()->registerActions();
+        });
+
         add_action('wp', function(){
-            $this->getLayoutManager()->registerHandles();
+            $this->getHandleManager()->registerHandles();
             $this->getMain()->registerLayouts();
 
             $this->getLayoutManager()->registerShortcodes()->registerActions();
@@ -209,6 +225,22 @@ class App
     public function getLayoutManager()
     {
         return $this->layoutManager;
+    }
+
+    /**
+     * @return WP\Layout\Handle\Manager
+     */
+    public function getHandleManager()
+    {
+        return $this->handleManager;
+    }
+
+    /**
+     * @return \DaveBaker\Core\WP\App\Request
+     */
+    public function getRequest()
+    {
+        return $this->request;
     }
 
     /**
