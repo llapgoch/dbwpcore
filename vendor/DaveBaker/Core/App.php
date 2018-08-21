@@ -25,7 +25,7 @@ class App
      */
     protected $generalOptionManager;
 
-    /** @var \DaveBaker\Core\WP\Installer\Manager object */
+    /** @var \DaveBaker\Core\WP\Installer\InstallerInterface object */
     protected $installerManager;
 
     /** @var \DaveBaker\Core\WP\Block\Manager */
@@ -83,6 +83,11 @@ class App
         );
 
         $this->installerManager = $this->getObjectManager()->get('\DaveBaker\Core\WP\Installer\Manager', [$this]);
+
+        if(!$this->installerManager instanceof \DaveBaker\Core\WP\Installer\InstallerInterface){
+            throw new \DaveBaker\Core\WP\App\Exception("Installer Manager must implement InstallerInterface");
+        }
+
         $this->handleManager = $this->getObjectManager()->get('\DaveBaker\Core\WP\Layout\Handle\Manager', [$this]);
         $this->eventManager = $this->getObjectManager()->get('\DaveBaker\Core\WP\Event\Manager', [$this]);
         $this->controller = $this->getObjectManager()->get('\DaveBaker\Core\WP\Controller\Front', [$this]);

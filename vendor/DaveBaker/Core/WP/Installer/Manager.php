@@ -2,7 +2,7 @@
 
 namespace DaveBaker\Core\WP\Installer;
 
-class Manager extends \DaveBaker\Core\WP\Base
+abstract class Manager extends \DaveBaker\Core\WP\Base
 {
     const VERSION_OPTION = 'version';
 
@@ -10,8 +10,8 @@ class Manager extends \DaveBaker\Core\WP\Base
     protected $namespaceCode = "installer";
 
     /** Override to run local installers */
-    protected abstract function install();
-    
+    public abstract function install();
+
     public function checkInstall()
     {
         /** @var $config \DaveBaker\Core\WP\Config\Installer */
