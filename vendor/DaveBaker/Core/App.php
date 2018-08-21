@@ -95,10 +95,7 @@ class App
         );
 
         $this->getMain()->init();
-
         $this->addEvents();
-
-        $this->getMain()->registerLayouts();
     }
 
     /**
@@ -134,11 +131,12 @@ class App
     {
         add_action('init', function(){
             $this->install();
-
             $this->getLayoutManager()->preDispatch();
         });
         
         add_action('wp', function(){
+            $this->getLayoutManager()->registerHandles();
+            $this->getMain()->registerLayouts();
             $this->getLayoutManager()->registerShortcodes();
         });
 

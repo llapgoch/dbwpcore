@@ -17,6 +17,11 @@ abstract class Base
     protected $eventManager;
 
     /**
+     * @var bool
+     */
+    protected $canCreateEventManager = true;
+
+    /**
      * @var string
      */
     protected $namespaceSuffix = 'default_';
@@ -35,6 +40,10 @@ abstract class Base
         }
 
         $this->optionManager = $optionManager;
+
+        if($this->canCreateEventManager){
+            $this->createEventManager();
+        }
     }
 
     /**

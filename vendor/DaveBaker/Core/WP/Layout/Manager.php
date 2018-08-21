@@ -12,6 +12,7 @@ class Manager extends \DaveBaker\Core\WP\Base
     protected $templatePaths = [];
     /** @var \DaveBaker\Core\WP\Config\ConfigInterface */
     protected $config;
+    protected $handles = ['default'];
 
     public function __construct(
         \DaveBaker\Core\App $app,
@@ -20,12 +21,13 @@ class Manager extends \DaveBaker\Core\WP\Base
     ) {
         parent::__construct($app, $optionManager);
         $this->config = $config;
-
+        
         $this->registerTemplatePaths();
     }
 
     /**
-     * @param \DaveBaker\Core\WP\Layout\Base $layout
+     * @param Base $layout
+     * @throws Exception
      */
     public function registerLayout(
         \DaveBaker\Core\WP\Layout\Base $layout
@@ -37,14 +39,14 @@ class Manager extends \DaveBaker\Core\WP\Base
 
         foreach(get_class_methods($layout) as $method){
             if(preg_match("/Action$/", $method)){
-                $tag = $util->camelToUnderscore($method);
+                $handleTag = $util->camelToUnderscore($method);
+                $handleTag = preg_replace("/_action$/", "", $handleTag);
 
-                $tag = preg_replace("/_action$/", "", $tag);
+                if(!in_array($handleTag, $this->handles)){
+                    continue;
+                }
+
                 if($blocks = $layout->{$method}()) {
-
-                    if (!isset($this->blocks[$tag])) {
-                        $this->blocks[$tag] = [];
-                    }
 
                     if (!is_array($blocks)) {
                         $blocks = [$blocks];
@@ -52,10 +54,15 @@ class Manager extends \DaveBaker\Core\WP\Base
 
                     /** @var \DaveBaker\Core\WP\Block\BlockInterface $block */
                     foreach ($blocks as $block) {
-                        $this->blocks[$tag][$block->getName()] = $block;
-                    }
+                        if(!$block->getShortcode()){
+                            throw new Exception("Shortcode not set for layout block {$block->getName()}");
+                        }
 
-                    add_shortcode($tag, function () {});
+                        if(!isset($this->blocks[$block->getShortcode()])){
+                            $this->blocks[$block->getShortcode()] = [];
+                        }
+                        $this->blocks[$block->getShortcode()][$block->getName()] = $block;
+                    }
                 }
             }
         }
@@ -115,41 +122,32 @@ class Manager extends \DaveBaker\Core\WP\Base
         }
     }
 
+    /**
+     * @return $this
+     */
     public function registerShortcodes()
     {
-        global $shortcode_tags;
+        $shortCodes = array_keys($this->blocks);
 
-        if($shortcode_tags) {
-            $this->shortcodeTags = $shortcode_tags;
+        foreach($shortCodes as $shortCode) {
+            /** @var  \DaveBaker\Core\WP\Block\BlockInterface $block */
+            foreach ($this->getBlocksForShortcode($shortCode) as $block) {
+                $block->preDispatch();
+
+                add_shortcode($shortCode, function ($args) use ($shortCode) {
+                    $html = "";
+
+                    /** @var \DaveBaker\Core\WP\Block\BlockInterface $block */
+                    foreach ($this->getBlocksForShortcode($shortCode) as $block) {
+                        $html .= $block->render();
+                    }
+
+                    return $html;
+                });
+            }
         }
 
-        $dispatched = [];
-
-        /*
-        Render Blocks here -----------------------
-        */
-        foreach($this->shortcodeTags as $k => $tag){
-
-            /** @var  \DaveBaker\Core\WP\Block\BlockInterface $block */
-            foreach($this->getBlocksForShortcode($k) as $block){
-                if(!in_array($block->getName(), $dispatched)){
-                    $block->preDispatch();
-                    $dispatched[] = $block->getName();
-                }
-            }
-
-            add_shortcode($k, function() use ($k){
-                $html = "";
-
-                /** @var \DaveBaker\Core\WP\Block\BlockInterface $block */
-                foreach($this->getBlocksForShortcode($k) as $block) {
-                    $html .= $block->render();
-                }
-
-                return $html;
-            });
-        };
-
+        return $this;
     }
 
     /**
@@ -166,6 +164,33 @@ class Manager extends \DaveBaker\Core\WP\Base
     public function getTemplatePaths()
     {
         return $this->templatePaths;
+    }
+
+
+    /**
+     * @return $this
+     * @throws \DaveBaker\WP\Event\Exception
+     */
+    public function registerHandles()
+    {
+        if($handles = $this->getEventManager()->fire('register_handles')){
+            array_merge($this->handles, $handles);
+        }
+
+        // Add page handle
+        $post = $this->getApp()->getPageManager()->getCurrentPost();
+
+        // TODO: add in special pages like homepage here
+        if ($post) {
+            $pageSuffix = str_replace("-", "_", $post->post_name);
+            $this->handles[] = $pageSuffix;
+        }
+
+        if(is_home()){
+            $this->handles[] = "index";
+        }
+
+        return $this;
     }
 
     /**
@@ -195,6 +220,7 @@ class Manager extends \DaveBaker\Core\WP\Base
         return $this;
     }
 
+
     /**
      * @param $shortcode
      * @return \DaveBaker\Core\WP\Block\BlockList
@@ -203,18 +229,9 @@ class Manager extends \DaveBaker\Core\WP\Base
     protected function getBlocksForShortcode($shortcode){
         /** @var \DaveBaker\Core\WP\Block\BlockList $blockList */
         $blockList = $this->getApp()->getBlockManager()->getBlockList();
-        $post = $post = $this->getApp()->getPageManager()->getCurrentPost();
 
         if(isset($this->blocks[$shortcode])){
             $blockList->add($this->blocks[$shortcode]);
-        }
-
-        if ($post) {
-            $pageSuffix = str_replace("-", "_", $post->post_name);
-
-            if (isset($this->blocks[$shortcode . "_" . $pageSuffix])) {
-                $blockList->add($this->blocks[$shortcode . "_" . $pageSuffix]);
-            }
         }
 
         if(count($blockList)) {

@@ -20,4 +20,6 @@ interface BaseInterface
     public function getOrderBlock();
     public function addChildBlock(\DaveBaker\Core\WP\Block\BlockInterface $block);
     public function getChildBlocks();
+    public function setShortcode($shortcode);
+    public function getShortcode();
 }

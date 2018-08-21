@@ -11,6 +11,7 @@ use DaveBaker\WP\Event\Exception;
 class Manager extends \DaveBaker\Core\WP\Base
 {
     protected $events = [];
+    protected $canCreateEventManager = false;
 
     public function __construct(
         \DaveBaker\Core\App $app,

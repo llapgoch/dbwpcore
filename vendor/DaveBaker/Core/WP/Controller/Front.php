@@ -27,8 +27,7 @@ class Front extends \DaveBaker\Core\WP\Base
         \DaveBaker\Core\WP\Option\Manager $optionManager = null
     ){
         parent::__construct($app, $optionManager);
-
-        $this->createEventManager();
+        
         $this->addEvents();
     }
 
@@ -54,5 +53,7 @@ class Front extends \DaveBaker\Core\WP\Base
             $this->getEventManager()->fire(current_action() . "_" . $this->post->post_name);
             $this->getEventManager()->fire(current_action() . "_" . $this->post->ID);
         }
+
+        return $this;
     }
 }

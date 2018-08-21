@@ -12,6 +12,9 @@ abstract class Base extends \DaveBaker\Core\Object\Base
     protected $childBlocks;
     protected $app;
 
+    // Shortcodes are only used when registering blocks with the layout manager.
+    protected $shortcode = '';
+
     const ORDER_TYPE_BEFORE = "before";
     const ORDER_TYPE_AFTER = "after";
 
@@ -42,6 +45,23 @@ abstract class Base extends \DaveBaker\Core\Object\Base
     public function getChildBlocks()
     {
         return $this->childBlocks;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function setShortcode($shortcode)
+    {
+        $this->shortcode = $shortcode;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getShortcode()
+    {
+        return $this->shortcode;
     }
 
     /**
@@ -118,7 +138,13 @@ abstract class Base extends \DaveBaker\Core\Object\Base
         return $this->getChildHtml() . $this->toHtml();
     }
 
-    abstract public function toHtml();
+    /**
+     * @return string
+     */
+    public function toHtml()
+    {
+        return '';
+    }
 
 
     public function init()
