@@ -12,19 +12,9 @@ abstract class Base
     protected $optionManager;
 
     /**
-     * @var \DaveBaker\Core\WP\Event\Manager
-     */
-    protected $eventManager;
-
-    /**
-     * @var bool
-     */
-    protected $canCreateEventManager = true;
-
-    /**
      * @var string
      */
-    protected $namespaceSuffix = 'default_';
+    protected $namespaceCode = 'default_';
 
     public function __construct(
         \DaveBaker\Core\App $app,
@@ -35,15 +25,23 @@ abstract class Base
         if(!$optionManager){
             $optionManager = $this->app->getObjectManager()->get(
                 '\DaveBaker\Core\WP\Option\Manager',
-                [$this->getNamespace()]
+                [$this->getOptionNamespace()]
             );
         }
 
         $this->optionManager = $optionManager;
+    }
 
-        if($this->canCreateEventManager){
-            $this->createEventManager();
-        }
+    /**
+     * @param $event string
+     * @param array $params
+     */
+    public function fireEvent($event, $params = [])
+    {
+        $this->getApp()->getEventManager()->fireEvent(
+            $this->getNamespacedEvent($event),
+            $params
+        );
     }
 
     /**
@@ -55,11 +53,20 @@ abstract class Base
     }
 
     /**
+     * @param $event string
      * @return string
      */
-    public function getNamespace()
+    public function getNamespacedEvent($event)
     {
-        return $this->getApp()->getNamespace() . $this->namespaceSuffix;
+        return $this->namespaceCode . $event;
+    }
+
+    /**
+     * @return string
+     */
+    public function getOptionNamespace()
+    {
+        return $this->getApp()->getNamespace() . $this->namespaceCode;
     }
 
     /**
@@ -71,21 +78,10 @@ abstract class Base
     }
 
     /**
-     * @throws Object\Exception
-     */
-    protected function createEventManager()
-    {
-        $this->eventManager = $this->getApp()->getObjectManager()->get(
-            '\DaveBaker\Core\WP\Event\Manager',
-            [$this->getApp(), $this->getOptionManager()]
-        );
-    }
-
-    /**
      * @return Event\Manager
      */
     protected function getEventManager()
     {
-        return $this->eventManager;
+        return $this->getApp()->getEventManager();
     }
 }

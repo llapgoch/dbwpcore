@@ -4,7 +4,13 @@ namespace DaveBaker\Core\WP\Layout\Handle;
 
 class Manager extends \DaveBaker\Core\WP\Base
 {
+    /** @var string */
+    protected $namespaceCode = "handle";
+    
+    /** @var array */
     protected $handles = [];
+    
+    /** @var array */
     protected $defaultHandles = ['default'];
 
     /**
@@ -40,7 +46,7 @@ class Manager extends \DaveBaker\Core\WP\Base
         if($pageManager->isOnRegisterPage()){
             $this->handles[] = 'register';
         }
-        
+
         return $this;
     }
 

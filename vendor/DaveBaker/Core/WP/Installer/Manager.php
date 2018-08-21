@@ -6,11 +6,11 @@ class Manager extends \DaveBaker\Core\WP\Base
 {
     const VERSION_OPTION = 'version';
 
-    protected $namespaceSuffix = "installer_";
+    /** @var string  */
+    protected $namespaceCode = "installer";
 
     /** Override to run local installers */
-    protected function install(){
-    }
+    protected abstract function install();
     
     public function checkInstall()
     {

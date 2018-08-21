@@ -15,9 +15,12 @@ class Front extends \DaveBaker\Core\WP\Base
 {
     /** @var  \WP_Post */
     protected $post;
-    protected $namespaceSuffix = "controller_";
+    
+    /** @var string */
+    protected $namespaceCode = "controller";
 
     // Add more wordpress events here as required
+    /** @var array */
     protected $eventRegisters = [
         'wp'
     ];

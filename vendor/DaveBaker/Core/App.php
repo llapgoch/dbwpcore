@@ -34,8 +34,11 @@ class App
     /** @var \DaveBaker\Core\WP\Layout\Manager */
     protected $layoutManager;
 
-    /** @var  \DaveBaker\Core\WP\Handle\Manager */
+    /** @var  \DaveBaker\Core\WP\Layout\Handle\Manager */
     protected $handleManager;
+
+    /** @var  \DaveBaker\Core\WP\Event\Manager */
+    protected $eventManager;
 
     /** @var  \DaveBaker\Core\WP\App\Request */
     protected $request;
@@ -81,6 +84,7 @@ class App
 
         $this->installerManager = $this->getObjectManager()->get('\DaveBaker\Core\WP\Installer\Manager', [$this]);
         $this->handleManager = $this->getObjectManager()->get('\DaveBaker\Core\WP\Layout\Handle\Manager', [$this]);
+        $this->eventManager = $this->getObjectManager()->get('\DaveBaker\Core\WP\Event\Manager', [$this]);
         $this->controller = $this->getObjectManager()->get('\DaveBaker\Core\WP\Controller\Front', [$this]);
         $this->blockManager = $this->getObjectManager()->get('\DaveBaker\Core\WP\Block\Manager', [$this]);
         $this->request = $this->getObjectManager()->get('\DaveBaker\Core\WP\App\Request', [$this]);
@@ -201,6 +205,14 @@ class App
     public function getBlockManager()
     {
         return $this->blockManager;
+    }
+
+    /**
+     * @return WP\Event\Manager
+     */
+    public function getEventManager()
+    {
+        return $this->eventManager;
     }
 
     /**

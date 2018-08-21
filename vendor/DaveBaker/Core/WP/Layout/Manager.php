@@ -7,10 +7,18 @@ class Manager extends \DaveBaker\Core\WP\Base
     const TEMPLATE_BASE_DIR =  "templates";
     const DEFAULT_ACTION_ARGUMENTS = 100;
 
+    /** @var string */
+    protected $namespaceCode = "layout";
+    
+    /** @var array */
     protected $shortcodeBlocks = [];
+    
+    /** @var array */
     protected $actionBlocks = [];
-    protected $namespaceSuffix = "layout_";
+    
+    /** @var array  */
     protected $templatePaths = [];
+    
     /** @var \DaveBaker\Core\WP\Config\ConfigInterface */
     protected $config;
 

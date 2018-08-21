@@ -10,16 +10,17 @@ use DaveBaker\WP\Event\Exception;
 
 class Manager extends \DaveBaker\Core\WP\Base
 {
+    /** @var string */
+    protected $namespaceCode = "event";
+    /** @var array */
     protected $events = [];
-    protected $canCreateEventManager = false;
 
     public function __construct(
         \DaveBaker\Core\App $app,
-        \DaveBaker\Core\WP\Option\Manager $optionManager
+        \DaveBaker\Core\WP\Option\Manager $optionManager = null
     ) {
         parent::__construct($app, $optionManager);
     }
-
 
     /**
      * @param $eventIdentifier

@@ -16,19 +16,17 @@ class Manager extends \DaveBaker\Core\WP\Base
     const ACTION_PARAM = 'action';
     const LOGIN_REGISTER_PARAM_VALUE = 'register';
 
+    /** @var string */
+    protected $namespaceCode = 'page';
+
     /** @var \DaveBaker\Core\WP\Config\ConfigInterface */
     protected $config;
-    /**
-     * @var array
-     */
+
+    /** @var array */
     protected $pageCache = [];
-    /**
-     * @var string
-     */
 
-
+    /** @var array */
     protected $authorCache = [];
-
 
     public function __construct(
         \DaveBaker\Core\App $app,
@@ -39,9 +37,7 @@ class Manager extends \DaveBaker\Core\WP\Base
         parent::__construct($app, $optionManager);
         $this->config = $config;
     }
-
-
-  
+    
     /**
      * @param $pageIdentifier
      * @param array $pageValues

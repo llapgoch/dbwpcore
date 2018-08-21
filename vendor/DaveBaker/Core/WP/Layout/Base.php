@@ -4,6 +4,10 @@ namespace DaveBaker\Core\WP\Layout;
 
 abstract class Base extends \DaveBaker\Core\WP\Base
 {
+    /** @var string */
+    protected $namespaceCode = 'layout_item';
+    
+    /** @var array */
     protected $blocks = [];
     
     /**
