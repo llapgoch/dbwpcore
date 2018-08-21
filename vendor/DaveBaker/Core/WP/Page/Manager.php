@@ -142,11 +142,11 @@ class Manager extends \DaveBaker\Core\WP\Base
      * @return bool
      */
     public function isOnPage($pageCode){
-        if(!$this->getCurrentPost()){
+        if(!($post = $this->getCurrentPost())){
             return false;
         }
 
-        if($this->getOption($pageCode) == $this->post->ID){
+        if($this->getOption($pageCode) == $post->ID){
             return true;
         }
 
