@@ -91,7 +91,7 @@ class Manager extends \DaveBaker\Core\WP\Base
         $pageIdentifier
     )
     {
-        if ($page = $this->retreiveFromCache($pageIdentifier)) {
+        if ($page = $this->retrieveFromCache($pageIdentifier)) {
             return $page;
         }
 
@@ -107,7 +107,7 @@ class Manager extends \DaveBaker\Core\WP\Base
     {
         $namespacedId = $this->getApp()->getNamespacedOption($pageIdentifier);
 
-        if ($reload || !($page = $this->retreiveFromCache($pageIdentifier))) {
+        if ($reload || !($page = $this->retrieveFromCache($pageIdentifier))) {
             $page = get_post($namespacedId);
         }
 
@@ -128,7 +128,7 @@ class Manager extends \DaveBaker\Core\WP\Base
      * @return mixed|null
      */
 
-    protected function retreiveFromCache($pageIdentifier)
+    protected function retrieveFromCache($pageIdentifier)
     {
         if(isset($this->pageCache[$pageIdentifier])){
             return $this->pageCache[$pageIdentifier];
