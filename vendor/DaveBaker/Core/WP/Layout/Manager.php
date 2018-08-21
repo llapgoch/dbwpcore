@@ -87,30 +87,31 @@ class Manager extends \DaveBaker\Core\WP\Base
     {
         $shortCodes = array_keys($this->shortcodeBlocks);
 
+        foreach($shortCodes as $shortCode){
+            $this->preDispatchBlocks($this->getBlocksForShortcode($shortCode));
+        }
+
         foreach($shortCodes as $shortCode) {
             /** @var  \DaveBaker\Core\WP\Block\BlockInterface $block */
-            foreach ($this->getBlocksForShortcode($shortCode) as $block) {
-                $block->preDispatch();
 
-                add_shortcode($shortCode, function ($args) use ($shortCode) {
-                    $html = "";
+            add_shortcode($shortCode, function ($args) use ($shortCode) {
+                $html = "";
 
-                    /** @var \DaveBaker\Core\WP\Block\BlockInterface $block */
-                    foreach ($this->getBlocksForShortcode($shortCode) as $block) {
+                /** @var \DaveBaker\Core\WP\Block\BlockInterface $block */
+                foreach ($this->getBlocksForShortcode($shortCode) as $block) {
 
-                        // Set shortcode data on the block
-                        if($args) {
-                            foreach ($args as $argKey => $arg) {
-                                $block->setData($argKey, $arg);
-                            }
+                    // Set shortcode data on the block
+                    if($args) {
+                        foreach ($args as $argKey => $arg) {
+                            $block->setData($argKey, $arg);
                         }
-
-                        $html .= $block->render();
                     }
 
-                    return $html;
-                });
-            }
+                    $html .= $block->render();
+                }
+
+                return $html;
+            });
         }
 
         return $this;
@@ -124,11 +125,7 @@ class Manager extends \DaveBaker\Core\WP\Base
         $actionCodes = array_keys($this->actionBlocks);
 
         foreach($actionCodes as $actionCode){
-            $blocks = $this->getBlocksForAction($actionCode);
-            /** @var  \DaveBaker\Core\WP\Block\BlockInterface $block */
-            foreach($blocks as $block){
-                $block->preDispatch();
-            }
+            $this->preDispatchBlocks($this->getBlocksForAction($actionCode));
         }
 
         /** @var string $actionCode */
@@ -147,6 +144,7 @@ class Manager extends \DaveBaker\Core\WP\Base
 
                     /** @var \DaveBaker\Core\WP\Block\BlockInterface $block */
                     foreach ($this->getBlocksForAction($actionCode) as $block) {
+                        // Set action arguments on the block, this will be an indexed array
                         $block->setActionArguments($args);
                         $html .= $block->render();
                     }
@@ -173,6 +171,20 @@ class Manager extends \DaveBaker\Core\WP\Base
     public function getTemplatePaths()
     {
         return $this->templatePaths;
+    }
+
+    /**
+     * @param $blocks array
+     * @return $this
+     */
+    protected function preDispatchBlocks($blocks)
+    {
+        /** @var  \DaveBaker\Core\WP\Block\BlockInterface $block */
+        foreach($blocks as $block){
+            $block->preDispatch();
+        }
+
+        return $this;
     }
 
     /**
