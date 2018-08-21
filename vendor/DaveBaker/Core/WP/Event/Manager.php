@@ -15,20 +15,11 @@ class Manager extends \DaveBaker\Core\WP\Base
     /** @var array */
     protected $events = [];
 
-    public function __construct(
-        \DaveBaker\Core\App $app,
-        \DaveBaker\Core\WP\Option\Manager $optionManager = null
-    ) {
-        parent::__construct($app, $optionManager);
-    }
-
     /**
      * @param $eventIdentifier
      * @throws Exception
      */
     public function fire($eventIdentifier){
-        $eventIdentifier = $this->getFullEventString($eventIdentifier);
-
         if(!($events = $this->getEvents($eventIdentifier))){
             return;
         }
@@ -48,8 +39,6 @@ class Manager extends \DaveBaker\Core\WP\Base
      */
     public function register($eventIdentifier, $method = [], $args = [])
     {
-        $eventIdentifier = $this->getFullEventString($eventIdentifier);
-
         if(!$this->getEvents($eventIdentifier)){
             $this->events[$eventIdentifier] = [];
         }
@@ -76,15 +65,6 @@ class Manager extends \DaveBaker\Core\WP\Base
                 unset($events[$k]);
             }
         }
-    }
-
-    /**
-     * @param $eventString
-     * @return string
-     */
-    protected function getFullEventString($eventString)
-    {
-        return $this->getOptionManager()->getNamespace() . $eventString;
     }
 
     /**

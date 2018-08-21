@@ -17,19 +17,9 @@ abstract class Base
     protected $namespaceCode = 'default_';
 
     public function __construct(
-        \DaveBaker\Core\App $app,
-        \DaveBaker\Core\WP\Option\Manager $optionManager = null
+        \DaveBaker\Core\App $app
     ) {
         $this->app = $app;
-
-        if(!$optionManager){
-            $optionManager = $this->app->getObjectManager()->get(
-                '\DaveBaker\Core\WP\Option\Manager',
-                [$this->getOptionNamespace()]
-            );
-        }
-
-        $this->optionManager = $optionManager;
     }
 
     /**
@@ -53,20 +43,46 @@ abstract class Base
     }
 
     /**
-     * @param $event string
-     * @return string
+     * @param $optionCode string
+     * @param $value mixed
+     * @return $this
      */
-    public function getNamespacedEvent($event)
+    public function setOption($optionCode, $value)
     {
-        return $this->namespaceCode . $event;
+        $this->getOptionManager()->set($this->getNamespacedOption($optionCode), $value);
+        return $this;
     }
 
     /**
-     * @return string
+     * @param $optionCode string
+     * @return mixed|void
      */
-    public function getOptionNamespace()
+    public function getOption($optionCode)
     {
-        return $this->getApp()->getNamespace() . $this->namespaceCode;
+        return $this->getOptionManager()->get($this->getNamespacedOption($optionCode));
+    }
+
+    /**
+     * @param $event string
+     * @return string
+     *
+     * Returns, for example "layout_create"
+     */
+    public function getNamespacedEvent($event)
+    {
+        return $this->namespaceCode . "_" . $event;
+    }
+
+    /**
+     * @param $optionCode string
+     * @return string
+     *
+     * For registering namespaced options for the application, which are stored using Wordpress' option system
+     * key in the database, for example, would be "applicationname_installer_version"
+     */
+    public function getNamespacedOption($optionCode)
+    {
+        return $this->getApp()->getNamespace() . "_" . $this->namespaceCode . "_" . $optionCode;
     }
 
     /**
@@ -74,7 +90,7 @@ abstract class Base
      */
     protected function getOptionManager()
     {
-        return $this->optionManager;
+        return $this->getApp()->getOptionManager();
     }
 
     /**

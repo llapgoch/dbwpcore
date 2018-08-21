@@ -30,11 +30,9 @@ class Manager extends \DaveBaker\Core\WP\Base
 
     public function __construct(
         \DaveBaker\Core\App $app,
-        \DaveBaker\Core\WP\Option\Manager $optionManager = null,
         \DaveBaker\Core\WP\Config\ConfigInterface $config
-    )
-    {
-        parent::__construct($app, $optionManager);
+    ) {
+        parent::__construct($app);
         $this->config = $config;
     }
     
@@ -59,9 +57,7 @@ class Manager extends \DaveBaker\Core\WP\Base
             throw new Exception("post_title not set");
         }
 
-        $pageIdentifier = $this->optionManager->getNamespace() . $pageIdentifier;
-
-        if ($pageId = $this->optionManager->get($pageIdentifier)) {
+        if ($pageId = $this->getOption($pageIdentifier)) {
             /**  @var \WP_Post $post */
             $post = get_post($pageId);
 
@@ -84,7 +80,7 @@ class Manager extends \DaveBaker\Core\WP\Base
             throw new Exception("The post could not be created");
         }
 
-        $this->getOptionManager()->set($pageIdentifier, $pageId);
+        $this->setOption($pageIdentifier, $pageId);
     }
 
     /**
@@ -110,7 +106,7 @@ class Manager extends \DaveBaker\Core\WP\Base
     // TODO: Fix this
     public function getPage($pageIdentifier, $reload = false)
     {
-        $namespacedId = $this->app->getNamespacedOption($pageIdentifier);
+        $namespacedId = $this->getApp()->getNamespacedOption($pageIdentifier);
 
         if ($reload || !($page = $this->retreiveFromCache($pageIdentifier))) {
             $page = get_post($namespacedId);
@@ -154,7 +150,7 @@ class Manager extends \DaveBaker\Core\WP\Base
             return false;
         }
 
-        if($this->getOptionManager()->get($pageCode) == $this->post->ID){
+        if($this->getOption($pageCode) == $this->post->ID){
             return true;
         }
 

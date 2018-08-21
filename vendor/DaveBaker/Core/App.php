@@ -5,7 +5,6 @@ namespace DaveBaker\Core;
 class App
 {
     const DEFAULT_OBJECT_MANAGER = '\DaveBaker\Core\WP\Object\Manager';
-    const GENERAL_NAMESPACE_SUFFIX = 'general_';
 
     protected static $apps = [];
     /**
@@ -23,7 +22,7 @@ class App
     /**
      * @var WP\Option\Manager
      */
-    protected $generalOptionManager;
+    protected $optionManager;
 
     /** @var \DaveBaker\Core\WP\Installer\InstallerInterface object */
     protected $installerManager;
@@ -75,11 +74,7 @@ class App
 
         $this->pageManager = $this->getObjectManager()->get(
             '\DaveBaker\Core\WP\Page\Manager',
-            [
-                $this,
-                null,
-                $this->getObjectManager()->get('\DaveBaker\Core\WP\Config\Page')
-            ]
+            [$this, $this->getObjectManager()->get('\DaveBaker\Core\WP\Config\Page')]
         );
 
         $this->installerManager = $this->getObjectManager()->get('\DaveBaker\Core\WP\Installer\Manager', [$this]);
@@ -96,21 +91,10 @@ class App
 
         $this->layoutManager = $this->getObjectManager()->get(
             '\DaveBaker\Core\WP\Layout\Manager',
-            [
-                $this,
-                null,
-                $this->getObjectManager()->get('\DaveBaker\Core\WP\Config\Layout')
-            ]);
-
-
-        /** @var  generalOptionManager
-         * A general store for options, local versions of the option manager should be used for
-         * More localised namespacing
-         */
-        $this->generalOptionManager = $this->objectManager->get(
-            '\DaveBaker\Core\WP\Option\Manager',
-            [$this->getNamespace() . self::GENERAL_NAMESPACE_SUFFIX]
+            [$this, $this->getObjectManager()->get('\DaveBaker\Core\WP\Config\Layout')]
         );
+
+        $this->optionManager = $this->objectManager->get('\DaveBaker\Core\WP\Option\Manager');
 
         $this->getMain()->init();
         $this->addEvents();
@@ -262,12 +246,10 @@ class App
 
     /**
      * @return WP\Option\Manager
-     *
-     * Only use for general options, use more specifically namespaced versions for other options
      */
-    public function getGeneralOptionManager()
+    public function getOptionManager()
     {
-        return $this->generalOptionManager;
+        return $this->optionManager;
     }
 
 }

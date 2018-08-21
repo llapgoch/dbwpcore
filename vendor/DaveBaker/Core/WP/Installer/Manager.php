@@ -16,7 +16,7 @@ abstract class Manager extends \DaveBaker\Core\WP\Base
     {
         /** @var $config \DaveBaker\Core\WP\Config\Installer */
         $config = $this->getApp()->getObjectManager()->get('\DaveBaker\Core\WP\Config\Installer');
-        $installedVersion = $this->getOptionManager()->get(self::VERSION_OPTION);
+        $installedVersion = $this->getOption(self::VERSION_OPTION);
         $currentVersion = $config->getConfigValue(self::VERSION_OPTION);
 
         if(version_compare($currentVersion, $installedVersion, ">")){
@@ -24,7 +24,7 @@ abstract class Manager extends \DaveBaker\Core\WP\Base
                 $this->install();
 
                 // Upgrade the version in the database
-                $this->getOptionManager()->set(self::VERSION_OPTION, $currentVersion);
+                $this->setOption(self::VERSION_OPTION, $currentVersion);
             }catch (\Exception $e){
                 throw new Exception($e->getMessage(), $e->getCode());
             }

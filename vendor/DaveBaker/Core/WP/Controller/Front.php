@@ -26,10 +26,9 @@ class Front extends \DaveBaker\Core\WP\Base
     ];
 
     public function __construct(
-        \DaveBaker\Core\App $app,
-        \DaveBaker\Core\WP\Option\Manager $optionManager = null
+        \DaveBaker\Core\App $app
     ){
-        parent::__construct($app, $optionManager);
+        parent::__construct($app);
         
         $this->addEvents();
     }
