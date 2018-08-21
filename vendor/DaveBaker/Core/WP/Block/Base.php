@@ -7,13 +7,14 @@ abstract class Base extends \DaveBaker\Core\Object\Base
     protected $blockName;
     protected $orderType = '';
     protected $orderBlock;
-    protected $as = '';
     /** @var  \DaveBaker\Core\WP\Block\BlockList */
     protected $childBlocks;
     protected $app;
 
-    // Shortcodes are only used when registering blocks with the layout manager.
+    // Shortcodes and actions are only used when registering blocks with the layout manager.
     protected $shortcode = '';
+    protected $action = '';
+    protected $actionArguments = [];
 
     const ORDER_TYPE_BEFORE = "before";
     const ORDER_TYPE_AFTER = "after";
@@ -28,7 +29,6 @@ abstract class Base extends \DaveBaker\Core\Object\Base
 
         $this->blockName = $name;
         $this->app = $app;
-
         $this->childBlocks = $this->app->getBlockManager()->getBlockList();
     }
 
@@ -62,6 +62,24 @@ abstract class Base extends \DaveBaker\Core\Object\Base
     public function getShortcode()
     {
         return $this->shortcode;
+    }
+
+    /**
+     * @return string
+     */
+    public function getAction()
+    {
+        return $this->action;
+    }
+
+    /**
+     * @param $action
+     * @return $this
+     */
+    public function setAction($action)
+    {
+        $this->action = $action;
+        return $this;
     }
 
     /**
@@ -107,6 +125,22 @@ abstract class Base extends \DaveBaker\Core\Object\Base
     }
 
     /**
+     * @param $args
+     */
+    public function setActionArguments($args)
+    {
+        $this->actionArguments = $args;
+    }
+
+    /**
+     * @return array
+     */
+    public function getActionArguments()
+    {
+        return $this->actionArguments;
+    }
+
+    /**
      * @param string $blockName
      * @return string
      */
@@ -133,17 +167,9 @@ abstract class Base extends \DaveBaker\Core\Object\Base
     /**
      * @return string
      */
-    public final function render()
+    public function render()
     {
-        return $this->getChildHtml() . $this->toHtml();
-    }
-
-    /**
-     * @return string
-     */
-    public function toHtml()
-    {
-        return '';
+        return $this->getHtml() . $this->getChildHtml('');
     }
 
 
@@ -170,5 +196,15 @@ abstract class Base extends \DaveBaker\Core\Object\Base
     public function postDispatch()
     {
         return $this;
+    }
+
+    /**
+     * @return string
+     *
+     * Override this method for a baseBlock's content
+     */
+    protected function getHtml()
+    {
+        return '';
     }
 }

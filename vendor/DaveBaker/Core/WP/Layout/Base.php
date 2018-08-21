@@ -6,6 +6,7 @@ abstract class Base
 {
     /** @var  \DaveBaker\Core\WP\Layout\Manager  */
     protected $manager;
+    protected $blocks = [];
 
     /**
      * @param \DaveBaker\Core\WP\Layout\Manager $manager
@@ -31,4 +32,24 @@ abstract class Base
     {
         return $this->manager;
     }
+
+    /**
+     * @return array
+     */
+    public function getBlocks()
+    {
+        return $this->blocks;
+    }
+
+    /**
+     * @param \DaveBaker\Core\WP\Block\BlockInterface $block
+     * @return $this
+     */
+    public function addBlock(
+        \DaveBaker\Core\WP\Block\BlockInterface $block
+    ) {
+        $this->blocks[] = $block;
+        return $this;
+    }
+
 }

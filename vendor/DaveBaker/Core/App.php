@@ -137,7 +137,8 @@ class App
         add_action('wp', function(){
             $this->getLayoutManager()->registerHandles();
             $this->getMain()->registerLayouts();
-            $this->getLayoutManager()->registerShortcodes();
+
+            $this->getLayoutManager()->registerShortcodes()->registerActions();
         });
 
         add_action('shutdown', function(){

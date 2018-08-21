@@ -20,6 +20,12 @@ interface BaseInterface
     public function getOrderBlock();
     public function addChildBlock(\DaveBaker\Core\WP\Block\BlockInterface $block);
     public function getChildBlocks();
+
+    // Actions and shortcodes are only used by blocks registered with the layout manager
     public function setShortcode($shortcode);
     public function getShortcode();
+    public function getAction();
+    public function setAction($action);
+    // Any arguments which are passed from actions are set in actionArguments
+    public function setActionArguments($args);
 }
