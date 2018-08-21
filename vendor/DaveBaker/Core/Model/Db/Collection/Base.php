@@ -35,12 +35,17 @@ abstract class Base
 
     protected abstract function init();
 
+    /**
+     * @return $this
+     */
     protected function initSelect()
     {
         if(!$this->select) {
             $this->select = new \Zend_Db_Select($this->getAdapter());
             $this->select->from($this->baseObject->getTableName(), "*");
         }
+
+        return $this;
     }
 
     /**
@@ -53,12 +58,18 @@ abstract class Base
 
     /**
      * @param \Zend_Db_Adapter_Pdo_Mysql|null $adapter
+     * @return $this
      */
     public function setAdapter(\Zend_Db_Adapter_Pdo_Mysql $adapter = null)
     {
         $this->adapter = $adapter;
+
+        return $this;
     }
-    
+
+    /**
+     * @return \Zend_Db_Adapter_Pdo_Mysql
+     */
     public function getAdapter()
     {
         if(!$this->adapter){
@@ -68,16 +79,25 @@ abstract class Base
         return $this->adapter;
     }
 
+    /**
+     * @return $this
+     */
     public function reset()
     {
         $this->initSelect();
         $this->select->reset();
         $this->resetItems();
+
+        return $this;
     }
 
+    /**
+     * @return $this
+     */
     public function resetItems()
     {
         $this->items = [];
+        return $this;
     }
 
     /**
@@ -88,6 +108,9 @@ abstract class Base
         return $this->items;
     }
 
+    /**
+     * @return array
+     */
     public function load()
     {
         $this->initSelect();

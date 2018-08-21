@@ -7,7 +7,7 @@ class Registry
     static protected $globalZendAdapter;
 
     /**
-     * @return Zend_Db_Adapter_Pdo_Mysql
+     * @return \Zend_Db_Adapter_Pdo_Mysql
      */
     public static function getGlobalZendAdapter()
     {

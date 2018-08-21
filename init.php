@@ -24,20 +24,19 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 session_start();
-
 require_once("bootstrap.php");
 
-// Create the app locally in the core module's initialisation:
-// This allows for an alternative defaults object to be used, and namespacing local to the plugin
-// $NAMESPACE_CORE_APP = new DaveBaker\Core\App('namespace');
+/*
+Create the app locally in the core module's initialisation:
+This allows for an alternative defaults object to be used, and namespacing local to the plugin
 
-/* To use with custom objects and defaults, use the following, where the config object merges its own config:
+ To use with custom objects and defaults, use the following, where the config object merges its own config:
 
-add_action('plugins_loaded', function(){
-    $app = new DaveBaker\Core\App('namespace',
-         new \DaveBaker\Core\WP\Object\Manager(
-            new \Namespace\Plugin\WP\Config\Object
-        )
-    );
+new DaveBaker\Core\App(
+    "custom_application_namespace",
+    new \Namespace\Application\Main,
+    new \DaveBaker\Core\WP\Object\Manager(
+        new \SuttonBaker\Impresario\WP\Config\Object
+    )
 );
 */

@@ -1,7 +1,7 @@
 <?php
 
 namespace DaveBaker\Core\Object;
-
+// TODO: Refactor
 class Base
 {
 

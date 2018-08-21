@@ -68,6 +68,9 @@ abstract class Base extends \DaveBaker\Core\Object\Base
         return $this->wpdb->base_prefix . $this->tableName;
     }
 
+    /**
+     * @return $this|void
+     */
     public function delete()
     {
         if(!$this->getId()){
@@ -80,8 +83,14 @@ abstract class Base extends \DaveBaker\Core\Object\Base
         );
 
         $this->unsetData();
+
+        return $this;
     }
 
+    /**
+     * @return $this|void
+     * @throws Exception
+     */
     public function save()
     {
         if(!$this->getData()){
@@ -98,8 +107,14 @@ abstract class Base extends \DaveBaker\Core\Object\Base
         } catch (\Exception $e){
             throw new Exception($e->getMessage(), $e->getCode());
         }
+
+        return $this;
     }
 
+    /**
+     * @return $this
+     * @throws Exception
+     */
     protected function insertSave()
     {
         $res = $this->wpdb->insert(
@@ -112,8 +127,13 @@ abstract class Base extends \DaveBaker\Core\Object\Base
         }
 
         $this->setData($this->idColumn, $this->wpdb->insert_id);
+
+        return $this;
     }
 
+    /**
+     * @return $this
+     */
     protected function updateSave()
     {
         $this->wpdb->update(
@@ -121,6 +141,8 @@ abstract class Base extends \DaveBaker\Core\Object\Base
             $this->getTableSaveData(),
             [$this->idColumn => $this->getId()]
         );
+
+        return $this;
     }
 
     /**
@@ -133,16 +155,20 @@ abstract class Base extends \DaveBaker\Core\Object\Base
 
     /**
      * @param \stdClass $data
+     * @return $this
      */
     public function setObjectData(\stdClass $data)
     {
         foreach(get_object_vars($data) as $k=>$d){
             $this->setData($k, $d);
         }
+
+        return $this;
     }
 
     /**
      * @param bool $force
+     * @return $this
      *
      * TODO: Add caching to this
      */
@@ -163,5 +189,6 @@ abstract class Base extends \DaveBaker\Core\Object\Base
             ];
         }
 
+        return $this;
     }
 }
