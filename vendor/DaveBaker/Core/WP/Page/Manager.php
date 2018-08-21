@@ -103,7 +103,6 @@ class Manager extends \DaveBaker\Core\WP\Base
      * @param bool $reload
      * @return null|\WP_Post
      */
-    // TODO: Fix this
     public function getPage($pageIdentifier, $reload = false)
     {
         $namespacedId = $this->getApp()->getNamespacedOption($pageIdentifier);
@@ -128,13 +127,11 @@ class Manager extends \DaveBaker\Core\WP\Base
      * @param $pageIdentifier
      * @return mixed|null
      */
-    // TODO: Fix This
+
     protected function retreiveFromCache($pageIdentifier)
     {
-        $option = $this->getApp()->getNamespacedOption($pageIdentifier);
-
-        if(isset($this->pageCache[$option])){
-            return $this->pageCache[$option];
+        if(isset($this->pageCache[$pageIdentifier])){
+            return $this->pageCache[$pageIdentifier];
         }
 
         return null;
@@ -144,7 +141,6 @@ class Manager extends \DaveBaker\Core\WP\Base
      * @param $pageCode
      * @return bool
      */
-    // TODO: Fix this
     public function isOnPage($pageCode){
         if(!$this->getCurrentPost()){
             return false;
