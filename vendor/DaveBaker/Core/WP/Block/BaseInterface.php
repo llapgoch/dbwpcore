@@ -2,7 +2,7 @@
 
 namespace DaveBaker\Core\WP\Block;
 
-interface BaseInterface
+interface BaseInterface extends \DaveBaker\Core\WP\BaseInterface
 {
     /* When the block is first created */
     public function init();

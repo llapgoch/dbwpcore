@@ -9,6 +9,8 @@ class BlockList implements \IteratorAggregate, \Countable
     protected $isOrdered = false;
     /**  @var \DaveBaker\Core\WP\Page\Manager */
     protected $pageManager;
+    /** @var \DaveBaker\Core\App  */
+    protected $app;
 
     public function __construct(
         \DaveBaker\Core\App $app
@@ -134,21 +136,21 @@ class BlockList implements \IteratorAggregate, \Countable
                 $orderBlock = $this->blocks[$block->getOrderBlock()];
 
                 if($block->getOrderType() == 'before'){
-                    $block->setIndex($orderBlock->getIndex() - 1);
+                    $block->setData('index', $orderBlock->getIndex() - 1);
 
                     foreach($this->blocks as $blockReorder){
                         if($blockReorder->getIndex() <  $orderBlock->getIndex()){
-                            $blockReorder->setIndex($blockReorder->getIndex() - 1);
+                            $blockReorder->setData('index', $blockReorder->getIndex() - 1);
                         }
                     }
                 }
 
                 if($block->getOrderType() == 'after'){
-                    $block->setIndex($orderBlock->getIndex() + 1);
+                    $block->setData('index', $orderBlock->getIndex() + 1);
 
                     foreach($this->blocks as $blockReorder){
-                        if($blockReorder->getIndex() >  $orderBlock->getIndex()){
-                            $blockReorder->setIndex($blockReorder->getIndex() + 1);
+                        if($blockReorder->getData('index') >  $orderBlock->getIndex()){
+                            $blockReorder->setData('index', $blockReorder->getIndex() + 1);
                         }
                     }
                 }
@@ -156,21 +158,21 @@ class BlockList implements \IteratorAggregate, \Countable
 
             if($block->getOrderBlock() === ''){
                 if($block->getOrderType() == 'before'){
-                    $block->setIndex($lowest - 10);
+                    $block->setData('index', $lowest - 10);
                 }
 
                 if($block->getOrderType() == 'after'){
-                    $block->setIndex($highest + 10);
+                    $block->setData('index', $highest + 10);
                 }
             }
 
-            $lowest = min($block->getIndex(), $lowest);
-            $highest = max($block->getIndex(), $highest);
+            $lowest = min($block->getData('index'), $lowest);
+            $highest = max($block->getData('index'), $highest);
         }
 
         $ordered = [];
         foreach($this->blocks as $block){
-            $ordered[$block->getIndex()] = $block;
+            $ordered[$block->getData('index')] = $block;
         }
 
         ksort($ordered);

@@ -37,7 +37,7 @@ class Request
      */
     public function setParam($key, $value)
     {
-        $this->params[self::CUSTOM] = $value;
+        $this->params[self::CUSTOM][$key] = $value;
         return $this;
     }
 

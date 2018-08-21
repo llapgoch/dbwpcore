@@ -24,23 +24,7 @@ class Manager extends \DaveBaker\Core\WP\Base
         
         $this->registerTemplatePaths();
     }
-
-
-    /**
-     * @param $directory
-     * @return $this
-     * @throws Exception
-     */
-    public function addTemplateDirectory($directory)
-    {
-        if(!file_exists($directory)){
-            throw new Exception("Tempate directory '{$directory}' not found.");
-        }
-        $this->templateDirectories = $directory;
-
-        return $this;
-    }
-
+    
     /**
      * @return $this
      */
@@ -79,15 +63,20 @@ class Manager extends \DaveBaker\Core\WP\Base
             $layouts = [$layouts];
         }
 
-        /** @var \DaveBaker\Core\WP\Layout\Base $layout */
+        /** @var string $layout */
         foreach($layouts as $layout){
             try{
+                /** @var \DaveBaker\Core\WP\Layout\Base $layoutInstance */
                 $layoutInstance = $this->getApp()->getObjectManager()->get($layout, [$this->getApp()]);
+
+                if(!$layoutInstance instanceof \DaveBaker\Core\WP\Layout\Base){
+                    throw new Exception('Layout is of incorrect type');
+                }
+
+                $this->registerLayout($layoutInstance);
             } catch (\Exception $e){
                 throw new Exception($e->getMessage(), $e->getCode());
             }
-
-            $this->registerLayout($layoutInstance);
         }
     }
 
@@ -197,9 +186,9 @@ class Manager extends \DaveBaker\Core\WP\Base
         $util = $this->getApp()->getHelper('Util');
 
         foreach(get_class_methods($layout) as $method) {
-            if (preg_match("/Action$/", $method)) {
+            if (preg_match("/Handle/", $method)) {
                 $handleTag = $util->camelToUnderscore($method);
-                $handleTag = preg_replace("/_action$/", "", $handleTag);
+                $handleTag = preg_replace("/_handle$/", "", $handleTag);
 
                 if (!in_array($handleTag, $this->getApp()->getHandleManager()->getHandles())) {
                     continue;
@@ -290,7 +279,6 @@ class Manager extends \DaveBaker\Core\WP\Base
         return $this;
     }
 
-
     /**
      * @param $shortcode string
      * @return \DaveBaker\Core\WP\Block\BlockList
@@ -298,7 +286,7 @@ class Manager extends \DaveBaker\Core\WP\Base
      */
     protected function getBlocksForShortcode($shortcode){
         /** @var \DaveBaker\Core\WP\Block\BlockList $blockList */
-        $blockList = $this->getApp()->getBlockManager()->getBlockList();
+        $blockList = $this->getApp()->getBlockManager()->createBlockList();
 
         if(isset($this->shortcodeBlocks[$shortcode])){
             $blockList->add($this->shortcodeBlocks[$shortcode]);
@@ -318,7 +306,7 @@ class Manager extends \DaveBaker\Core\WP\Base
      */
     protected function getBlocksForAction($action){
         /** @var \DaveBaker\Core\WP\Block\BlockList $blockList */
-        $blockList = $this->getApp()->getBlockManager()->getBlockList();
+        $blockList = $this->getApp()->getBlockManager()->createBlockList();
 
         if(isset($this->actionBlocks[$action])){
             $blockList->add($this->actionBlocks[$action]);

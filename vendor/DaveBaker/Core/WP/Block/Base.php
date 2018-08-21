@@ -29,9 +29,13 @@ abstract class Base extends \DaveBaker\Core\Object\Base
 
         $this->blockName = $name;
         $this->app = $app;
-        $this->childBlocks = $this->app->getBlockManager()->getBlockList();
+        $this->childBlocks = $this->app->getBlockManager()->createBlockList();
     }
 
+    /**
+     * @param BlockInterface $block
+     * @return $this
+     */
     public function addChildBlock(
         \DaveBaker\Core\WP\Block\BlockInterface $block
     ) {
@@ -48,7 +52,8 @@ abstract class Base extends \DaveBaker\Core\Object\Base
     }
 
     /**
-     * @return boolean
+     * @param $shortcode
+     * @return $this
      */
     public function setShortcode($shortcode)
     {
@@ -83,12 +88,12 @@ abstract class Base extends \DaveBaker\Core\Object\Base
     }
 
     /**
-     * @param $type
-     * @param $blockName
+     * @param $type string
+     * @param $blockName string
      * @return $this
      * @throws Exception
      */
-    public function setOrder($type = self::ORDER_TYPES_BEFORE, $blockName)
+    public function setOrder($type, $blockName)
     {
         if(!in_array($type, [self::ORDER_TYPE_AFTER, self::ORDER_TYPE_BEFORE])){
             throw new Exception("Invalid order set");
@@ -157,6 +162,8 @@ abstract class Base extends \DaveBaker\Core\Object\Base
         }
 
         $html = '';
+
+        /** @var \DaveBaker\Core\WP\Block\BlockInterface $block */
         foreach($this->getChildBlocks() as $block){
             $html .= $block->render();
         }
@@ -172,11 +179,14 @@ abstract class Base extends \DaveBaker\Core\Object\Base
         return $this->getHtml() . $this->getChildHtml('');
     }
 
-
+    /**
+     * @return $this
+     */
     public function init()
     {
         return $this;
     }
+
     /**
      * @return $this
      */

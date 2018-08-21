@@ -15,7 +15,7 @@ class Manager
         \DaveBaker\Core\App $app
     ){
         $this->app = $app;
-        $this->blockList = $this->getBlockList();
+        $this->blockList = $this->createBlockList();
     }
 
     /**
@@ -68,7 +68,7 @@ class Manager
      * @return \DaveBaker\Core\WP\Block\BlockList
      * @throws \DaveBaker\Core\WP\Object\Exception
      */
-    public function getBlockList()
+    public function createBlockList()
     {
         return $this->app->getObjectManager()->get('\DaveBaker\Core\WP\Block\BlockList', [$this->app]);
     }

@@ -40,11 +40,7 @@ class Manager extends \DaveBaker\Core\WP\Base
         if($pageManager->isOnRegisterPage()){
             $this->handles[] = 'register';
         }
-
-        var_dump($pageManager->isOnRegisterPage());
-
-        var_dump($this->handles);
-
+        
         return $this;
     }
 

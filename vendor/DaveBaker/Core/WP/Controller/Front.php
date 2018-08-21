@@ -13,7 +13,7 @@ namespace DaveBaker\Core\WP\Controller;
 
 class Front extends \DaveBaker\Core\WP\Base
 {
-    /** @var  WP_Post */
+    /** @var  \WP_Post */
     protected $post;
     protected $namespaceSuffix = "controller_";
 
@@ -31,6 +31,9 @@ class Front extends \DaveBaker\Core\WP\Base
         $this->addEvents();
     }
 
+    /**
+     * @return $this
+     */
     protected function addEvents()
     {
         foreach($this->eventRegisters as $eventRegister) {
@@ -39,8 +42,14 @@ class Front extends \DaveBaker\Core\WP\Base
                 'fireEventForPost',
             ]);
         }
+
+        return $this;
     }
 
+    /**
+     * @return $this
+     * @throws \DaveBaker\WP\Event\Exception
+     */
     public function fireEventForPost()
     {
         global $post;
