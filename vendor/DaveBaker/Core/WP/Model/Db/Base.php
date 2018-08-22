@@ -7,6 +7,8 @@ abstract class Base
     implements \DaveBaker\Core\WP\Model\Db\BaseInterface
 {
     const MODEL_NAMESPACE = 'model';
+    const DEFAULT_CREATED_AT_COLUMN = 'created_at';
+    const DEFAULT_UPDATED_AT_COLUMN = 'updated_at';
 
     protected $tableName;
     protected $idColumn;
@@ -139,11 +141,19 @@ abstract class Base
      */
     protected function insertSave()
     {
+        if(!($data = $this->getTableSaveData())){
+            return $this;
+        }
+
         $this->fireEvent('before_insert_save');
+
+        if($this->isDateTime(self::DEFAULT_CREATED_AT_COLUMN)){
+            $data[self::DEFAULT_CREATED_AT_COLUMN] = current_time('mysql');
+        }
 
         $res = $this->getDb()->insert(
             $this->getTableName(),
-            $this->getTableSaveData()
+            $data
         );
 
         if(!$res){
@@ -162,11 +172,21 @@ abstract class Base
      */
     protected function updateSave()
     {
+        if(!($data = $this->getTableSaveData())){
+            return $this;
+        }
+
         $this->fireEvent('before_update_save');
+
+        var_dump($this->isDateTime(self::DEFAULT_UPDATED_AT_COLUMN));
+
+        if($this->isDateTime(self::DEFAULT_UPDATED_AT_COLUMN)){
+            $data[self::DEFAULT_UPDATED_AT_COLUMN] = current_time('mysql');
+        }
 
         $this->getDb()->update(
             $this->getTableName(),
-            $this->getTableSaveData(),
+            $data,
             [$this->idColumn => $this->getId()]
         );
 
@@ -176,11 +196,26 @@ abstract class Base
     }
 
     /**
+     * @param $column string
+     * @return bool
+     */
+    protected function isDateTime($column)
+    {
+        $schema = $this->getSchema();
+
+        if(!isset($schema[$column])){
+            return false;
+        }
+
+        return $schema[$column]['type'] == 'datetime';
+    }
+
+    /**
      * @return array
      */
     protected function getTableSaveData()
     {
-        return array_intersect_key($this->getData(), $this->schema);
+        return array_intersect_key($this->getData(), $this->getSchema());
     }
 
     /**
@@ -225,23 +260,21 @@ abstract class Base
      *
      * TODO: Add caching to this
      */
-    protected function loadSchema($force = false)
+    protected function getSchema($force = false)
     {
-        if($this->schema && !$force){
-            return;
+        if(!$this->schema || $force) {
+            $rows = $this->getDb()->get_results(
+                "SHOW COLUMNS FROM {$this->getTableName()}"
+            );
+
+            foreach ($rows as $row) {
+                $type = explode("(", $row->Type);
+                $this->schema[$row->Field] = [
+                    "type" => $type[0]
+                ];
+            }
         }
 
-        $rows = $this->getDb()->get_results(
-            "SHOW COLUMNS FROM {$this->getTableName()}"
-        );
-
-        foreach($rows as $row){
-            $type = explode("(", $row->Type);
-            $this->schema[$row->Field] = [
-                "type" => $type[0]
-            ];
-        }
-
-        return $this;
+        return $this->schema;
     }
 }

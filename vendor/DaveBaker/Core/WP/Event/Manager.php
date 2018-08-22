@@ -80,6 +80,9 @@ class Manager extends \DaveBaker\Core\WP\Base
         $this->events[$eventIdentifier][] = [
             "callback" => $callback
         ];
+
+        // Also add to Wordpress' filter system
+        add_filter($eventIdentifier, $callback);
     }
 
     /**
