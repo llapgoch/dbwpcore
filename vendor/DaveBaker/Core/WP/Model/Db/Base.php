@@ -177,9 +177,7 @@ abstract class Base
         }
 
         $this->fireEvent('before_update_save');
-
-        var_dump($this->isDateTime(self::DEFAULT_UPDATED_AT_COLUMN));
-
+        
         if($this->isDateTime(self::DEFAULT_UPDATED_AT_COLUMN)){
             $data[self::DEFAULT_UPDATED_AT_COLUMN] = current_time('mysql');
         }
