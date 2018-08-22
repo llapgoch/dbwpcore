@@ -14,6 +14,7 @@ class Manager extends \DaveBaker\Core\WP\Base
     protected $namespaceCode = "event";
     /** @var array */
     protected $events = [];
+    protected $context;
 
     /**
      * @param array $eventIdentifiers
@@ -24,10 +25,14 @@ class Manager extends \DaveBaker\Core\WP\Base
      */
     public function fire($eventIdentifiers = [], $args = [])
     {
-        $context = $this->getApp()->getObjectManager()->get('\DaveBaker\Core\WP\Event\Context', [$this->getApp()]);
+        if(!$this->context) {
+            $this->context = $this->getApp()->getObjectManager()->get('\DaveBaker\Core\WP\Event\Context', [$this->getApp()]);
+        }
+
+        $this->context->unsetData();
 
         foreach($args as $k => $arg){
-            $context->setData($k, $arg);
+            $this->context->setData($k, $arg);
         }
 
         if(!is_array($eventIdentifiers)){
@@ -36,19 +41,19 @@ class Manager extends \DaveBaker\Core\WP\Base
 
         foreach($eventIdentifiers as $eventIdentifier) {
             if (!($events = $this->getEvents($eventIdentifier))) {
-                return $context;
+                return $this->context;
             }
 
             try {
                 foreach ($events as $event) {
-                    call_user_func($event['callback'], $context);
+                    call_user_func($event['callback'], $this->context);
                 }
             } catch (\Exception $e) {
                 throw new Exception($e->getMessage(), $e->getCode());
             }
         }
 
-        return $context;
+        return $this->context;
     }
 
     /**
