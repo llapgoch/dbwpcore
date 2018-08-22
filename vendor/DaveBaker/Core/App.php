@@ -64,37 +64,13 @@ class App
 
         $this->registerApp($this->namespace, $this);
         $this->main->setApp($this);
-        
 
         // For any singleton objects, they'll be stored against the namespace, allowing for multiple
         // singletons across different app definitions
         $this->objectManager->setNamespace($this->getNamespace());
 
-        $this->pageManager = $this->getObjectManager()->get(
-            '\DaveBaker\Core\WP\Page\Manager',
-            [$this, $this->getObjectManager()->get('\DaveBaker\Core\WP\Config\Page')]
-        );
-
-        $this->installerManager = $this->getObjectManager()->get('\DaveBaker\Core\WP\Installer\Manager', [$this]);
-
-        if(!$this->installerManager instanceof \DaveBaker\Core\WP\Installer\InstallerInterface){
-            throw new \DaveBaker\Core\WP\App\Exception("Installer Manager must implement InstallerInterface");
-        }
-
-        $this->handleManager = $this->getObjectManager()->get('\DaveBaker\Core\WP\Layout\Handle\Manager', [$this]);
-        $this->eventManager = $this->getObjectManager()->get('\DaveBaker\Core\WP\Event\Manager', [$this]);
-        $this->controllerManager = $this->getObjectManager()->get('\DaveBaker\Core\WP\Controller\Manager', [$this]);
-        $this->blockManager = $this->getObjectManager()->get('\DaveBaker\Core\WP\Block\Manager', [$this]);
-        $this->request = $this->getObjectManager()->get('\DaveBaker\Core\WP\App\Request', [$this]);
-
-        $this->layoutManager = $this->getObjectManager()->get(
-            '\DaveBaker\Core\WP\Layout\Manager',
-            [$this, $this->getObjectManager()->get('\DaveBaker\Core\WP\Config\Layout')]
-        );
-
-        $this->optionManager = $this->objectManager->get('\DaveBaker\Core\WP\Option\Manager');
-
         $this->getMain()->init();
+
         $this->addEvents();
     }
 
@@ -178,7 +154,7 @@ class App
      */
     protected function install()
     {
-        $this->installerManager->checkInstall();
+        $this->getInstallerManager()->checkInstall();
     }
 
     /**
@@ -211,6 +187,10 @@ class App
      */
     public function getBlockManager()
     {
+        if(!$this->blockManager){
+            $this->blockManager = $this->getObjectManager()->get('\DaveBaker\Core\WP\Block\Manager', [$this]);
+        }
+
         return $this->blockManager;
     }
 
@@ -219,6 +199,10 @@ class App
      */
     public function getEventManager()
     {
+        if(!$this->eventManager){
+            $this->eventManager = $this->getObjectManager()->get('\DaveBaker\Core\WP\Event\Manager', [$this]);
+        }
+
         return $this->eventManager;
     }
 
@@ -227,6 +211,13 @@ class App
      */
     public function getPageManager()
     {
+        if(!$this->pageManager){
+            $this->pageManager = $this->getObjectManager()->get(
+                '\DaveBaker\Core\WP\Page\Manager',
+                [$this, $this->getObjectManager()->get('\DaveBaker\Core\WP\Config\Page')]
+            );
+        }
+
         return $this->pageManager;
     }
 
@@ -243,6 +234,13 @@ class App
      */
     public function getLayoutManager()
     {
+        if(!$this->layoutManager){
+            $this->layoutManager = $this->getObjectManager()->get(
+                '\DaveBaker\Core\WP\Layout\Manager',
+                [$this, $this->getObjectManager()->get('\DaveBaker\Core\WP\Config\Layout')]
+            );
+        }
+
         return $this->layoutManager;
     }
 
@@ -251,14 +249,28 @@ class App
      */
     public function getHandleManager()
     {
+        if(!$this->handleManager) {
+            $this->handleManager = $this->handleManager = $this->getObjectManager()->get('\DaveBaker\Core\WP\Layout\Handle\Manager', [$this]);
+        }
+
         return $this->handleManager;
     }
 
+
     /**
      * @return WP\Installer\InstallerInterface
+     * @throws WP\App\Exception
+     * @throws WP\Object\Exception
      */
     public function getInstallerManager()
     {
+        if(!$this->installerManager){
+            $this->installerManager = $this->getObjectManager()->get('\DaveBaker\Core\WP\Installer\Manager', [$this]);
+
+            if(!$this->installerManager instanceof \DaveBaker\Core\WP\Installer\InstallerInterface){
+                throw new \DaveBaker\Core\WP\App\Exception("Installer Manager must implement InstallerInterface");
+            }
+        }
         return $this->installerManager;
     }
 
@@ -267,6 +279,10 @@ class App
      */
     public function getRequest()
     {
+        if(!$this->request){
+            $this->request = $this->getObjectManager()->get('\DaveBaker\Core\WP\App\Request', [$this]);
+        }
+
         return $this->request;
     }
 
@@ -275,6 +291,10 @@ class App
      */
     public function getOptionManager()
     {
+        if(!$this->optionManager){
+            $this->optionManager = $this->objectManager->get('\DaveBaker\Core\WP\Option\Manager', [$this]);
+        }
+
         return $this->optionManager;
     }
 
@@ -283,6 +303,10 @@ class App
      */
     public function getContollerManager()
     {
+        if(!$this->controllerManager){
+            $this->controllerManager = $this->getObjectManager()->get('\DaveBaker\Core\WP\Controller\Manager', [$this]);
+        }
+
         return $this->controllerManager;
     }
 

@@ -2,29 +2,33 @@
 
 namespace DaveBaker\Core\WP\Option;
 
-class Manager
+class Manager extends \DaveBaker\Core\WP\Base
 {
     /**
-     * @param $option
+     * @param $optionId
      * @param null $default
-     * @return mixed|void
+     * @return mixed
      */
-    public function get($option, $default = null){
-        return get_option($option, $default);
+    public function get($optionId, $default = null){
+        $option = get_option($optionId, $default);
+        $context = $this->fireEvent('get_option', ['option' => $optionId, 'option_value' => $option]);
+        return $context->getOptionValue();
     }
 
     /**
-     * @param $option
+     * @param $optionId
      * @param $value
      */
-    public function set($option, $value){
-        update_option($option, $value);
+    public function set($optionId, $value){
+        $context = $this->fireEvent('set_option', ['option'=>$optionId, 'option_value' => $value]);
+        update_option($optionId, $context->getOptionValue());
     }
 
     /**
      * @param $option
      */
     public function remove($option){
+        $this->fireEvent('remove_option', ['option' => 'option']);
         delete_option($option);
     }
 }

@@ -23,10 +23,6 @@ class Manager extends \DaveBaker\Core\WP\Base
 
         $pageManager = $this->getApp()->getPageManager();
 
-        if($handles = $this->getEventManager()->fire('register_handles')){
-            array_merge($this->handles, $handles);
-        }
-
         // Add page handle
         $post = $pageManager->getCurrentPost();
 
@@ -46,6 +42,9 @@ class Manager extends \DaveBaker\Core\WP\Base
         if($pageManager->isOnRegisterPage()){
             $this->handles[] = 'register';
         }
+
+        $context = $this->fireEvent('register_handles', ['handles' => $this->handles]);
+        $this->handles = $context->getHandles();
 
         return $this;
     }

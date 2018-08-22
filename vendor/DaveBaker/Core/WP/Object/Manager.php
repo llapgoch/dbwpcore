@@ -57,7 +57,7 @@ class Manager extends \DaveBaker\Core\WP\Base
         if(!$model instanceof \DaveBaker\Core\WP\Model\Db\Base){
             throw new Exception('Created DB Model is not compatible with Base Model');
         }
-
+        
         return $model;
     }
 
@@ -112,11 +112,13 @@ class Manager extends \DaveBaker\Core\WP\Base
      */
     protected function getDefinition($identifier)
     {
+        $definition = false;
+
         if(isset($this->getDefaults()[$identifier])){
-            return $this->getDefaults()[$identifier];
+            $definition = $this->getDefaults()[$identifier];
         }
 
-        return false;
+        return $definition;
     }
 
     /**

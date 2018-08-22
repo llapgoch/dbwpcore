@@ -16,56 +16,96 @@ class Manager extends \DaveBaker\Core\WP\Base
     protected $events = [];
 
     /**
-     * @param $eventIdentifier
+     * @param array $eventIdentifiers
+     * @param array $args
+     * @return Context
      * @throws Exception
+     * @throws \DaveBaker\Core\WP\Object\Exception
      */
-    public function fire($eventIdentifier){
-        if(!($events = $this->getEvents($eventIdentifier))){
-            return;
+    public function fire($eventIdentifiers = [], $args = [])
+    {
+        $context = $this->getApp()->getObjectManager()->get('\DaveBaker\Core\WP\Event\Context', [$this->getApp()]);
+
+        foreach($args as $k => $arg){
+            $context->setData($k, $arg);
         }
 
-        try {
-            foreach ($events as $event) {
-                call_user_func($event['method'], $event['args']);
-            }
-        }catch (\Exception $e){
-            throw new Exception($e->getMessage(), $e->getCode());
+        if(!is_array($eventIdentifiers)){
+            $eventIdentifiers = [$eventIdentifiers];
         }
+
+        foreach($eventIdentifiers as $eventIdentifier) {
+            if (!($events = $this->getEvents($eventIdentifier))) {
+                return $context;
+            }
+
+            try {
+                foreach ($events as $event) {
+                    call_user_func($event['callback'], $context);
+                }
+            } catch (\Exception $e) {
+                throw new Exception($e->getMessage(), $e->getCode());
+            }
+        }
+
+        return $context;
     }
 
     /**
      * @param $eventIdentifier
-     * @param $method
+     * @param array $callback
+     * @param bool $allowMultiples
+     * $callback should be an array of class, method, or an anonymous function
      */
-    public function register($eventIdentifier, $method = [], $args = [])
+    public function add($eventIdentifier, $callback = [], $allowMultiples = false)
     {
         if(!$this->getEvents($eventIdentifier)){
             $this->events[$eventIdentifier] = [];
         }
 
-        $this->events[$eventIdentifier][] = [
-            "method" => $method,
-            "args" => $args
-        ];
+        if(!$allowMultiples) {
+            foreach ($this->events[$eventIdentifier] as $event) {
+                // Event has already been added
+                if ($event['callback'] == $callback) {
+                    return;
+                }
+            }
+        }
 
+        $this->events[$eventIdentifier][] = [
+            "callback" => $callback
+        ];
     }
 
     /**
-     * @param $eventIdentifier
-     * @param $method
+     * @param $eventIdentifier string
+     * @param $callback array|bool
+     * @return $this
      */
-    public function unregister($eventIdentifier, $method)
+    public function remove($eventIdentifier, $callback = false)
     {
-        if(!($events = &$this->getEvents($eventIdentifier))){
-            return;
+        if(!isset($this->events[$eventIdentifier])){
+            return $this;
         }
 
-        foreach($events as $k => $event){
-            if($event === $method){
-                unset($events[$k]);
+        if(!$callback){
+            unset($this->events[$eventIdentifier]);
+            return $this;
+        }
+
+        foreach($this->events[$eventIdentifier] as $k => $event){
+            if ($event['callback'] == $callback) {
+                unset($this->events[$eventIdentifier][$k]);
             }
         }
+
+        return $this;
     }
+
+    // Override with stubs, these methods exist in the base class
+    public function fireEvent($event, $params = []){}
+    public function addEvent($event, $callback, $allowMultiples = false){}
+    public function removeEvent($event, $callback = false){}
 
     /**
      * @param $eventIdentifier

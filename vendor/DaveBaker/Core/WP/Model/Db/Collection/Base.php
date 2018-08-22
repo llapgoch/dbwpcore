@@ -15,14 +15,9 @@ abstract class Base extends \DaveBaker\Core\WP\Base
     protected $items = [];
     protected $select;
     protected $adapter;
-
-    protected $namespaceCode = 'collection';
-
-    public function __construct()
+    
+    public function _construct()
     {
-        global $wpdb;
-        $this->wpdb = $wpdb;
-
         $this->init();
 
         if(!$this->dbClass){
@@ -34,6 +29,8 @@ abstract class Base extends \DaveBaker\Core\WP\Base
         } catch (\Exception $e){
             throw new Exception($e->getMessage(), $e->getCode());
         }
+
+        $this->fireEvent('create');
     }
 
     protected abstract function init();
@@ -87,19 +84,12 @@ abstract class Base extends \DaveBaker\Core\WP\Base
      */
     public function reset()
     {
+        $this->fireEvent('before_reset');
         $this->initSelect();
         $this->select->reset();
         $this->resetItems();
+        $this->fireEvent('after_reset');
 
-        return $this;
-    }
-
-    /**
-     * @return $this
-     */
-    public function resetItems()
-    {
-        $this->items = [];
         return $this;
     }
 
@@ -118,7 +108,7 @@ abstract class Base extends \DaveBaker\Core\WP\Base
     public function getNamespacedEvent($event)
     {
         return self::COLLECTION_NAMESPACE .
-            "_" . $this->namespaceCode .
+            "_" . $this->baseObject->getTableName() .
             "_" . $event;
     }
 
@@ -130,7 +120,7 @@ abstract class Base extends \DaveBaker\Core\WP\Base
     {
         return $this->getApp()->getNamespace() .
             "_" . self::COLLECTION_NAMESPACE .
-            "_" .$this->namespaceCode .
+            "_" . $this->baseObject->getTableName() .
             "_" . $optionCode;
     }
 
@@ -139,6 +129,7 @@ abstract class Base extends \DaveBaker\Core\WP\Base
      */
     public function load()
     {
+        $this->fireEvent('before_load');
         $this->initSelect();
 
         $results = $this->wpdb->get_results($this->select->assemble());
@@ -150,7 +141,18 @@ abstract class Base extends \DaveBaker\Core\WP\Base
             $this->items[] = $item;
         }
 
+        $this->fireEvent('after_load');
+
         return $this->items;
+    }
+
+    /**
+     * @return $this
+     */
+    protected function resetItems()
+    {
+        $this->items = [];
+        return $this;
     }
 
 }

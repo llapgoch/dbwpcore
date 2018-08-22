@@ -4,19 +4,30 @@ namespace DaveBaker\Core\WP\Block;
 
 abstract class Base extends \DaveBaker\Core\WP\Object\Base
 {
+    protected $namespaceCode = 'block';
+    /** @var string  */
     protected $blockName;
+    /** @var string  */
     protected $orderType = '';
+    /** @var   */
     protected $orderBlock;
     /** @var  \DaveBaker\Core\WP\Block\BlockList */
     protected $childBlocks;
+    /** @var \DaveBaker\Core\App  */
     protected $app;
 
     // Shortcodes and actions are only used when registering blocks with the layout manager.
+    /** @var string  */
     protected $shortcode = '';
+    /** @var string  */
     protected $action = '';
+    /** @var array  */
     protected $actionArguments = [];
+    /** @var bool  */
     protected $isPreDispatched = false;
+    /** @var bool  */
     protected $isPostDispatched = false;
+    /** @var bool  */
     protected $rendered = false;
 
     const ORDER_TYPE_BEFORE = "before";
@@ -33,6 +44,8 @@ abstract class Base extends \DaveBaker\Core\WP\Object\Base
         $this->blockName = $name;
         $this->app = $app;
         $this->childBlocks = $this->app->getBlockManager()->createBlockList();
+
+        $this->fireEvent('create');
     }
 
     /**
@@ -105,6 +118,8 @@ abstract class Base extends \DaveBaker\Core\WP\Object\Base
         $this->orderBlock = (string) $blockName;
         $this->orderType = (string) $type;
 
+        $this->fireEvent('order', ['type' => $type, 'blockName' => $blockName]);
+
         return $this;
     }
 
@@ -130,6 +145,18 @@ abstract class Base extends \DaveBaker\Core\WP\Object\Base
     public function getName()
     {
         return $this->blockName;
+    }
+
+    /**
+     * @param string $event
+     * @return array
+     */
+    public function getNamespacedEvent($event)
+    {
+        $blockName = str_replace(".", "_", $this->getName());
+        $eventName = parent::getNamespacedEvent($event);
+
+        return [$eventName, $eventName . "_" . $blockName];
     }
 
     /**
@@ -170,8 +197,9 @@ abstract class Base extends \DaveBaker\Core\WP\Object\Base
         foreach($this->getChildBlocks() as $block){
             $html .= $block->render();
         }
-
-        return $html;
+        
+        $context = $this->fireEvent('getchildhtml', ['html' => $html]);
+        return $context->getHtml();
     }
 
     /**
@@ -180,7 +208,12 @@ abstract class Base extends \DaveBaker\Core\WP\Object\Base
     public function render()
     {
         $this->rendered = true;
-        return $this->getHtml() . $this->getChildHtml('');
+        $context = $this->fireEvent(
+            'render',
+             ["html" => $this->getHtml() . $this->getChildHtml('')]
+        );
+
+        return $context->getHtml();
     }
 
     /**
@@ -200,15 +233,17 @@ abstract class Base extends \DaveBaker\Core\WP\Object\Base
            return;
         }
 
+        $this->fireEvent('predispatch_before');
+
         $this->_preDispatch();
 
-        var_dump("predispatch {$this->getName()}" );
         /** @var \DaveBaker\Core\WP\Block\BlockInterface $child */
         foreach($this->getChildBlocks() as $child){
             $child->preDispatch();
         }
 
         $this->isPreDispatched = true;
+        $this->fireEvent('predispatch_after');
 
         return $this;
     }
@@ -229,7 +264,9 @@ abstract class Base extends \DaveBaker\Core\WP\Object\Base
         if($this->isPostDispatched){
             return;
         }
-        var_dump("postdispatch {$this->getName()}" );
+
+        $this->fireEvent('predispatch_before');
+
         $this->_postDispatch();
 
         /** @var \DaveBaker\Core\WP\Block\BlockInterface $child */
@@ -238,15 +275,22 @@ abstract class Base extends \DaveBaker\Core\WP\Object\Base
         }
 
         $this->isPostDispatched = true;
+        $this->fireEvent('predispatch_after');
 
         return $this;
     }
 
+    /**
+     * @return $this
+     */
     protected function _preDispatch()
     {
         return $this;
     }
 
+    /**
+     * @return $this
+     */
     protected function _postDispatch()
     {
         return $this;

@@ -8,8 +8,6 @@ abstract class Base
 {
     const MODEL_NAMESPACE = 'model';
 
-    /** @var  \wpdb */
-    protected $wpdb;
     protected $tableName;
     protected $idColumn;
     protected $schema = [];
@@ -19,6 +17,26 @@ abstract class Base
     // Set the table name and idColumn in an init
     protected abstract function init();
 
+
+    /**
+     * @return $this
+     * @throws Exception
+     *
+     * Set up the database details in init()
+     */
+    protected function _construct()
+    {
+        parent::_construct();
+        $this->init();
+
+        if(!$this->idColumn || !$this->tableName){
+            throw new Exception("idColumn or tableName not set");
+        }
+
+        $this->fireEvent('create');
+        return $this;
+    }
+
     /**
      * @param $id
      * @param string $column
@@ -26,11 +44,13 @@ abstract class Base
      */
     public function load($id, $column = '')
     {
+        $this->fireEvent('before_load');
+
         $column = $column ? $column: $this->idColumn;
 
         try {
-            $data = $this->wpdb->get_row(
-                $this->wpdb->prepare(
+            $data = $this->getDb()->get_row(
+                $sql = $this->getDb()->prepare(
                     "SELECT * FROM {$this->getTableName()} WHERE {$column}=%s",
                     $id
                 )
@@ -39,6 +59,8 @@ abstract class Base
             if($data) {
                 $this->setObjectData($data);
             }
+
+            $this->fireEvent('after_load');
         } catch (\Exception $e){
             throw new Exception($e->getMessage(), $e->getCode());
         }
@@ -57,7 +79,7 @@ abstract class Base
      */
     public function getTableName()
     {
-        return $this->wpdb->base_prefix . $this->tableName;
+        return $this->getDb()->base_prefix . $this->tableName;
     }
 
     /**
@@ -65,16 +87,20 @@ abstract class Base
      */
     public function delete()
     {
+        $this->fireEvent('before_delete');
+
         if(!$this->getId()){
             return;
         }
 
-        $this->wpdb->delete(
+        $this->getDb()->delete(
             $this->getTableName(),
             [$this->idColumn => $this->getId()]
         );
 
         $this->unsetData();
+
+        $this->fireEvent('after_delete');
 
         return $this;
     }
@@ -89,6 +115,8 @@ abstract class Base
             return;
         }
 
+        $this->fireEvent('before_save');
+
         try {
             if ($this->getId()) {
                 return $this->updateSave();
@@ -100,6 +128,8 @@ abstract class Base
             throw new Exception($e->getMessage(), $e->getCode());
         }
 
+        $this->fireEvent('after_save');
+
         return $this;
     }
 
@@ -109,7 +139,9 @@ abstract class Base
      */
     protected function insertSave()
     {
-        $res = $this->wpdb->insert(
+        $this->fireEvent('before_insert_save');
+
+        $res = $this->getDb()->insert(
             $this->getTableName(),
             $this->getTableSaveData()
         );
@@ -118,7 +150,9 @@ abstract class Base
             throw new Exception('An error occurred saving to the database');
         }
 
-        $this->setData($this->idColumn, $this->wpdb->insert_id);
+        $this->setData($this->idColumn, $this->getDb()->insert_id);
+
+        $this->fireEvent('after_insert_save');
 
         return $this;
     }
@@ -128,11 +162,15 @@ abstract class Base
      */
     protected function updateSave()
     {
-        $this->wpdb->update(
+        $this->fireEvent('before_update_save');
+
+        $this->getDb()->update(
             $this->getTableName(),
             $this->getTableSaveData(),
             [$this->idColumn => $this->getId()]
         );
+
+        $this->fireEvent('after_update_save');
 
         return $this;
     }
@@ -165,7 +203,7 @@ abstract class Base
     public function getNamespacedEvent($event)
     {
         return self::MODEL_NAMESPACE .
-        "_" . $this->namespaceCode .
+        "_" . $this->tableName .
         "_" . $event;
     }
 
@@ -177,7 +215,7 @@ abstract class Base
     {
         return $this->getApp()->getNamespace() .
         "_" . self::MODEL_NAMESPACE .
-        "_" .$this->namespaceCode .
+        "_" .$this->tableName .
         "_" . $optionCode;
     }
 
@@ -193,7 +231,7 @@ abstract class Base
             return;
         }
 
-        $rows = $this->wpdb->get_results(
+        $rows = $this->getDb()->get_results(
             "SHOW COLUMNS FROM {$this->getTableName()}"
         );
 

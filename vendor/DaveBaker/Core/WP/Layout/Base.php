@@ -50,6 +50,12 @@ abstract class Base extends \DaveBaker\Core\WP\Base
         \DaveBaker\Core\WP\Block\BlockInterface $block
     ) {
         $this->blocks[] = $block;
+
+        $context = $this->fireEvent('add_block',
+            ['block' => $block, 'blocks' => $this->blocks]
+        );
+
+        $this->blocks = $context->getBlocks();
         return $this;
     }
 

@@ -48,6 +48,7 @@ class Manager extends \DaveBaker\Core\WP\Base
      */
     public final function preDispatch()
     {
+        $this->fireEvent('predispatch_before');
         $actionCodes = array_keys($this->actionBlocks);
         $shortCodes = array_keys($this->shortcodeBlocks);
 
@@ -60,6 +61,7 @@ class Manager extends \DaveBaker\Core\WP\Base
         }
 
         $this->_preDispatch();
+        $this->fireEvent('predispatch_after');
 
         return $this;
     }
@@ -69,6 +71,7 @@ class Manager extends \DaveBaker\Core\WP\Base
      */
     public final function postDispatch()
     {
+        $this->fireEvent('postdispatch_before');
         $actionCodes = array_keys($this->actionBlocks);
         $shortCodes = array_keys($this->shortcodeBlocks);
 
@@ -81,6 +84,7 @@ class Manager extends \DaveBaker\Core\WP\Base
         }
 
         $this->_postDispatch();
+        $this->fireEvent('postdispatch_after');
 
         return $this;
     }
@@ -210,10 +214,14 @@ class Manager extends \DaveBaker\Core\WP\Base
      */
     protected function preDispatchBlocks($blocks)
     {
+        $this->fireEvent('predispatch_blocks_before');
+
         /** @var  \DaveBaker\Core\WP\Block\BlockInterface $block */
         foreach($blocks as $block){
             $block->preDispatch();
         }
+
+        $this->fireEvent('predispatch_blocks_after');
 
         return $this;
     }
@@ -224,11 +232,14 @@ class Manager extends \DaveBaker\Core\WP\Base
      */
     protected function postDispatchBlocks($blocks)
     {
+        $this->fireEvent('postdispatch_blocks_before');
+
         /** @var  \DaveBaker\Core\WP\Block\BlockInterface $block */
         foreach($blocks as $block){
             $block->postDispatch();
         }
 
+        $this->fireEvent('postdispatch_blocks_after');
         return $this;
     }
 
@@ -242,7 +253,6 @@ class Manager extends \DaveBaker\Core\WP\Base
         /** @var \DaveBaker\Core\WP\Helper\Util $util */
 
         $util = $this->getApp()->getHelper('Util');
-        
 
         foreach(get_class_methods($layout) as $method) {
             if (preg_match("/Handle/", $method)) {
@@ -360,6 +370,9 @@ class Manager extends \DaveBaker\Core\WP\Base
         if(file_exists($themeLocation)){
             array_unshift($this->templatePaths, $themeLocation);
         }
+
+        $context = $this->fireEvent('register_template_paths', ['template_paths' => $this->templatePaths]);
+        $this->templatePaths = $context->getTemplatePaths();
 
         return $this;
     }

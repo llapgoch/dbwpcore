@@ -4,12 +4,15 @@ namespace DaveBaker\Core\WP\Controller;
 
 class Base extends \DaveBaker\Core\WP\Base
 {
+    protected $namespaceCode = 'controller';
     /**
      * @return $this
      */
     public final function preDispatch()
     {
+        $this->fireEvent('predispatch_before');
         $this->_preDispatch();
+        $this->fireEvent('predispatch_after');
         return $this;
     }
 
@@ -18,7 +21,9 @@ class Base extends \DaveBaker\Core\WP\Base
      */
     public final function postDispatch()
     {
+        $this->fireEvent('postdispatch_before');
         $this->_postDispatch();
+        $this->fireEvent('postdispatch_after');
         return $this;
     }
 

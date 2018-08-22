@@ -1,14 +1,5 @@
 <?php
 
-/**
- * Example for listening to page events
- *
- *   Event = wordpressAction + page_name
- *   $this->getEventManager()->register("wp_hello-world", function(){
- *     var_dump("woo");
- *   });
- */
-
 namespace DaveBaker\Core\WP\Controller;
 
 class Manager extends \DaveBaker\Core\WP\Base
@@ -17,7 +8,7 @@ class Manager extends \DaveBaker\Core\WP\Base
     protected $post;
     
     /** @var string */
-    protected $namespaceCode = "controller";
+    protected $namespaceCode = "controller_manager";
     protected $controllers = [];
 
     public function __construct(
@@ -46,6 +37,7 @@ class Manager extends \DaveBaker\Core\WP\Base
 
     public final function preDispatch()
     {
+        $this->fireEvent('predispatch_before');
         $this->_preDispatch();
 
         $handles = $this->getApp()->getHandleManager()->getHandles();
@@ -57,11 +49,14 @@ class Manager extends \DaveBaker\Core\WP\Base
             }
         }
 
+        $this->fireEvent('predispatch_after');
+
         return $this;
     }
 
     public function execute()
     {
+        $this->fireEvent('execute_before');
         $handles = $this->getApp()->getHandleManager()->getHandles();
 
         foreach($handles as $handle){
@@ -70,7 +65,7 @@ class Manager extends \DaveBaker\Core\WP\Base
                 $controller->execute();
             }
         }
-
+        $this->fireEvent('execute_after');
         return $this;
     }
 
@@ -79,6 +74,7 @@ class Manager extends \DaveBaker\Core\WP\Base
      */
     public final function postDispatch()
     {
+        $this->fireEvent('postdispatch_before');
         $this->_postDispatch();
         $handles = $this->getApp()->getHandleManager()->getHandles();
 
@@ -89,6 +85,7 @@ class Manager extends \DaveBaker\Core\WP\Base
             }
         }
 
+        $this->fireEvent('postdispatch_after');
         return $this;
     }
 
@@ -132,6 +129,8 @@ class Manager extends \DaveBaker\Core\WP\Base
             throw new Exception("Controller is not compatible with ControllerInterface");
         }
 
+        $this->fireEvent('register_controller', ['controller' => $controller]);
+
         $this->controllers[$handle][$controllerClass] = $controller;
     }
 
@@ -141,10 +140,14 @@ class Manager extends \DaveBaker\Core\WP\Base
      */
     protected function getControllersForHandle($handle)
     {
+        $controllers = [];
+
         if(isset($this->controllers[$handle])){
-            return $this->controllers[$handle];
+            $controllers = $this->controllers[$handle];
         }
 
-        return [];
+        $context = $this->fireEvent('get_controllers_for_handle', ['controllers' => $controllers]);
+
+        return $context->getControllers();
     }
 }

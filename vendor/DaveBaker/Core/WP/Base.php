@@ -11,6 +11,9 @@ abstract class Base
      */
     protected $optionManager;
 
+    /** @var  \wpdb */
+    protected $wpdb;
+
     /**
      * @var string
      */
@@ -20,32 +23,64 @@ abstract class Base
         \DaveBaker\Core\App $app
     ) {
         $this->app = $app;
+
+        global $wpdb;
+        $this->wpdb = $wpdb;
+
+        $this->_construct();
+    }
+
+    /**
+     * @return $this
+     */
+    protected function _construct()
+    {
+        return $this;
+    }
+
+
+
+    /**
+     * @param $event
+     * @param $callback
+     * @param bool $allowMultiples
+     * @return $this
+     */
+    public function addEvent($event, $callback, $allowMultiples = false)
+    {
+        $this->getApp()->getEventManager()->add(
+            $event,
+            $callback,
+            $allowMultiples
+        );
+
+        return $this;
     }
 
     /**
      * @param $event string
      * @param array $params
+     * @return $this
      */
     public function fireEvent($event, $params = [])
     {
-        $this->getApp()->getEventManager()->fireEvent(
+        $params['object'] = $this;
+
+        return $this->getApp()->getEventManager()->fire(
             $this->getNamespacedEvent($event),
             $params
         );
+        
     }
 
     /**
-     * @param $event
-     * @param $callback object
+     * @param $event string
+     * @param $callback object|bool
      * @return $this
      */
-    public function addEvent($event, $callback)
+    public function removeEvent($event, $callback = false)
     {
-        $this->getApp()->getEventManager()->addEvent(
-            $this->getNamespacedEvent($event),
-            $callback
-        );
-
+        $this->getApp()->getEventManager()->remove($event, $callback);
         return $this;
     }
 
@@ -55,6 +90,14 @@ abstract class Base
     public function getApp()
     {
         return $this->app;
+    }
+
+    /**
+     * @return \wpdb
+     */
+    public function getDb()
+    {
+        return $this->wpdb;
     }
 
     /**
@@ -99,6 +142,8 @@ abstract class Base
     {
         return $this->getApp()->getNamespace() . "_" . $this->namespaceCode . "_" . $optionCode;
     }
+
+
 
     /**
      * @return \DaveBaker\Core\WP\Option\Manager
