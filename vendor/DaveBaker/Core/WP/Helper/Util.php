@@ -1,6 +1,6 @@
 <?php
 
-namespace DaveBaker\Core\Helper;
+namespace DaveBaker\Core\WP\Helper;
 
 class Util extends Base
 {

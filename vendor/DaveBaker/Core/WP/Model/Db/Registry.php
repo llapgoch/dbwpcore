@@ -1,6 +1,6 @@
 <?php
 
-namespace DaveBaker\Core\Model\Db;
+namespace DaveBaker\Core\Model\WP\Db;
 
 class Registry
 {

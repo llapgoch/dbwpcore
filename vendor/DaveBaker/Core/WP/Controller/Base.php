@@ -25,7 +25,7 @@ class Base extends \DaveBaker\Core\WP\Base
     /**
      * @return $this
      */
-    public function _preDispatch()
+    protected function _preDispatch()
     {
         return $this;
     }
@@ -33,7 +33,7 @@ class Base extends \DaveBaker\Core\WP\Base
     /**
      * @return $this
      */
-    public function _postDispatch()
+    protected function _postDispatch()
     {
         return $this;
     }

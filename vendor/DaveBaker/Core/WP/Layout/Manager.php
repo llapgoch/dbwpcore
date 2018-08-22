@@ -239,8 +239,10 @@ class Manager extends \DaveBaker\Core\WP\Base
     protected function registerLayout(
         \DaveBaker\Core\WP\Layout\Base $layout
     ) {
-        /** @var \DaveBaker\Core\Helper\Util $util */
+        /** @var \DaveBaker\Core\WP\Helper\Util $util */
+
         $util = $this->getApp()->getHelper('Util');
+        
 
         foreach(get_class_methods($layout) as $method) {
             if (preg_match("/Handle/", $method)) {

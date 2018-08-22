@@ -21,6 +21,7 @@ class Template
             throw new Exception("Template file not set or not found for {$this->getName()}");
         }
 
+        $this->rendered = true;
         ob_start();
 
         // Define items for use in templates here

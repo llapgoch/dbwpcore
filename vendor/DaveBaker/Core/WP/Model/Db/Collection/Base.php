@@ -1,19 +1,22 @@
 <?php
 
-namespace DaveBaker\Core\Model\Db\Collection;
+namespace DaveBaker\Core\WP\Model\Db\Collection;
 
-abstract class Base
+abstract class Base extends \DaveBaker\Core\WP\Base
 {
+    const COLLECTION_NAMESPACE = 'collection';
     /**
      * @var \wpdb
      */
     protected $wpdb;
     protected $dbClass;
-    /** @var  \DaveBaker\Core\Model\Db\Base */
+    /** @var  \DaveBaker\Core\WP\Model\Db\Base */
     protected $baseObject;
     protected $items = [];
     protected $select;
     protected $adapter;
+
+    protected $namespaceCode = 'collection';
 
     public function __construct()
     {
@@ -73,7 +76,7 @@ abstract class Base
     public function getAdapter()
     {
         if(!$this->adapter){
-            return \DaveBaker\Core\Model\Db\Registry::getGlobalZendAdapter();
+            return \DaveBaker\Core\WP\Model\Db\Registry::getGlobalZendAdapter();
         }
 
         return $this->adapter;
@@ -109,6 +112,29 @@ abstract class Base
     }
 
     /**
+     * @param string $event
+     * @return string
+     */
+    public function getNamespacedEvent($event)
+    {
+        return self::COLLECTION_NAMESPACE .
+            "_" . $this->namespaceCode .
+            "_" . $event;
+    }
+
+    /**
+     * @param string $optionCode
+     * @return string
+     */
+    public function getNamespacedOption($optionCode)
+    {
+        return $this->getApp()->getNamespace() .
+            "_" . self::COLLECTION_NAMESPACE .
+            "_" .$this->namespaceCode .
+            "_" . $optionCode;
+    }
+
+    /**
      * @return array
      */
     public function load()
@@ -118,7 +144,7 @@ abstract class Base
         $results = $this->wpdb->get_results($this->select->assemble());
 
         foreach($results as $result){
-            /** @var \DaveBaker\Core\Model\Db\Base $item */
+            /** @var \DaveBaker\Core\WP\Model\Db\Base $item */
             $item = new $this->dbClass;
             $item->setObjectData($result);
             $this->items[] = $item;

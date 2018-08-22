@@ -1,8 +1,9 @@
 <?php
 
-namespace DaveBaker\Core\Object;
+namespace DaveBaker\Core\WP\Object;
+
 // TODO: Refactor
-class Base
+class Base extends \DaveBaker\Core\WP\Base
 {
 
     protected $_hasDataChanges = false;
@@ -19,11 +20,7 @@ class Base
      * @var array
      */
     protected static $_underscoreCache = [];
-    
-    public function __construct()
-    {
 
-    }
 
     /**
      * @param $method

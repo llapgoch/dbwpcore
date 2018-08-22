@@ -2,12 +2,12 @@
 
 namespace DaveBaker\Core\WP\Object;
 
-class Manager
+class Manager extends \DaveBaker\Core\WP\Base
 {
     const SINGLETON_KEY = 'singleton';
     const DEFINITION_KEY = 'definition';
 
-    const BASE_HELPER_DEFINITION = '\DaveBaker\Core\Helper\{{helperName}}';
+    const BASE_HELPER_DEFINITION = '\DaveBaker\Core\WP\Helper\{{helperName}}';
     /**
      * @var string
      */
@@ -21,8 +21,10 @@ class Manager
     protected $singletonCache = [];
 
     public function __construct(
+        \DaveBaker\Core\App $app,
         \DaveBaker\Core\WP\Config\ConfigInterface $config
     ) {
+        parent::__construct($app);
         $this->config = $config;
     }
 
@@ -38,8 +40,27 @@ class Manager
 
     public function getHelper($helperName){
         $helperPath = str_replace('{{helperName}}', $helperName, self::BASE_HELPER_DEFINITION);
-        return $this->get($helperPath);
+        $helper = $this->get($helperPath, [$this->getApp()]);
+
+        return $helper;
     }
+
+    /**
+     * @param $className string
+     * @return object
+     * @throws Exception
+     */
+    public function getModel($className)
+    {
+        $model = $this->get($className, [$this->getApp()]);
+
+        if(!$model instanceof \DaveBaker\Core\WP\Model\Db\Base){
+            throw new Exception('Created DB Model is not compatible with Base Model');
+        }
+
+        return $model;
+    }
+
     
     /**
      * @param $identifier

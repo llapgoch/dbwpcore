@@ -2,7 +2,9 @@
 
 namespace DaveBaker\Core\WP\Installer;
 
-abstract class Manager extends \DaveBaker\Core\WP\Base
+abstract class Manager
+    extends \DaveBaker\Core\WP\Base
+    implements ManagerInterface
 {
     const VERSION_OPTION = 'version';
 

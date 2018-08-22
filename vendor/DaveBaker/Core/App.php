@@ -53,20 +53,18 @@ class App
 
     public function __construct(
         $namespace,
-        \DaveBaker\Core\WP\Main\MainInterface $main,
-        \DaveBaker\Core\WP\Object\Manager $objectManager = null
+        $mainClassName,
+        $objectManagerClassName,
+        $objectManagerConfigClassName
     ) {
+
         $this->namespace = $namespace . "_";
-        $this->objectManager = $objectManager;
-        $this->main = $main;
+        $this->main = new $mainClassName($this);
+        $this->objectManager = new $objectManagerClassName($this, new $objectManagerConfigClassName);
+
         $this->registerApp($this->namespace, $this);
-
         $this->main->setApp($this);
-
-        if(!$objectManager){
-            $manager = self::DEFAULT_OBJECT_MANAGER;
-            $this->objectManager = new $manager();
-        }
+        
 
         // For any singleton objects, they'll be stored against the namespace, allowing for multiple
         // singletons across different app definitions
@@ -144,6 +142,7 @@ class App
             $this->initApplication();
         });
 
+
         add_action('login_init', function(){
             $this->initApplication();
         });
@@ -162,9 +161,11 @@ class App
     protected function initApplication()
     {
         $this->getHandleManager()->registerHandles();
-        $this->getMain()->registerControllers();
-        $this->getMain()->registerLayouts();
 
+        $this->getMain()->registerControllers();
+
+        $this->getMain()->registerLayouts();
+        
         $this->getContollerManager()->preDispatch();
         $this->getLayoutManager()->registerShortcodes()->registerActions()->preDispatch();
         $this->getContollerManager()->execute();
@@ -198,7 +199,7 @@ class App
 
     /**
      * @param $helperName
-     * @return \DaveBaker\Core\Helper\Base
+     * @return \DaveBaker\Core\WP\Helper\Base
      */
     public function getHelper($helperName)
     {
@@ -251,6 +252,14 @@ class App
     public function getHandleManager()
     {
         return $this->handleManager;
+    }
+
+    /**
+     * @return WP\Installer\InstallerInterface
+     */
+    public function getInstallerManager()
+    {
+        return $this->installerManager;
     }
 
     /**

@@ -2,7 +2,7 @@
 
 namespace DaveBaker\Core\WP\Block;
 
-abstract class Base extends \DaveBaker\Core\Object\Base
+abstract class Base extends \DaveBaker\Core\WP\Object\Base
 {
     protected $blockName;
     protected $orderType = '';

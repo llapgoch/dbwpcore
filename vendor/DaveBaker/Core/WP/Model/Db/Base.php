@@ -1,28 +1,20 @@
 <?php
 
-namespace DaveBaker\Core\Model\Db;
+namespace DaveBaker\Core\WP\Model\Db;
 
-abstract class Base extends \DaveBaker\Core\Object\Base
+abstract class Base
+    extends \DaveBaker\Core\WP\Object\Base
+    implements \DaveBaker\Core\WP\Model\Db\BaseInterface
 {
+    const MODEL_NAMESPACE = 'model';
+
     /** @var  \wpdb */
     protected $wpdb;
     protected $tableName;
     protected $idColumn;
     protected $schema = [];
 
-    public function __construct()
-    {
-        global $wpdb;
-        $this->wpdb = $wpdb;
-
-        $this->init();
-
-        if(!$this->idColumn |! $this->tableName){
-            throw new Exception('ID column or table not set');
-        }
-
-        $this->loadSchema();
-    }
+    protected $namespaceCode = "default";
 
     // Set the table name and idColumn in an init
     protected abstract function init();
@@ -164,6 +156,29 @@ abstract class Base extends \DaveBaker\Core\Object\Base
         }
 
         return $this;
+    }
+
+    /**
+     * @param string $event
+     * @return string
+     */
+    public function getNamespacedEvent($event)
+    {
+        return self::MODEL_NAMESPACE .
+        "_" . $this->namespaceCode .
+        "_" . $event;
+    }
+
+    /**
+     * @param string $optionCode
+     * @return string
+     */
+    public function getNamespacedOption($optionCode)
+    {
+        return $this->getApp()->getNamespace() .
+        "_" . self::MODEL_NAMESPACE .
+        "_" .$this->namespaceCode .
+        "_" . $optionCode;
     }
 
     /**
