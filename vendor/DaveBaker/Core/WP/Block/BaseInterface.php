@@ -28,4 +28,5 @@ interface BaseInterface extends \DaveBaker\Core\WP\BaseInterface
     public function setAction($action);
     // Any arguments which are passed from actions are set in actionArguments
     public function setActionArguments($args);
+    public function isRendered();
 }

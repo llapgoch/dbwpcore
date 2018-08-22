@@ -72,4 +72,29 @@ class Manager
     {
         return $this->app->getObjectManager()->get('\DaveBaker\Core\WP\Block\BlockList', [$this->app]);
     }
+
+    /**
+     * @return BlockList
+     */
+    public function getAllBlocks()
+    {
+        return $this->blockList;
+    }
+
+    /**
+     * @return BlockList
+     */
+    public function getAllRenderedBlocks()
+    {
+        $list = $this->createBlockList();
+
+        /** @var \DaveBaker\Core\WP\Block\BlockInterface $block */
+        foreach($this->getAllBlocks() as $block) {
+            if($block->isRendered()) {
+                $list->add($block);
+            }
+        }
+
+        return $list;
+    }
 }

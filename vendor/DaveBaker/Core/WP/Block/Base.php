@@ -17,6 +17,7 @@ abstract class Base extends \DaveBaker\Core\Object\Base
     protected $actionArguments = [];
     protected $isPreDispatched = false;
     protected $isPostDispatched = false;
+    protected $rendered = false;
 
     const ORDER_TYPE_BEFORE = "before";
     const ORDER_TYPE_AFTER = "after";
@@ -178,6 +179,7 @@ abstract class Base extends \DaveBaker\Core\Object\Base
      */
     public function render()
     {
+        $this->rendered = true;
         return $this->getHtml() . $this->getChildHtml('');
     }
 
@@ -209,6 +211,14 @@ abstract class Base extends \DaveBaker\Core\Object\Base
         $this->isPreDispatched = true;
 
         return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isRendered()
+    {
+        return $this->rendered;
     }
 
     /**
