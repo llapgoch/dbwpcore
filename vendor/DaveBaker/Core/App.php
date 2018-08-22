@@ -12,9 +12,9 @@ class App
      */
     protected $namespace;
     /**
-     * @var \DaveBaker\Core\WP\Controller\Front
+     * @var \DaveBaker\Core\WP\Controller\Manager
      */
-    protected $controller;
+    protected $controllerManager;
     /**
      * @var WP\Page\Manager
      */
@@ -85,7 +85,7 @@ class App
 
         $this->handleManager = $this->getObjectManager()->get('\DaveBaker\Core\WP\Layout\Handle\Manager', [$this]);
         $this->eventManager = $this->getObjectManager()->get('\DaveBaker\Core\WP\Event\Manager', [$this]);
-        $this->controller = $this->getObjectManager()->get('\DaveBaker\Core\WP\Controller\Front', [$this]);
+        $this->controllerManager = $this->getObjectManager()->get('\DaveBaker\Core\WP\Controller\Manager', [$this]);
         $this->blockManager = $this->getObjectManager()->get('\DaveBaker\Core\WP\Block\Manager', [$this]);
         $this->request = $this->getObjectManager()->get('\DaveBaker\Core\WP\App\Request', [$this]);
 
@@ -141,15 +141,16 @@ class App
         /*  We have to do initLayout in multiple actions because not all actions exist on every page.
             This may need adding to */
         add_action('wp', function(){
-            $this->initLayout();
+            $this->initApplication();
         });
 
         add_action('login_init', function(){
-            $this->initLayout();
+            $this->initApplication();
         });
 
         add_action('shutdown', function(){
             $this->getLayoutManager()->postDispatch();
+            $this->getContollerManager()->postDispatch();
         });
 
         return $this;
@@ -158,11 +159,15 @@ class App
     /**
      * @return $this
      */
-    protected function initLayout()
+    protected function initApplication()
     {
         $this->getHandleManager()->registerHandles();
+        $this->getMain()->registerControllers();
         $this->getMain()->registerLayouts();
+
+        $this->getContollerManager()->preDispatch();
         $this->getLayoutManager()->registerShortcodes()->registerActions()->preDispatch();
+        $this->getContollerManager()->execute();
 
         return $this;
     }
@@ -262,6 +267,14 @@ class App
     public function getOptionManager()
     {
         return $this->optionManager;
+    }
+
+    /**
+     * @return WP\Controller\Manager|object
+     */
+    public function getContollerManager()
+    {
+        return $this->controllerManager;
     }
 
 }

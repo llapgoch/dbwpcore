@@ -35,6 +35,21 @@ abstract class Base
     }
 
     /**
+     * @param $event
+     * @param $callback object
+     * @return $this
+     */
+    public function addEvent($event, $callback)
+    {
+        $this->getApp()->getEventManager()->addEvent(
+            $this->getNamespacedEvent($event),
+            $callback
+        );
+
+        return $this;
+    }
+
+    /**
      * @return \DaveBaker\Core\App
      */
     public function getApp()
