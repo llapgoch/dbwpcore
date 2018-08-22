@@ -129,6 +129,9 @@ class App
         self::$apps[$namespace] = $app;
     }
 
+    /**
+     * @return $this
+     */
     protected function addEvents()
     {
         add_action('init', function(){
@@ -148,16 +151,20 @@ class App
         add_action('shutdown', function(){
             $this->getLayoutManager()->postDispatch();
         });
+
+        return $this;
     }
 
+    /**
+     * @return $this
+     */
     protected function initLayout()
     {
         $this->getHandleManager()->registerHandles();
         $this->getMain()->registerLayouts();
+        $this->getLayoutManager()->registerShortcodes()->registerActions()->preDispatch();
 
-        $this->getLayoutManager()->registerShortcodes()->registerActions();
-
-        $this->getLayoutManager()->preDispatch();
+        return $this;
     }
 
     /**
