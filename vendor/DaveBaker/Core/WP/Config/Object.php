@@ -28,6 +28,10 @@ class Object extends Base
         '\DaveBaker\Core\Helper\Util' => [
             'definition' => '\DaveBaker\Core\Helper\Util',
             'singleton' => true
+        ],
+        '\DaveBaker\Core\Helper\Date' => [
+            'definition' => '\DaveBaker\Core\Helper\Date',
+            'singleton' => true
         ]
     ];
 

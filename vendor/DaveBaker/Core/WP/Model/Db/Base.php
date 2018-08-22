@@ -13,6 +13,7 @@ abstract class Base
     protected $tableName;
     protected $idColumn;
     protected $schema = [];
+    protected $autoUpdateTime = true;
 
     protected $namespaceCode = "default";
 
@@ -146,9 +147,16 @@ abstract class Base
         }
 
         $this->fireEvent('before_insert_save');
+        $currentTime = $this->getDateHelper()->getDbTime();
 
-        if($this->isDateTime(self::DEFAULT_CREATED_AT_COLUMN)){
-            $data[self::DEFAULT_CREATED_AT_COLUMN] = current_time('mysql');
+        if($this->isDateTime(self::DEFAULT_CREATED_AT_COLUMN)
+            && !isset($data[self::DEFAULT_CREATED_AT_COLUMN]) && $this->getAutoUpdateTime()){
+            $data[self::DEFAULT_CREATED_AT_COLUMN] = $currentTime;
+        }
+
+        if($this->isDateTime(self::DEFAULT_UPDATED_AT_COLUMN)
+            && !isset($data[self::DEFAULT_UPDATED_AT_COLUMN]) && $this->getAutoUpdateTime()){
+            $data[self::DEFAULT_UPDATED_AT_COLUMN] = $currentTime;
         }
 
         $res = $this->getDb()->insert(
@@ -177,9 +185,10 @@ abstract class Base
         }
 
         $this->fireEvent('before_update_save');
-        
-        if($this->isDateTime(self::DEFAULT_UPDATED_AT_COLUMN)){
-            $data[self::DEFAULT_UPDATED_AT_COLUMN] = current_time('mysql');
+
+        // Always update updated_at columns on save
+        if($this->isDateTime(self::DEFAULT_UPDATED_AT_COLUMN) && $this->getAutoUpdateTime()){
+            $data[self::DEFAULT_UPDATED_AT_COLUMN] = $this->getDateHelper()->getDbTime();
         }
 
         $this->getDb()->update(
@@ -191,6 +200,26 @@ abstract class Base
         $this->fireEvent('after_update_save');
 
         return $this;
+    }
+
+    /**
+     * @param $update
+     * @return $this
+     *
+     * Sets whether the object automatically populates created_at and updated_at
+     */
+    public function setAutoUpdateTime($update)
+    {
+        $this->autoUpdateTime = $update;
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getAutoUpdateTime()
+    {
+        return $this->autoUpdateTime;
     }
 
     /**
@@ -206,6 +235,14 @@ abstract class Base
         }
 
         return $schema[$column]['type'] == 'datetime';
+    }
+
+    /**
+     * @return \DaveBaker\Core\WP\Helper\Date
+     */
+    protected function getDateHelper()
+    {
+        return $this->getApp()->getHelper('Date');
     }
 
     /**
