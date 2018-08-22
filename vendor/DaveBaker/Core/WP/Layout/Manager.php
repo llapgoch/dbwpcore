@@ -18,9 +18,20 @@ class Manager extends \DaveBaker\Core\WP\Base
     
     /** @var array  */
     protected $templatePaths = [];
+
+    /*  Because registering the layouts may run several times (because not all WP actions run on
+        every page, so multiple are registered, we keep track of what's already been executed here
+    */
+    /** @var array  */
+    protected $registeredLayouts = [];
+    /** @var array  */
+    protected $registeredHandles = [];
     
     /** @var \DaveBaker\Core\WP\Config\ConfigInterface */
     protected $config;
+
+    /** @var bool */
+    protected $isDispatched = false;
 
     public function __construct(
         \DaveBaker\Core\App $app,
@@ -35,27 +46,41 @@ class Manager extends \DaveBaker\Core\WP\Base
     /**
      * @return $this
      */
-    public function preDispatch()
+    public final function preDispatch()
     {
+        $actionCodes = array_keys($this->actionBlocks);
+        $shortCodes = array_keys($this->shortcodeBlocks);
+
+        foreach($actionCodes as $actionCode){
+           $this->preDispatchBlocks($this->getBlocksForAction($actionCode));
+        }
+
+        foreach($shortCodes as $shortCode){
+            $this->preDispatchBlocks($this->getBlocksForShortcode($shortCode));
+        }
+
+        $this->_preDispatch();
+
         return $this;
     }
 
     /**
      * @return $this
      */
-    public function postDispatch()
+    public final function postDispatch()
     {
-        /**
-         * @var  $tag string
-         * @var  $tagBlocks array
-         */
-        /** TODO: Only created blocks should fire a postDispatch */
-//        foreach($this->blocks as $tag => $tagBlocks){
-//            /** @var \DaveBaker\Core\WP\Block\BlockInterface $block */
-//            foreach($tagBlocks as $block){
-//                $block->postDispatch();
-//            }
-//        }
+        $actionCodes = array_keys($this->actionBlocks);
+        $shortCodes = array_keys($this->shortcodeBlocks);
+
+        foreach($actionCodes as $actionCode){
+            $this->postDispatchBlocks($this->getBlocksForAction($actionCode));
+        }
+
+        foreach($shortCodes as $shortCode){
+            $this->postDispatchBlocks($this->getBlocksForShortcode($shortCode));
+        }
+
+        $this->_postDispatch();
 
         return $this;
     }
@@ -72,9 +97,16 @@ class Manager extends \DaveBaker\Core\WP\Base
 
         /** @var string $layout */
         foreach($layouts as $layout){
+
             try{
                 /** @var \DaveBaker\Core\WP\Layout\Base $layoutInstance */
-                $layoutInstance = $this->getApp()->getObjectManager()->get($layout, [$this->getApp()]);
+                if(isset($this->registeredLayouts[$layout])){
+                    $layoutInstance = $this->registeredLayouts[$layout];
+                }else {
+                    $layoutInstance = $this->getApp()->getObjectManager()->get($layout, [$this->getApp()]);
+                }
+
+                $this->registeredLayouts[$layout] = $layoutInstance;
 
                 if(!$layoutInstance instanceof \DaveBaker\Core\WP\Layout\Base){
                     throw new Exception('Layout is of incorrect type');
@@ -93,10 +125,6 @@ class Manager extends \DaveBaker\Core\WP\Base
     public function registerShortcodes()
     {
         $shortCodes = array_keys($this->shortcodeBlocks);
-
-        foreach($shortCodes as $shortCode){
-            $this->preDispatchBlocks($this->getBlocksForShortcode($shortCode));
-        }
 
         foreach($shortCodes as $shortCode) {
             /** @var  \DaveBaker\Core\WP\Block\BlockInterface $block */
@@ -130,10 +158,6 @@ class Manager extends \DaveBaker\Core\WP\Base
     public function registerActions()
     {
         $actionCodes = array_keys($this->actionBlocks);
-
-        foreach($actionCodes as $actionCode){
-            $this->preDispatchBlocks($this->getBlocksForAction($actionCode));
-        }
 
         /** @var string $actionCode */
         foreach($actionCodes  as $actionCode) {
@@ -195,6 +219,20 @@ class Manager extends \DaveBaker\Core\WP\Base
     }
 
     /**
+     * @param $blocks array
+     * @return $this
+     */
+    protected function postDispatchBlocks($blocks)
+    {
+        /** @var  \DaveBaker\Core\WP\Block\BlockInterface $block */
+        foreach($blocks as $block){
+            $block->postDispatch();
+        }
+
+        return $this;
+    }
+
+    /**
      * @param Base $layout
      * @throws Exception
      */
@@ -212,6 +250,16 @@ class Manager extends \DaveBaker\Core\WP\Base
                 if (!in_array($handleTag, $this->getApp()->getHandleManager()->getHandles())) {
                     continue;
                 }
+
+                if(!isset($this->registeredHandles[$handleTag])){
+                    $this->registeredHandles[$handleTag] = [];
+                }
+
+                if(in_array($layout, $this->registeredHandles[$handleTag])){
+                    continue;
+                }
+
+                $this->registeredHandles[$handleTag][] = $layout;
 
                 // Run each of the action methods for registered handles, creating the blocks
                 $layout->{$method}();
@@ -241,6 +289,22 @@ class Manager extends \DaveBaker\Core\WP\Base
             }
         }
 
+    }
+
+    /**
+     * @return $this
+     */
+    protected function _postDispatch()
+    {
+        return $this;
+    }
+
+    /**
+     * @return $this
+     */
+    protected function _preDispatch()
+    {
+        return $this;
     }
 
     /**

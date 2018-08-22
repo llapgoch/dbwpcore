@@ -133,26 +133,31 @@ class App
     {
         add_action('init', function(){
             $this->install();
-            $this->getLayoutManager()->preDispatch();
-        });
-        
-        add_action('wp_loaded', function(){
-            $this->getHandleManager()->registerHandles();
-            $this->getMain()->registerLayouts();
-
-            $this->getLayoutManager()->registerShortcodes()->registerActions();
         });
 
+        /*  We have to do initLayout in multiple actions because not all actions exist on every page.
+            This may need adding to */
         add_action('wp', function(){
-            $this->getHandleManager()->registerHandles();
-            $this->getMain()->registerLayouts();
+            $this->initLayout();
+        });
 
-            $this->getLayoutManager()->registerShortcodes()->registerActions();
+        add_action('login_init', function(){
+            $this->initLayout();
         });
 
         add_action('shutdown', function(){
             $this->getLayoutManager()->postDispatch();
         });
+    }
+
+    protected function initLayout()
+    {
+        $this->getHandleManager()->registerHandles();
+        $this->getMain()->registerLayouts();
+
+        $this->getLayoutManager()->registerShortcodes()->registerActions();
+
+        $this->getLayoutManager()->preDispatch();
     }
 
     /**

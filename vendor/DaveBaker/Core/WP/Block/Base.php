@@ -15,6 +15,8 @@ abstract class Base extends \DaveBaker\Core\Object\Base
     protected $shortcode = '';
     protected $action = '';
     protected $actionArguments = [];
+    protected $isPreDispatched = false;
+    protected $isPostDispatched = false;
 
     const ORDER_TYPE_BEFORE = "before";
     const ORDER_TYPE_AFTER = "after";
@@ -190,13 +192,21 @@ abstract class Base extends \DaveBaker\Core\Object\Base
     /**
      * @return $this
      */
-    public function preDispatch()
+    public final function preDispatch()
     {
-        var_dump('predispatch ' . $this->getName());
+        if($this->isPreDispatched){
+           return;
+        }
+
+        $this->_preDispatch();
+
+        var_dump("predispatch {$this->getName()}" );
         /** @var \DaveBaker\Core\WP\Block\BlockInterface $child */
         foreach($this->getChildBlocks() as $child){
             $child->preDispatch();
         }
+
+        $this->isPreDispatched = true;
 
         return $this;
     }
@@ -204,7 +214,30 @@ abstract class Base extends \DaveBaker\Core\Object\Base
     /**
      * @return $this
      */
-    public function postDispatch()
+    public final function postDispatch()
+    {
+        if($this->isPostDispatched){
+            return;
+        }
+        var_dump("postdispatch {$this->getName()}" );
+        $this->_postDispatch();
+
+        /** @var \DaveBaker\Core\WP\Block\BlockInterface $child */
+        foreach($this->getChildBlocks() as $child){
+            $child->postDispatch();
+        }
+
+        $this->isPostDispatched = true;
+
+        return $this;
+    }
+
+    protected function _preDispatch()
+    {
+        return $this;
+    }
+
+    protected function _postDispatch()
     {
         return $this;
     }

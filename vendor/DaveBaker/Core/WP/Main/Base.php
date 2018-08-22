@@ -21,7 +21,17 @@ class Base implements BaseInterface
         return $this->app;
     }
 
+    /**
+     * @param $layout
+     * @return $this|void
+     */
     protected function registerLayout($layout){
+        if(in_array($this->layouts, $layout)){
+            return;
+        }
+
         $this->layouts[] = $layout;
+
+        return $this;
     }
 }
