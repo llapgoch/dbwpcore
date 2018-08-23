@@ -2,7 +2,7 @@
 
 namespace DaveBaker\Core\Block\Html;
 
-class Tag extends \DaveBaker\Core\Block\Template
+class Tag extends Base
 {
     protected function init()
     {

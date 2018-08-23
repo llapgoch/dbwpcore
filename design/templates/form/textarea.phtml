@@ -1,0 +1,7 @@
+<?php
+/** @var \DaveBaker\Form\Block\Textarea $block */
+?>
+<?php echo $this->getLabelHtml(); ?>
+<textarea name="<?php echo $block->escAttr($this->getInputName());?>" <?php echo $block->getAttrs();?>>
+    <?php echo $block->escapeHtml($block->getInputValue())?>
+</textarea>

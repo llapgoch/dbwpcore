@@ -2,11 +2,11 @@
 
 namespace DaveBaker\Form\Block;
 
-class Base extends \DaveBaker\Core\Block\Html\Base
+class Textarea extends Base
 {
     protected function init()
     {
         parent::init();
+        $this->setTemplate('form/textarea.phtml');
     }
 }
-

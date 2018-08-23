@@ -1,8 +1,10 @@
 <?php
 /** @var \DaveBaker\Form\Block\Input $block */
 ?>
+<?php echo $this->getLabelHtml(); ?>
 <input
     type="<?php echo $block->escAttr($this->getInputType());?>"
     name="<?php echo $block->escAttr($this->getInputName());?>"
     value="<?php echo $block->escAttr($this->getInputValue());?>"
+    <?php echo $block->getAttrs();?>
 >

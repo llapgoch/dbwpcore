@@ -1,6 +1,6 @@
 <?php
 /** @var \DaveBaker\Form\Block\Form $block */
 ?>
-<form name="<?php echo $block->escAttr($block->getFormName());?>">
+<form name="<?php echo $block->escAttr($block->getFormName());?>" <?php echo $block->getAttrs();?>>
     <?php echo $block->getChildHtml(''); ?>
 </form>

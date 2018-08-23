@@ -2,9 +2,9 @@
 
 namespace DaveBaker\Core\Block\Html;
 
-class Heading extends \DaveBaker\Core\Block\Template
+class Heading extends Base
 {
-    public function init()
+    protected function init()
     {
         $this->setTemplate('html/heading.phtml');
         $this->setTag('h2');

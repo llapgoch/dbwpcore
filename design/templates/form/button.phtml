@@ -1,0 +1,8 @@
+<?php
+/** @var \DaveBaker\Form\Block\Form $block */
+?>
+<?php echo $this->getLabelHtml(); ?>
+<button name="<?php echo $block->escAttr($block->getFormName());?>" <?php echo $block->getAttrs();?>>
+    <?php echo $block->getButtonName(); ?>
+    <?php echo $block->getChildHtml(''); ?>
+</button>

@@ -2,7 +2,7 @@
 
 namespace DaveBaker\Form\Block\Input;
 
-class Input extends Base
+class Input extends \DaveBaker\Form\Block\Base
 {
     protected function init()
     {
