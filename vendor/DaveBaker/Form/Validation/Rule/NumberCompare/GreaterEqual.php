@@ -1,10 +1,10 @@
 <?php
 
-namespace DaveBaker\Form\Validation\Rule;
+namespace DaveBaker\Form\Validation\Rule\NumberCompare;
 
 class GreaterEqual
     extends Base
-    implements RuleInterface
+    implements \DaveBaker\Form\Validation\Rule\RuleInterface
 {
     protected $mainError = "{{niceName}} needs to be greater or equal to {{compareNumber}}";
     protected $inputError = "This needs to be greater or equal to {{compareNumber}}";
@@ -14,7 +14,7 @@ class GreaterEqual
      */
     public function validate()
     {
-        if($this->getValue() < $this->compareNumber){
+        if((float) $this->getValue() < (float) $this->compareNumber){
             return $this->createError();
         }
 
