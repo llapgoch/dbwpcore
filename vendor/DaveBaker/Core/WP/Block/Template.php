@@ -17,8 +17,12 @@ class Template
      */
     public function render()
     {
+        if(!$this->getTemplate()){
+            throw new Exception("Template file not set for {$this->getName()}");
+        }
+
         if(!$file = $this->getTemplateFile()){
-            throw new Exception("Template file not set or not found for {$this->getName()}");
+            throw new Exception("Template file not found for {$this->getName()}");
         }
 
         $this->rendered = true;
@@ -56,6 +60,7 @@ class Template
     public function getTemplateFile()
     {
         $templatePaths = $this->app->getLayoutManager()->getTemplatePaths();
+        
 
         foreach($templatePaths as $templatePath){
             if(file_exists($templatePath . $this->getTemplate())){

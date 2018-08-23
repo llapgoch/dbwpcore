@@ -29,6 +29,8 @@ abstract class Base extends \DaveBaker\Core\WP\Object\Base
     protected $isPostDispatched = false;
     /** @var bool  */
     protected $rendered = false;
+    /** @var  \DaveBaker\Core\WP\Helper\Util */
+    protected $utilHelper;
 
     const ORDER_TYPE_BEFORE = "before";
     const ORDER_TYPE_AFTER = "after";
@@ -46,6 +48,7 @@ abstract class Base extends \DaveBaker\Core\WP\Object\Base
         $this->childBlocks = $this->app->getBlockManager()->createBlockList();
 
         $this->fireEvent('create');
+        $this->init();
     }
 
     /**
@@ -219,7 +222,7 @@ abstract class Base extends \DaveBaker\Core\WP\Object\Base
     /**
      * @return $this
      */
-    public function init()
+    protected function init()
     {
         return $this;
     }
@@ -304,5 +307,44 @@ abstract class Base extends \DaveBaker\Core\WP\Object\Base
     protected function getHtml()
     {
         return '';
+    }
+
+    /**
+     * @return \DaveBaker\Core\WP\Helper\Util
+     */
+    protected function getUtilHelper()
+    {
+        if(!$this->utilHelper) {
+            $this->utilHelper = $this->getApp()->getHelper('Util');
+        }
+
+        return $this->utilHelper;
+    }
+
+    /**
+     * @param $attr string
+     * @return string|void
+     */
+    public function escAttr($attr)
+    {
+        return $this->getUtilHelper()->escAttr($attr);
+    }
+
+    /**
+     * @param $text
+     * @return string
+     */
+    public function _($text)
+    {
+        return $this->getUtilHelper()->translate($text);
+    }
+
+    /**
+     * @param $html
+     * @return string
+     */
+    public function escapeHtml($html)
+    {
+        return $this->getUtilHelper()->escapeHtml($html);
     }
 }

@@ -29,7 +29,6 @@ class Manager
         try{
             /** @var \DaveBaker\Core\WP\Block\BlockInterface $block */
             $block = $this->app->getObjectManager()->get($class, [$name, $this->app]);
-            $block->init();
 
             if(!$block instanceof \DaveBaker\Core\WP\Block\BlockInterface){
                 throw new Exception("Block {$name} does not implement BlockInterface");

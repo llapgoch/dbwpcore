@@ -16,4 +16,32 @@ class Util extends Base
         }
         return implode('_', $ret);
     }
+
+    /**
+     * @param $attr string
+     * @return string|void
+     */
+    public function escAttr($attr)
+    {
+        return esc_attr($attr);
+    }
+
+    /**
+     * @param $html string
+     * @return string
+     */
+    public function escapeHtml($html)
+    {
+        return esc_html($html);
+    }
+    
+    /**
+     * @param $text
+     * @return string
+     */
+    public function translate($text)
+    {
+        return _e($text);
+    }
+
 }

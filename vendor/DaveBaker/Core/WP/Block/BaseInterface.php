@@ -4,9 +4,6 @@ namespace DaveBaker\Core\WP\Block;
 
 interface BaseInterface extends \DaveBaker\Core\WP\BaseInterface
 {
-    /* When the block is first created */
-    public function init();
-
     /* When all blocks have been created */
     public function preDispatch();
 

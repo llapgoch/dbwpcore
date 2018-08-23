@@ -43,6 +43,17 @@ abstract class Base extends \DaveBaker\Core\WP\Base
     }
 
     /**
+     * @param $className
+     * @param $name
+     * @return \DaveBaker\Core\WP\Block\BlockInterface
+     * @throws \DaveBaker\Core\WP\App\Exception
+     */
+    public function createBlock($className, $name)
+    {
+        return $this->getBlockManager()->createBlock($className, $name);
+    }
+
+    /**
      * @param \DaveBaker\Core\WP\Block\BlockInterface $block
      * @return $this
      */
