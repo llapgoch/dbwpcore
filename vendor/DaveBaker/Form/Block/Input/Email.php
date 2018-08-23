@@ -7,6 +7,6 @@ class Email extends Input
     public function init()
     {
         parent::init();
-        $this->setInputType('email');
+        $this->setElementType('email');
     }
 }

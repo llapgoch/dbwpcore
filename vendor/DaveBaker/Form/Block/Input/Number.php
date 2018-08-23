@@ -7,6 +7,6 @@ class Number extends Input
     public function init()
     {
         parent::init();
-        $this->setInputType('number');
+        $this->setElementType('number');
     }
 }

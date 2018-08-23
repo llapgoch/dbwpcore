@@ -7,6 +7,6 @@ class Checkbox extends Input
     public function init()
     {
         parent::init();
-        $this->setInputType('button');
+        $this->setElementType('button');
     }
 }

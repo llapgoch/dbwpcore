@@ -47,7 +47,7 @@ abstract class Base
      */
     public function load($id, $column = '')
     {
-        $this->fireEvent('before_load');
+        $this->fireEvent('load_before');
 
         $column = $column ? $column: $this->idColumn;
 
@@ -63,7 +63,7 @@ abstract class Base
                 $this->setObjectData($data);
             }
 
-            $this->fireEvent('after_load');
+            $this->fireEvent('load');
         } catch (\Exception $e){
             throw new Exception($e->getMessage(), $e->getCode());
         }
@@ -149,14 +149,18 @@ abstract class Base
         $this->fireEvent('before_insert_save');
         $currentTime = $this->getDateHelper()->getDbTime();
 
-        if($this->isDateTime(self::DEFAULT_CREATED_AT_COLUMN)
-            && !isset($data[self::DEFAULT_CREATED_AT_COLUMN]) && $this->getAutoUpdateTime()){
-            $data[self::DEFAULT_CREATED_AT_COLUMN] = $currentTime;
-        }
+        if($this->getAutoUpdateTime()) {
+            if ($this->isDateTime(self::DEFAULT_CREATED_AT_COLUMN)
+                && !isset($data[self::DEFAULT_CREATED_AT_COLUMN])
+            ) {
+                $data[self::DEFAULT_CREATED_AT_COLUMN] = $currentTime;
+            }
 
-        if($this->isDateTime(self::DEFAULT_UPDATED_AT_COLUMN)
-            && !isset($data[self::DEFAULT_UPDATED_AT_COLUMN]) && $this->getAutoUpdateTime()){
-            $data[self::DEFAULT_UPDATED_AT_COLUMN] = $currentTime;
+            if ($this->isDateTime(self::DEFAULT_UPDATED_AT_COLUMN)
+                && !isset($data[self::DEFAULT_UPDATED_AT_COLUMN])
+            ) {
+                $data[self::DEFAULT_UPDATED_AT_COLUMN] = $currentTime;
+            }
         }
 
         $res = $this->getDb()->insert(

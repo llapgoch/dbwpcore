@@ -28,6 +28,14 @@ class Base extends \DaveBaker\Core\Base
     }
 
     /**
+     * @return \DaveBaker\Core\App\Request
+     */
+    public function getRequest()
+    {
+        return $this->getApp()->getRequest();
+    }
+
+    /**
      * @return $this
      */
     protected function _preDispatch()

@@ -132,6 +132,17 @@ abstract class Base
     }
 
     /**
+     * @param $className
+     * @param $args
+     * @return object
+     * @throws Object\Exception
+     */
+    public function createObject($className, $args)
+    {
+        return $this->getApp()->getObjectManager()->get($className, $args);
+    }
+
+    /**
      * @param $optionCode string
      * @return string
      *

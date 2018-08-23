@@ -7,6 +7,6 @@ class Password extends Input
     public function init()
     {
         parent::init();
-        $this->setInputType('password');
+        $this->setElementType('password');
     }
 }

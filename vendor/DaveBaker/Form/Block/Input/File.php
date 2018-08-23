@@ -7,6 +7,6 @@ class File extends Input
     public function init()
     {
         parent::init();
-        $this->setInputType('file');
+        $this->setElementType('file');
     }
 }

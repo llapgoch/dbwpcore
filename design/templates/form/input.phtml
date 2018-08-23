@@ -3,8 +3,8 @@
 ?>
 <?php echo $this->getLabelHtml(); ?>
 <input
-    type="<?php echo $block->escAttr($this->getInputType());?>"
-    name="<?php echo $block->escAttr($this->getInputName());?>"
-    value="<?php echo $block->escAttr($this->getInputValue());?>"
+    type="<?php echo $block->escAttr($this->getElementType());?>"
+    name="<?php echo $block->escAttr($this->getElementName());?>"
+    value="<?php echo $block->escAttr($this->getElementValue());?>"
     <?php echo $block->getAttrs();?>
 >

@@ -7,6 +7,6 @@ class Submit extends Input
     public function init()
     {
         parent::init();
-        $this->setInputType('submit');
+        $this->setElementType('submit');
     }
 }

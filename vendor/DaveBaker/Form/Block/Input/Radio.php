@@ -7,6 +7,6 @@ class Radio extends Input
     public function init()
     {
         parent::init();
-        $this->setInputType('radio');
+        $this->setElementType('radio');
     }
 }

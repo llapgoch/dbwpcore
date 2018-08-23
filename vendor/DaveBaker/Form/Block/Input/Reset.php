@@ -7,6 +7,6 @@ class Reset extends Input
     public function init()
     {
         parent::init();
-        $this->setInputType('reset');
+        $this->setElementType('reset');
     }
 }

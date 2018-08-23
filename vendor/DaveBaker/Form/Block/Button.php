@@ -7,6 +7,6 @@ class Button extends Base
     public function init()
     {
         parent::init();
-        $this->setInputType('button');
+        $this->setElementType('button');
     }
 }

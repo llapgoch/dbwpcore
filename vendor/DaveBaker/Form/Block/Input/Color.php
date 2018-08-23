@@ -7,6 +7,6 @@ class Color extends Input
     public function init()
     {
         parent::init();
-        $this->setInputType('color');
+        $this->setElementType('color');
     }
 }

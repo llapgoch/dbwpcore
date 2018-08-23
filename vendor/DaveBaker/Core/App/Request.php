@@ -64,6 +64,14 @@ class Request
     }
 
     /**
+     * @return array
+     */
+    public function getPostParams()
+    {
+        return $this->params[self::POST];
+    }
+
+    /**
      * @param $key
      * @param string $default
      * @return string

@@ -7,6 +7,6 @@ class Search extends Input
     public function init()
     {
         parent::init();
-        $this->setInputType('search');
+        $this->setElementType('search');
     }
 }

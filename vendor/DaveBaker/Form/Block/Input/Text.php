@@ -7,6 +7,6 @@ class Text extends Input
     public function init()
     {
         parent::init();
-        $this->setInputType('text');
+        $this->setElementType('text');
     }
 }
