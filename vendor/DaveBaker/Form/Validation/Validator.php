@@ -1,12 +1,14 @@
 <?php
-namespace DaveBaker\Form\Util;
+namespace DaveBaker\Form\Validation;
+
+use DaveBaker\Form\Validation\Rule\Configurator\Exception;
 
 class Validator extends \DaveBaker\Core\Base
 {
     /** @var array  */
     protected $rules = [];
     /** @var array  */
-    protected $data = [];
+    protected $values = [];
     /** @var string  */
     protected $breakAtFirst = true;
 
@@ -14,10 +16,18 @@ class Validator extends \DaveBaker\Core\Base
      * @param array $data
      * @return $this
      */
-    public function setData($data = [])
+    public function setValues($data = [])
     {
-        $this->data = $data;
+        $this->values = $data;
         return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getValues()
+    {
+        return $this->values;
     }
 
     /**
@@ -32,17 +42,26 @@ class Validator extends \DaveBaker\Core\Base
     }
 
     /**
-     * @param \DaveBaker\Form\Validation\Rule\ConfiguratorInterface $configurator
+     * @param Rule\Configurator\ConfiguratorInterface $configurator
      * @return $this
+     * @throws Exception
      */
     public function configurate(
-        \DaveBaker\Form\Validation\Rule\ConfiguratorInterface $configurator
+        \DaveBaker\Form\Validation\Rule\Configurator\ConfiguratorInterface $configurator
     ) {
+        $configurator
+            ->setValues($this->getValues())
+            ->collate();
+
+        if(!is_array($configurator->getRules())) {
+            throw new Exception('Rule Configurator getRules() must return an array of rules');
+        }
+
         /** @var \DaveBaker\Form\Validation\Rule\RuleInterface $rule */
-        foreach($configurator->getRules() as $rule){
+        foreach ($configurator->getRules() as $rule) {
             $this->addRule($rule);
         }
-        
+
         return $this;
     }
 

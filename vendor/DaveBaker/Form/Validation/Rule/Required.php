@@ -6,7 +6,7 @@ class Required
     extends Base
     implements RuleInterface
 {
-    protected $mainError = "Please enter '{{niceName}}'";
+    protected $mainError = "Please enter a value for '{{niceName}}'";
     protected $inputError = "This is a required field";
 
     /**

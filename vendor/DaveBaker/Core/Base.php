@@ -137,7 +137,7 @@ abstract class Base
      * @return object
      * @throws Object\Exception
      */
-    public function createObject($className, $args)
+    public function createObject($className, $args = [])
     {
         return $this->getApp()->getObjectManager()->get($className, $args);
     }

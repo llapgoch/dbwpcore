@@ -98,7 +98,7 @@ abstract class Base
     protected function doErrorReplacers($string = '')
     {
         foreach($this->getErrorReplacers() as $k => $errorReplacer) {
-            $string = str_replace("{{" . $errorReplacer . "}}", $errorReplacer, $string);
+            $string = str_replace("{{" . $k . "}}", $errorReplacer, $string);
         }
 
         return $string;

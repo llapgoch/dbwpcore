@@ -2,7 +2,7 @@
 
 namespace DaveBaker\Form\Validation\Rule;
 
-class Required
+class Numeric
     extends Base
     implements RuleInterface
 {
