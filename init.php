@@ -35,8 +35,8 @@ This allows for an alternative defaults object to be used, and namespacing local
 new DaveBaker\Core\App(
     "custom_application_namespace",
     new \Namespace\Application\Main,
-    new \DaveBaker\Core\WP\Object\Manager(
-        new \SuttonBaker\Impresario\WP\Config\Object
+    new \DaveBaker\Core\Object\Manager(
+        new \SuttonBaker\Impresario\Config\Object
     )
 );
 */

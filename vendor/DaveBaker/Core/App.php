@@ -4,7 +4,7 @@ namespace DaveBaker\Core;
 
 class App
 {
-    const DEFAULT_OBJECT_MANAGER = '\DaveBaker\Core\WP\Object\Manager';
+    const DEFAULT_OBJECT_MANAGER = '\DaveBaker\Core\Object\Manager';
 
     protected static $apps = [];
     /**
@@ -12,38 +12,38 @@ class App
      */
     protected $namespace;
     /**
-     * @var \DaveBaker\Core\WP\Controller\Manager
+     * @var \DaveBaker\Core\Controller\Manager
      */
     protected $controllerManager;
     /**
-     * @var WP\Page\Manager
+     * @var Page\Manager
      */
     protected $pageManager;
     /**
-     * @var WP\Option\Manager
+     * @var Option\Manager
      */
     protected $optionManager;
 
-    /** @var \DaveBaker\Core\WP\Installer\InstallerInterface object */
+    /** @var \DaveBaker\Core\Installer\InstallerInterface object */
     protected $installerManager;
 
-    /** @var \DaveBaker\Core\WP\Block\Manager */
+    /** @var \DaveBaker\Core\Block\Manager */
     protected $blockManager;
 
-    /** @var \DaveBaker\Core\WP\Layout\Manager */
+    /** @var \DaveBaker\Core\Layout\Manager */
     protected $layoutManager;
 
-    /** @var  \DaveBaker\Core\WP\Layout\Handle\Manager */
+    /** @var  \DaveBaker\Core\Layout\Handle\Manager */
     protected $handleManager;
 
-    /** @var  \DaveBaker\Core\WP\Event\Manager */
+    /** @var  \DaveBaker\Core\Event\Manager */
     protected $eventManager;
 
-    /** @var  \DaveBaker\Core\WP\App\Request */
+    /** @var  \DaveBaker\Core\App\Request */
     protected $request;
 
 
-    /** @var \DaveBaker\Core\WP\Main\MainInterface  */
+    /** @var \DaveBaker\Core\Main\MainInterface  */
     protected $main;
 
     /**
@@ -77,7 +77,7 @@ class App
     /**
      * @param string $namespace
      * @return mixed
-     * @throws WP\App\Exception
+     * @throws App\Exception
      */
     public static function getApp($namespace = '')
     {
@@ -86,7 +86,7 @@ class App
         }
 
         if(!isset(self::$apps[$namespace])){
-            throw new \DaveBaker\Core\WP\App\Exception("App not registered {$namespace}");
+            throw new \DaveBaker\Core\App\Exception("App not registered {$namespace}");
         }
 
         return self::$apps[$namespace];
@@ -150,7 +150,7 @@ class App
     }
 
     /**
-     * @throws WP\Installer\Exception
+     * @throws Installer\Exception
      */
     protected function install()
     {
@@ -158,7 +158,7 @@ class App
     }
 
     /**
-     * @return WP\Main\MainInterface
+     * @return Main\MainInterface
      */
     public function getMain()
     {
@@ -175,7 +175,7 @@ class App
 
     /**
      * @param $helperName
-     * @return \DaveBaker\Core\WP\Helper\Base
+     * @return \DaveBaker\Core\Helper\Base
      */
     public function getHelper($helperName)
     {
@@ -183,38 +183,38 @@ class App
     }
 
     /**
-     * @return WP\Block\Manager
+     * @return Block\Manager
      */
     public function getBlockManager()
     {
         if(!$this->blockManager){
-            $this->blockManager = $this->getObjectManager()->get('\DaveBaker\Core\WP\Block\Manager', [$this]);
+            $this->blockManager = $this->getObjectManager()->get('\DaveBaker\Core\Block\Manager', [$this]);
         }
 
         return $this->blockManager;
     }
 
     /**
-     * @return WP\Event\Manager
+     * @return Event\Manager
      */
     public function getEventManager()
     {
         if(!$this->eventManager){
-            $this->eventManager = $this->getObjectManager()->get('\DaveBaker\Core\WP\Event\Manager', [$this]);
+            $this->eventManager = $this->getObjectManager()->get('\DaveBaker\Core\Event\Manager', [$this]);
         }
 
         return $this->eventManager;
     }
 
     /**
-     * @return WP\Page\Manager
+     * @return Page\Manager
      */
     public function getPageManager()
     {
         if(!$this->pageManager){
             $this->pageManager = $this->getObjectManager()->get(
-                '\DaveBaker\Core\WP\Page\Manager',
-                [$this, $this->getObjectManager()->get('\DaveBaker\Core\WP\Config\Page')]
+                '\DaveBaker\Core\Page\Manager',
+                [$this, $this->getObjectManager()->get('\DaveBaker\Core\Config\Page')]
             );
         }
 
@@ -222,7 +222,7 @@ class App
     }
 
     /**
-     * @return \DaveBaker\Core\WP\Object\Manager
+     * @return \DaveBaker\Core\Object\Manager
      */
     public function getObjectManager()
     {
@@ -230,14 +230,14 @@ class App
     }
 
     /**
-     * @return WP\Layout\Manager
+     * @return Layout\Manager
      */
     public function getLayoutManager()
     {
         if(!$this->layoutManager){
             $this->layoutManager = $this->getObjectManager()->get(
-                '\DaveBaker\Core\WP\Layout\Manager',
-                [$this, $this->getObjectManager()->get('\DaveBaker\Core\WP\Config\Layout')]
+                '\DaveBaker\Core\Layout\Manager',
+                [$this, $this->getObjectManager()->get('\DaveBaker\Core\Config\Layout')]
             );
         }
 
@@ -245,12 +245,12 @@ class App
     }
 
     /**
-     * @return WP\Layout\Handle\Manager
+     * @return Layout\Handle\Manager
      */
     public function getHandleManager()
     {
         if(!$this->handleManager) {
-            $this->handleManager = $this->handleManager = $this->getObjectManager()->get('\DaveBaker\Core\WP\Layout\Handle\Manager', [$this]);
+            $this->handleManager = $this->handleManager = $this->getObjectManager()->get('\DaveBaker\Core\Layout\Handle\Manager', [$this]);
         }
 
         return $this->handleManager;
@@ -258,53 +258,53 @@ class App
 
 
     /**
-     * @return WP\Installer\InstallerInterface
-     * @throws WP\App\Exception
-     * @throws WP\Object\Exception
+     * @return Installer\InstallerInterface
+     * @throws App\Exception
+     * @throws Object\Exception
      */
     public function getInstallerManager()
     {
         if(!$this->installerManager){
-            $this->installerManager = $this->getObjectManager()->get('\DaveBaker\Core\WP\Installer\Manager', [$this]);
+            $this->installerManager = $this->getObjectManager()->get('\DaveBaker\Core\Installer\Manager', [$this]);
 
-            if(!$this->installerManager instanceof \DaveBaker\Core\WP\Installer\InstallerInterface){
-                throw new \DaveBaker\Core\WP\App\Exception("Installer Manager must implement InstallerInterface");
+            if(!$this->installerManager instanceof \DaveBaker\Core\Installer\InstallerInterface){
+                throw new \DaveBaker\Core\App\Exception("Installer Manager must implement InstallerInterface");
             }
         }
         return $this->installerManager;
     }
 
     /**
-     * @return \DaveBaker\Core\WP\App\Request
+     * @return \DaveBaker\Core\App\Request
      */
     public function getRequest()
     {
         if(!$this->request){
-            $this->request = $this->getObjectManager()->get('\DaveBaker\Core\WP\App\Request', [$this]);
+            $this->request = $this->getObjectManager()->get('\DaveBaker\Core\App\Request', [$this]);
         }
 
         return $this->request;
     }
 
     /**
-     * @return WP\Option\Manager
+     * @return Option\Manager
      */
     public function getOptionManager()
     {
         if(!$this->optionManager){
-            $this->optionManager = $this->objectManager->get('\DaveBaker\Core\WP\Option\Manager', [$this]);
+            $this->optionManager = $this->objectManager->get('\DaveBaker\Core\Option\Manager', [$this]);
         }
 
         return $this->optionManager;
     }
 
     /**
-     * @return WP\Controller\Manager|object
+     * @return Controller\Manager|object
      */
     public function getContollerManager()
     {
         if(!$this->controllerManager){
-            $this->controllerManager = $this->getObjectManager()->get('\DaveBaker\Core\WP\Controller\Manager', [$this]);
+            $this->controllerManager = $this->getObjectManager()->get('\DaveBaker\Core\Controller\Manager', [$this]);
         }
 
         return $this->controllerManager;
