@@ -6,7 +6,7 @@ namespace DaveBaker\Form\Block\Input;
  * Class Dave
  * @package DaveBaker\Form\Block\Input
  */
-class Dave
+class Date
     extends Input
     implements \DaveBaker\Form\Block\ValueSetterInterface
 {

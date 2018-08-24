@@ -34,7 +34,6 @@ class Request
      */
     protected function compileParams()
     {
-
         if(is_array($_GET)){
             foreach($_GET as $k => $param){
                 $this->params[self::GET][$k] = stripslashes_deep($param);
