@@ -2,6 +2,10 @@
 
 namespace DaveBaker\Form\Block;
 
+/**
+ * Class Label
+ * @package DaveBaker\Form\Block
+ */
 class Label extends Base
 {
     /** @var string  */

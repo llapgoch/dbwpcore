@@ -2,6 +2,10 @@
 
 namespace DaveBaker\Form\Block\Input;
 
+/**
+ * Class File
+ * @package DaveBaker\Form\Block\Input
+ */
 class File
     extends Input
     implements \DaveBaker\Form\Block\ValueSetterInterface

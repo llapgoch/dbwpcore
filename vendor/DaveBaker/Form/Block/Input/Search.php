@@ -2,6 +2,10 @@
 
 namespace DaveBaker\Form\Block\Input;
 
+/**
+ * Class Search
+ * @package DaveBaker\Form\Block\Input
+ */
 class Search
     extends Input
     implements \DaveBaker\Form\Block\ValueSetterInterface

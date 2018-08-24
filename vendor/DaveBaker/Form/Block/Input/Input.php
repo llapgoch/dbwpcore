@@ -2,6 +2,10 @@
 
 namespace DaveBaker\Form\Block\Input;
 
+/**
+ * Class Input
+ * @package DaveBaker\Form\Block\Input
+ */
 class Input extends \DaveBaker\Form\Block\Base
 {
     /** @var string  */

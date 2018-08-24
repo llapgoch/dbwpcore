@@ -2,6 +2,10 @@
 
 namespace DaveBaker\Form\Block;
 
+/**
+ * Class Form
+ * @package DaveBaker\Form\Block
+ */
 class Form extends Base
 {
     protected $method = 'post';
