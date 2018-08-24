@@ -143,6 +143,19 @@ abstract class Base
     }
 
     /**
+     * @param $identifier
+     * @param array $args
+     * @return object
+     *
+     * Returns an object which typically extends Core/Base and automatically
+     * passes in Core/App as the first parameter
+     */
+    public function createAppObject($identifier, $args = [])
+    {
+        return $this->getApp()->getObjectManager()->getAppObject($identifier, $args);
+    }
+
+    /**
      * @param $optionCode string
      * @return string
      *

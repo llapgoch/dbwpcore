@@ -107,6 +107,28 @@ class Manager extends \DaveBaker\Core\Base
     }
 
     /**
+     * @param $identifier
+     * @param array $args
+     * @return object
+     * @throws Exception
+     *
+     * Returns an object which typically extends Core/Base and automatically
+     * passes in Core/App as the first parameter
+     */
+    public function getAppObject($identifier, $args = [])
+    {
+        if(count($args)){
+            if(($args[0] instanceof \DaveBaker\Core\App) == false){
+                array_unshift($args, [$this->getApp()]);
+            }
+        }else{
+            $args[] = $this->getApp();
+        }
+
+        return $this->get($identifier, $args);
+    }
+
+    /**
      * @param $identifier string
      * @return bool|mixed
      */
