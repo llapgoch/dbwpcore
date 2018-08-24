@@ -8,16 +8,14 @@ class Manager extends \DaveBaker\Core\Base
     const DEFINITION_KEY = 'definition';
 
     const BASE_HELPER_DEFINITION = '\DaveBaker\Core\Helper\{{helperName}}';
-    /**
-     * @var string
-     */
-    protected $namespace;
-    /**
-     * @var array
-     */
 
+    /** @var string */
+    protected $namespace = '';
+
+    /** @var \DaveBaker\Core\Config\ConfigInterface */
     protected $config;
 
+    /** @var array */
     protected $singletonCache = [];
 
     public function __construct(
@@ -28,19 +26,32 @@ class Manager extends \DaveBaker\Core\Base
         $this->config = $config;
     }
 
+    /**
+     * @param $namespace string
+     * @return $this
+     */
     public function setNamespace($namespace)
     {
         $this->namespace = $namespace;
+        return $this;
     }
 
+    /**
+     * @return array
+     */
     public function getDefaults()
     {
         return $this->config->getConfig();
     }
 
+    /**
+     * @param $helperName string
+     * @return object
+     * @throws Exception
+     */
     public function getHelper($helperName){
         $helperPath = str_replace('{{helperName}}', $helperName, self::BASE_HELPER_DEFINITION);
-        $helper = $this->get($helperPath, [$this->getApp()]);
+        $helper = $this->getAppObject($helperPath);
 
         return $helper;
     }
@@ -52,7 +63,7 @@ class Manager extends \DaveBaker\Core\Base
      */
     public function getModel($className)
     {
-        $model = $this->get($className, [$this->getApp()]);
+        $model = $this->getAppObject($className);
 
         if(!$model instanceof \DaveBaker\Core\Model\Db\Base){
             throw new Exception('Created DB Model is not compatible with Base Model');
@@ -61,7 +72,6 @@ class Manager extends \DaveBaker\Core\Base
         return $model;
     }
 
-    
     /**
      * @param $identifier
      * @return mixed
@@ -100,6 +110,7 @@ class Manager extends \DaveBaker\Core\Base
             }
 
             return $object;
+            
         } catch(\Exception $e){
             // Localised exception
             throw new Exception($e->getMessage(), $e->getCode());

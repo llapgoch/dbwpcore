@@ -107,7 +107,7 @@ class Manager extends \DaveBaker\Core\Base
                 if(isset($this->registeredLayouts[$layout])){
                     $layoutInstance = $this->registeredLayouts[$layout];
                 }else {
-                    $layoutInstance = $this->getApp()->getObjectManager()->get($layout, [$this->getApp()]);
+                    $layoutInstance = $this->getApp()->getObjectManager()->getAppObject($layout);
                 }
 
                 $this->registeredLayouts[$layout] = $layoutInstance;

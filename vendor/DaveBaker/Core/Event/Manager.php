@@ -7,6 +7,7 @@ class Manager extends \DaveBaker\Core\Base
     protected $namespaceCode = "event";
     /** @var array */
     protected $events = [];
+    /** @var \DaveBaker\Core\Event\Context */
     protected $context;
 
     /**
@@ -19,7 +20,7 @@ class Manager extends \DaveBaker\Core\Base
     public function fire($eventIdentifiers = [], $args = [])
     {
         if(!$this->context) {
-            $this->context = $this->getApp()->getObjectManager()->get('\DaveBaker\Core\Event\Context', [$this->getApp()]);
+            $this->context = $this->getApp()->getObjectManager()->getAppObject('\DaveBaker\Core\Event\Context');
         }
 
         $this->context->unsetData();
@@ -62,6 +63,7 @@ class Manager extends \DaveBaker\Core\Base
         }
 
         if(!$allowMultiples) {
+            /** @var array $event */
             foreach ($this->events[$eventIdentifier] as $event) {
                 // Event has already been added
                 if ($event['callback'] == $callback) {

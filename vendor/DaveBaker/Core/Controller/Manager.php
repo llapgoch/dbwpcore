@@ -123,7 +123,7 @@ class Manager extends \DaveBaker\Core\Base
             return;
         }
 
-        $controller = $this->getApp()->getObjectManager()->get($controllerClass, [$this->getApp()]);
+        $controller = $this->getApp()->getObjectManager()->getAppObject($controllerClass);
 
         if(!$controller instanceof \DaveBaker\Core\Controller\ControllerInterface){
             throw new Exception("Controller is not compatible with ControllerInterface");

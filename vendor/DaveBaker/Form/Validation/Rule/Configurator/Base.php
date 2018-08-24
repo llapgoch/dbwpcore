@@ -18,7 +18,7 @@ abstract class Base
      */
     public function createRule($classSuffix, $name, $niceName = null, $value = null)
     {
-        $rule = $this->createObject(self::RULE_BASE . $classSuffix, [$this->getApp()]);
+        $rule = $this->createAppObject(self::RULE_BASE . $classSuffix);
         
         if(!($rule instanceof \DaveBaker\Form\Validation\Rule\RuleInterface)){
             throw new Exception("Rule {$classSuffix} is not compatible with RuleInterface");
