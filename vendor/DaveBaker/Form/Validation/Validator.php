@@ -8,17 +8,17 @@ class Validator extends \DaveBaker\Core\Base
     /** @var array  */
     protected $rules = [];
     /** @var array  */
-    protected $values = [];
+    protected $values;
     /** @var string  */
     protected $breakAtFirst = true;
 
     /**
-     * @param array $data
+     * @param array $values
      * @return $this
      */
-    public function setValues($data = [])
+    public function setValues($values)
     {
-        $this->values = $data;
+        $this->values = $values;
         return $this;
     }
 
@@ -84,11 +84,16 @@ class Validator extends \DaveBaker\Core\Base
     }
 
     /**
-     * @return array
+     * @return array|bool
+     * @throws Exception
      */
     public function validate()
     {
         $errors = [];
+
+        if(!is_array($this->getValues())){
+            throw new Exception('Values must be set before calling validate');
+        }
 
         /** @var \DaveBaker\Form\Validation\Rule\RuleInterface $rule */
         foreach($this->rules as $rule){
