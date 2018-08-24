@@ -1,16 +1,20 @@
 <?php
 namespace DaveBaker\Form\Validation;
 
+use DaveBaker\Form\Validation\Error\ErrorInterface;
 use DaveBaker\Form\Validation\Rule\Configurator\Exception;
 
 class Validator extends \DaveBaker\Core\Base
 {
-    /** @var array  */
+    /** @var array */
     protected $rules = [];
-    /** @var array  */
+    /** @var array */
     protected $values;
-    /** @var string  */
+    /** @var string */
     protected $breakAtFirst = true;
+
+    /** @var array */
+    private $errors = [];
 
     /**
      * @param array $values
@@ -28,6 +32,23 @@ class Validator extends \DaveBaker\Core\Base
     public function getValues()
     {
         return $this->values;
+    }
+
+    /**
+     * @return array
+     */
+    public function getErrors()
+    {
+        return $this->errors;
+    }
+
+    /**
+     * @param Error\ErrorInterface $error
+     */
+    public function addError(
+        Error\ErrorInterface $error
+    ) {
+        $this->errors[] = $error;
     }
 
     /**
@@ -89,7 +110,7 @@ class Validator extends \DaveBaker\Core\Base
      */
     public function validate()
     {
-        $errors = [];
+        $this->errors = [];
 
         if(!is_array($this->getValues())){
             throw new Exception('Values must be set before calling validate');
@@ -101,15 +122,13 @@ class Validator extends \DaveBaker\Core\Base
                 continue;
             }
 
+            $this->addError($ruleResult);
+
             if($this->breakAtFirst){
-                return [$ruleResult];
+                return false;
             }
 
-            $errors[] = $ruleResult;
-        }
-
-        if(count($errors)){
-            return $errors;
+            $this->errors[] = $ruleResult;
         }
 
         return true;

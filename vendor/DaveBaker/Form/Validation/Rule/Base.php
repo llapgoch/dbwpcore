@@ -131,12 +131,12 @@ abstract class Base
     }
 
     /**
-     * @return \DaveBaker\Form\Validation\Rule\Error
+     * @return \DaveBaker\Form\Validation\Error\ErrorInterface
      */
     protected function createError()
     {
-        /** @var \DaveBaker\Form\Validation\Rule\Error $error */
-        $error = $this->createObject('\DaveBaker\Form\Validation\Rule\Error');
+        /** @var \DaveBaker\Form\Validation\Error\ErrorInterface $error */
+        $error = $this->createObject('\DaveBaker\Form\Validation\Error\Error');
         return $error->setErrors($this->getMainErrorOutput(), $this->getInputErrorOutput());
     }
 }
