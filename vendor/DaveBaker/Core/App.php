@@ -42,6 +42,8 @@ class App
     /** @var  \DaveBaker\Core\App\Request */
     protected $request;
 
+    /** @var  \DaveBaker\Core\Config\ConfigInterface */
+    protected $generalConfig;
 
     /** @var \DaveBaker\Core\Main\MainInterface  */
     protected $main;
@@ -183,12 +185,25 @@ class App
     }
 
     /**
+     * @return Config\ConfigInterface
+     * @throws Object\Exception
+     */
+    public function getGeneralConfig()
+    {
+        if(!$this->generalConfig){
+            $this->generalConfig = $this->getObjectManager()->get('\DaveBaker\Core\Config\General');
+        }
+
+        return $this->generalConfig;
+    }
+
+    /**
      * @return Block\Manager
      */
     public function getBlockManager()
     {
         if(!$this->blockManager){
-            $this->blockManager = $this->getObjectManager()->get('\DaveBaker\Core\Block\Manager', [$this]);
+            $this->blockManager = $this->getObjectManager()->getAppObject('\DaveBaker\Core\Block\Manager');
         }
 
         return $this->blockManager;
@@ -200,7 +215,7 @@ class App
     public function getEventManager()
     {
         if(!$this->eventManager){
-            $this->eventManager = $this->getObjectManager()->get('\DaveBaker\Core\Event\Manager', [$this]);
+            $this->eventManager = $this->getObjectManager()->getAppObject('\DaveBaker\Core\Event\Manager');
         }
 
         return $this->eventManager;
@@ -235,9 +250,9 @@ class App
     public function getLayoutManager()
     {
         if(!$this->layoutManager){
-            $this->layoutManager = $this->getObjectManager()->get(
+            $this->layoutManager = $this->getObjectManager()->getAppObject(
                 '\DaveBaker\Core\Layout\Manager',
-                [$this, $this->getObjectManager()->get('\DaveBaker\Core\Config\Layout')]
+                [$this->getObjectManager()->get('\DaveBaker\Core\Config\Layout')]
             );
         }
 
@@ -250,7 +265,7 @@ class App
     public function getHandleManager()
     {
         if(!$this->handleManager) {
-            $this->handleManager = $this->handleManager = $this->getObjectManager()->get('\DaveBaker\Core\Layout\Handle\Manager', [$this]);
+            $this->handleManager = $this->handleManager = $this->getObjectManager()->getAppObject('\DaveBaker\Core\Layout\Handle\Manager');
         }
 
         return $this->handleManager;
@@ -265,7 +280,7 @@ class App
     public function getInstallerManager()
     {
         if(!$this->installerManager){
-            $this->installerManager = $this->getObjectManager()->get('\DaveBaker\Core\Installer\Manager', [$this]);
+            $this->installerManager = $this->getObjectManager()->getAppObject('\DaveBaker\Core\Installer\Manager');
 
             if(!$this->installerManager instanceof \DaveBaker\Core\Installer\InstallerInterface){
                 throw new \DaveBaker\Core\App\Exception("Installer Manager must implement InstallerInterface");
@@ -280,7 +295,7 @@ class App
     public function getRequest()
     {
         if(!$this->request){
-            $this->request = $this->getObjectManager()->get('\DaveBaker\Core\App\Request', [$this]);
+            $this->request = $this->getObjectManager()->getAppObject('\DaveBaker\Core\App\Request');
         }
 
         return $this->request;
@@ -292,7 +307,7 @@ class App
     public function getOptionManager()
     {
         if(!$this->optionManager){
-            $this->optionManager = $this->objectManager->get('\DaveBaker\Core\Option\Manager', [$this]);
+            $this->optionManager = $this->objectManager->getAppObject('\DaveBaker\Core\Option\Manager');
         }
 
         return $this->optionManager;
@@ -304,7 +319,7 @@ class App
     public function getContollerManager()
     {
         if(!$this->controllerManager){
-            $this->controllerManager = $this->getObjectManager()->get('\DaveBaker\Core\Controller\Manager', [$this]);
+            $this->controllerManager = $this->getObjectManager()->getAppObject('\DaveBaker\Core\Controller\Manager');
         }
 
         return $this->controllerManager;

@@ -78,8 +78,8 @@ class Manager extends \DaveBaker\Core\Base
      */
     public function getDefaultClassName($identifier)
     {
-        if(isset($this->getDefaults()[$identifier])){
-            return $this->getDefaults()[$identifier]['definition'];
+        if(isset($this->getDefaults()[$identifier][self::DEFINITION_KEY])){
+            return $this->getDefaults()[$identifier][self::DEFINITION_KEY];
         }
 
         return $identifier;
@@ -130,7 +130,7 @@ class Manager extends \DaveBaker\Core\Base
     {
         if(count($args)){
             if(($args[0] instanceof \DaveBaker\Core\App) == false){
-                array_unshift($args, [$this->getApp()]);
+                array_unshift($args, $this->getApp());
             }
         }else{
             $args[] = $this->getApp();
