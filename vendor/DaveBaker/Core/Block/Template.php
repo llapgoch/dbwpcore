@@ -13,18 +13,59 @@ class Template
 
     /** @var array */
     protected $attributes = [];
+    protected $classes = [];
 
     /**
      * @return string
-     * Output all registered attributes in HTML
+     * Output all registered attributes and classes in HTML
      */
     public function getAttrs()
     {
-        $attrString = '';
-
-        return implode(' ', array_map(function($k, $v){
+        $attrString  = implode(' ', array_map(function($k, $v){
             return $this->escapeHtml($k) . "=" . $this->escAttr($v);
         }, array_keys($this->attributes), $this->attributes));
+
+        if($this->classes){
+            $attrString .= " class='" . implode(" ", array_map([$this, 'escAttr'], $this->classes)) . "'";
+        }
+
+        return $attrString;
+    }
+
+    /**
+     * @param $classes array|string
+     * @return $this
+     */
+    public function addClass($classes)
+    {
+        if(!is_array($classes)){
+            $classes = [$classes];
+        }
+
+        foreach ($classes as $class){
+            $this->classes[] = (string) $class;
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param $classes array|string
+     * @return $this
+     */
+    public function removeClass($classes)
+    {
+        if(!is_array($classes)){
+            $classes = [$classes];
+        }
+
+        foreach($this->classes as $k => $class){
+            if(in_array($class, $classes)){
+                unset($this->classes[$k]);
+            }
+        }
+
+        return $this;
     }
 
     /**
@@ -42,7 +83,7 @@ class Template
      *
      * An array of key/value pairs of name/value
      */
-    public function addAttributes($attributes = [])
+    public function addAttribute($attributes = [])
     {
         $this->attributes = array_merge($this->attributes, $attributes);
         return $this;
@@ -106,4 +147,5 @@ class Template
 
         return "";
     }
+
 }
