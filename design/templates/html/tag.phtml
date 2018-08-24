@@ -1,6 +1,6 @@
 <?php
 /** @var $block \DaveBaker\Core\Block\Html\Tag */
 ?>
-<<?php echo $block->escapeHtml($block->$this->getTag());?>>
+<<?php echo $block->escapeHtml($block->$this->getTag());?> <?php echo $block->getAttrs();?>>
     <?php echo $block->getChildHtml(''); ?>
 </<?php echo $block->getTag();?>>
