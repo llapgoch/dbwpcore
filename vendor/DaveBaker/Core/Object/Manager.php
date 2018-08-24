@@ -161,7 +161,9 @@ class Manager extends \DaveBaker\Core\Base
     public function isSingleton($identifier)
     {
         if($definition = $this->getDefinition($identifier)){
-            return $definition[self::SINGLETON_KEY];
+            if(isset($definition[self::SINGLETON_KEY])) {
+                return (bool) $definition[self::SINGLETON_KEY];
+            }
         }
 
         return false;
