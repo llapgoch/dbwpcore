@@ -2,7 +2,9 @@
 
 namespace DaveBaker\Form\Block;
 
-class Textarea extends Base
+class Textarea
+    extends Base
+    implements ValueSetterInterface
 {
     protected function init()
     {

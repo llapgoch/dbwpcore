@@ -2,7 +2,9 @@
 
 namespace DaveBaker\Form\Block;
 
-class Base extends \DaveBaker\Core\Block\Html\Base
+class Base
+    extends \DaveBaker\Core\Block\Html\Base
+    implements BaseInterface
 {
     /** @var string  */
     protected $elementName = '';

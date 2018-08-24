@@ -44,6 +44,23 @@ class Manager
     }
 
     /**
+     * @param $blockName string
+     * @return BlockInterface|null
+     */
+    public function getBlock($blockName)
+    {
+        return $this->getBlockList()->get($blockName);
+    }
+
+    /**
+     * @return BlockList
+     */
+    public function getBlockList()
+    {
+        return $this->blockList;
+    }
+
+    /**
      * @param $blockName
      * @return $this|void
      */

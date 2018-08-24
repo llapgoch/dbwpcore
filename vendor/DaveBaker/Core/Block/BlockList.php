@@ -81,7 +81,11 @@ class BlockList implements \IteratorAggregate, \Countable
      */
     public function get($blockName)
     {
-        return $this->blocks[$blockName];
+        if(isset($this->blocks[$blockName])) {
+            return $this->blocks[$blockName];
+        }
+
+        return null;
     }
     
     /**
