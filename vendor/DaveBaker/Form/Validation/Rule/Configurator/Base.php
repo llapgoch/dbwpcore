@@ -16,13 +16,19 @@ abstract class Base
      * @return \DaveBaker\Form\Validation\Rule\RuleInterface
      * @throws Exception
      */
-    public function createRule($classSuffix)
+    public function createRule($classSuffix, $name, $niceName = null, $value = null)
     {
         $rule = $this->createObject(self::RULE_BASE . $classSuffix, [$this->getApp()]);
         
         if(!($rule instanceof \DaveBaker\Form\Validation\Rule\RuleInterface)){
             throw new Exception("Rule {$classSuffix} is not compatible with RuleInterface");
         }
+
+        $rule->configure(
+            $name,
+            $niceName ? $niceName : $name,
+            $value ? $value : $this->getValue($name)
+        );
 
         return $rule;
     }

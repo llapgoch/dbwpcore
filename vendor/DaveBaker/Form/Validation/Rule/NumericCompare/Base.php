@@ -1,9 +1,9 @@
 <?php
 
-namespace DaveBaker\Form\Validation\Rule\NumberCompare;
+namespace DaveBaker\Form\Validation\Rule\NumericCompare;
 
 abstract class Base
-    extends \DaveBaker\Form\Validation\Rule\Base
+    extends \DaveBaker\Form\Validation\Rule\Numeric
 {
     protected $compareNumber = 0;
 

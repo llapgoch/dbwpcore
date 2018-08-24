@@ -1,6 +1,6 @@
 <?php
 
-namespace DaveBaker\Form\Validation\Rule\NumberCompare;
+namespace DaveBaker\Form\Validation\Rule\NumericCompare;
 
 class GreaterEqual
     extends Base
@@ -14,6 +14,10 @@ class GreaterEqual
      */
     public function validate()
     {
+        if(($result = parent::validate()) !== true){
+            return $result;
+        }
+        
         if((float) $this->getValue() < (float) $this->compareNumber){
             return $this->createError();
         }
