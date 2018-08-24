@@ -7,7 +7,7 @@ namespace DaveBaker\Form\Block;
  * @package DaveBaker\Form\Block
  */
 class Base
-    extends \DaveBaker\Core\Block\Html\Base
+    extends \DaveBaker\Core\Block\Template
     implements BaseInterface
 {
     /** @var string  */

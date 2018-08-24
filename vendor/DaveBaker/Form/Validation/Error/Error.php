@@ -19,4 +19,20 @@ class Error implements ErrorInterface
         return $this;
     }
 
+    /**
+     * @return string
+     */
+    public function getMainError()
+    {
+        return $this->mainError;
+    }
+
+    /**
+     * @return string
+     */
+    public function getInputError()
+    {
+        return $this->inputError;
+    }
+
 }
