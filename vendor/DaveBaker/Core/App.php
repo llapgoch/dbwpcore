@@ -265,7 +265,7 @@ class App
     public function getHandleManager()
     {
         if(!$this->handleManager) {
-            $this->handleManager = $this->handleManager = $this->getObjectManager()->getAppObject('\DaveBaker\Core\Layout\Handle\Manager');
+            $this->handleManager = $this->getObjectManager()->getAppObject('\DaveBaker\Core\Layout\Handle\Manager');
         }
 
         return $this->handleManager;

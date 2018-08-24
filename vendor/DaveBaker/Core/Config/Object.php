@@ -24,18 +24,7 @@ class Object extends Base
         '\DaveBaker\Core\Config\General' => [
             'singleton' => true
         ],
-
-        /* Managers */
-        '\DaveBaker\Core\Option\Manager' => [
-            'singleton' => false
-        ],
-        '\DaveBaker\Core\Page\Manager' => [
-            'singleton' => true
-        ],
-        '\DaveBaker\Core\Event\Manager' => [
-            'singleton' => false
-        ],
-
+        
         /* Helpers */
         '\DaveBaker\Core\Helper\Util' => [
             'singleton' => true
