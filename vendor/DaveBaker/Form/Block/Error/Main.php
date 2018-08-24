@@ -10,6 +10,9 @@ namespace DaveBaker\Form\Block\Error;
  */
 class Main extends \DaveBaker\Core\Block\Template
 {
+    /**
+     * @var array
+     */
     protected $errors = [];
 
     protected function init()

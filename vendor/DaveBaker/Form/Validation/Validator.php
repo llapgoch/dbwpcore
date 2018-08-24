@@ -11,7 +11,7 @@ class Validator extends \DaveBaker\Core\Base
     /** @var array */
     protected $values;
     /** @var string */
-    protected $breakAtFirst = true;
+    protected $breakAtFirst = false;
 
     /** @var array */
     private $errors = [];
@@ -92,7 +92,7 @@ class Validator extends \DaveBaker\Core\Base
      */
     public function setBreakAtFirst($breakAtFirst)
     {
-        $this->breakAtFirst = $breakAtFirst;
+        $this->breakAtFirst = (bool) $breakAtFirst;
         return $this;
     }
 
@@ -102,6 +102,14 @@ class Validator extends \DaveBaker\Core\Base
     public function getBreakAtFirst()
     {
         return $this->breakAtFirst;
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasErrors()
+    {
+        return (bool) count($this->errors);
     }
 
     /**
@@ -127,8 +135,10 @@ class Validator extends \DaveBaker\Core\Base
             if($this->breakAtFirst){
                 return false;
             }
+        }
 
-            $this->errors[] = $ruleResult;
+        if($this->hasErrors()){
+            return false;
         }
 
         return true;

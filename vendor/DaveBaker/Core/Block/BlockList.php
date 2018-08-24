@@ -60,6 +60,25 @@ class BlockList implements \IteratorAggregate, \Countable
     }
 
     /**
+     * @param array $blockNames
+     * @return $this
+     */
+    public function remove($blockNames = [])
+    {
+        if(!is_array($blockNames)){
+            $blockNames = [$blockNames];
+        }
+
+        foreach($blockNames as $blockName){
+            if(isset($this->blocks[$blockName])){
+                unset($this->blocks[$blockName]);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
      * @return $this
      */
     public function order()

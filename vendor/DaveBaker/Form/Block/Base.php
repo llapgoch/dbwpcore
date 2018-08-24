@@ -16,12 +16,7 @@ class Base
     protected $elementValue = '';
     /** @var string  */
     protected $elementType = '';
-
-    protected function init()
-    {
-        parent::init();
-    }
-
+    
     /**
      * @param $elementName string
      * @return $this

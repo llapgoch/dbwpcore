@@ -18,6 +18,9 @@ abstract class Base extends \DaveBaker\Core\Object\Base
     /** @var \DaveBaker\Core\App  */
     protected $app;
 
+    /** @var array  */
+    protected $excludedChildren = [];
+
     // Shortcodes and actions are only used when registering blocks with the layout manager.
     /** @var string  */
     protected $shortcode = '';
@@ -63,6 +66,19 @@ abstract class Base extends \DaveBaker\Core\Object\Base
         \DaveBaker\Core\Block\BlockInterface $block
     ) {
         $this->childBlocks->add($block);
+        return $this;
+    }
+
+    /**
+     * @param $childBlock string
+     * @return $this
+     */
+    public function excludeChild($childBlock)
+    {
+        if(!in_array($childBlock, $this->excludedChildren)) {
+            $this->excludedChildren[] = $childBlock;
+        }
+
         return $this;
     }
 
@@ -184,12 +200,12 @@ abstract class Base extends \DaveBaker\Core\Object\Base
 
     /**
      * @param string $blockName
+     * @param array $exclude
      * @return string
      */
-    public function getChildHtml($blockName = '')
+    public function getChildHtml($blockName = '', $exclude = [])
     {
-        $this->getChildBlocks()->order();
-        
+
         if($blockName){
             if($block = $this->childBlocks->get($blockName)){
                 return $block->render();
@@ -198,10 +214,25 @@ abstract class Base extends \DaveBaker\Core\Object\Base
             return '';
         }
 
+        if(!is_array($exclude)){
+            $exclude = [$exclude];
+        }
+
+        $exclude = array_unique(array_merge($this->excludedChildren, $exclude));
+
+        $blockList = clone $this->getChildBlocks();
+
+        if($exclude){
+            $blockList->remove($exclude);
+        }
+
+        $blockList->order();
+
+
         $html = '';
 
         /** @var \DaveBaker\Core\Block\BlockInterface $block */
-        foreach($this->getChildBlocks() as $block){
+        foreach($blockList as $block){
             $html .= $block->render();
         }
         
