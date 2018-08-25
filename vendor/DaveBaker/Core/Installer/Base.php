@@ -9,7 +9,6 @@ abstract class Base
     extends \DaveBaker\Core\Base
     implements BaseInterface
 {
-    const VERSION_OPTION = 'version';
 
     /** @var string  */
     protected $namespaceCode = "installer";
@@ -17,7 +16,7 @@ abstract class Base
     protected $query;
 
     /** @var string */
-    protected $installerNamespace;
+    protected $installerCode;
 
     /** Override to run local installers */
     public abstract function install();
@@ -28,16 +27,21 @@ abstract class Base
      */
     public function checkInstall()
     {
-        if(!$this->installerNamespace){
+        if(!$this->installerCode){
             throw new Exception("installerNamespace not set in " . getClass($this));
         }
 
         /** @var $config \DaveBaker\Core\Config\Installer */
         $config = $this->getApp()->getObjectManager()->get('\DaveBaker\Core\Config\Installer');
-        $installedVersion = $this->getOption(self::VERSION_OPTION);
-        $currentVersion = $config->getConfigValue(self::VERSION_OPTION);
 
-        if(version_compare($currentVersion, $installedVersion, ">")){
+        if(!$this->getConfigValue($this->installerCode)){
+            return;
+        }
+
+        $installedVersion = $this->getOption($this->installerCode);
+        $currentVersion = $config->getConfigValue($this->installerCode);
+
+        if(!$installedVersion || version_compare($currentVersion, $installedVersion, ">")){
             try {
                 $this->install();
 
@@ -48,6 +52,8 @@ abstract class Base
             }
         }
     }
+
+
 
     /**
      * @return \DaveBaker\Core\Db\Query
