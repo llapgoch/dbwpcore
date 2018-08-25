@@ -121,6 +121,7 @@ class App
     /**
      * @return $this
      * @throws Event\Exception
+     * @throws Object\Exception
      */
     protected function initApplication()
     {
@@ -162,7 +163,8 @@ class App
 
     /**
      * @param $helperName
-     * @return \DaveBaker\Core\Helper\Base
+     * @return object
+     * @throws Object\Exception
      */
     public function getHelper($helperName)
     {
@@ -183,7 +185,8 @@ class App
     }
 
     /**
-     * @return Block\Manager
+     * @return Block\Manager|object
+     * @throws Object\Exception
      */
     public function getBlockManager()
     {
@@ -195,7 +198,8 @@ class App
     }
 
     /**
-     * @return Event\Manager
+     * @return Event\Manager|object
+     * @throws Object\Exception
      */
     public function getEventManager()
     {
@@ -207,7 +211,8 @@ class App
     }
 
     /**
-     * @return Page\Manager
+     * @return Page\Manager|object
+     * @throws Object\Exception
      */
     public function getPageManager()
     {
@@ -231,7 +236,8 @@ class App
     }
 
     /**
-     * @return Layout\Manager
+     * @return Layout\Manager|object
+     * @throws Object\Exception
      */
     public function getLayoutManager()
     {
@@ -246,7 +252,8 @@ class App
     }
 
     /**
-     * @return Layout\Handle\Manager
+     * @return Layout\Handle\Manager|object
+     * @throws Object\Exception
      */
     public function getHandleManager()
     {
@@ -268,15 +275,17 @@ class App
         if(!$this->installerManager){
             $this->installerManager = $this->getObjectManager()->getAppObject('\DaveBaker\Core\Installer\Manager');
 
+            var_dump(get_class($this->installerManager));
             if(!$this->installerManager instanceof \DaveBaker\Core\Installer\ManagerInterface){
-                throw new \DaveBaker\Core\App\Exception("Installer Manager must implement InstallerInterface");
+                throw new \DaveBaker\Core\App\Exception("Installer Manager must implement ManagerInterface");
             }
         }
         return $this->installerManager;
     }
 
     /**
-     * @return \DaveBaker\Core\App\Request
+     * @return App\Request|object
+     * @throws Object\Exception
      */
     public function getRequest()
     {
@@ -288,7 +297,8 @@ class App
     }
 
     /**
-     * @return Option\Manager
+     * @return Option\Manager|object
+     * @throws Object\Exception
      */
     public function getOptionManager()
     {
@@ -301,6 +311,7 @@ class App
 
     /**
      * @return Controller\Manager|object
+     * @throws Object\Exception
      */
     public function getContollerManager()
     {
