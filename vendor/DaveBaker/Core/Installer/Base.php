@@ -28,7 +28,7 @@ abstract class Base
     public function checkInstall()
     {
         if(!$this->installerCode){
-            throw new Exception("installerNamespace not set in " . getClass($this));
+            throw new Exception("installerNamespace not set in " . get_class($this));
         }
 
         /** @var $config \DaveBaker\Core\Config\Installer */

@@ -96,6 +96,7 @@ class App
     protected function addEvents()
     {
         add_action('init', function(){
+            $this->getMain()->registerInstallers();
             $this->install();
         });
 
@@ -275,7 +276,6 @@ class App
         if(!$this->installerManager){
             $this->installerManager = $this->getObjectManager()->getAppObject('\DaveBaker\Core\Installer\Manager');
 
-            var_dump(get_class($this->installerManager));
             if(!$this->installerManager instanceof \DaveBaker\Core\Installer\ManagerInterface){
                 throw new \DaveBaker\Core\App\Exception("Installer Manager must implement ManagerInterface");
             }

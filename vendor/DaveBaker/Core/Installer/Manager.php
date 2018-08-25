@@ -18,6 +18,7 @@ class Manager
      */
     public final function register($installerClass)
     {
+        var_dump("ref");
         if(!is_array($installerClass)){
             $installerClass = [$installerClass];
         }
@@ -30,6 +31,7 @@ class Manager
      * @param $installerClass
      * @return $this
      * @throws Exception
+     * @throws \DaveBaker\Core\Object\Exception
      */
     protected final function add($installerClass)
     {
@@ -43,11 +45,17 @@ class Manager
         return $this;
     }
 
+    /**
+     * @return $this
+     */
     public function checkInstall()
     {
         /** @var ManagerInterface $installer */
         foreach($this->installers as $installer){
+            var_dump("check");
             $installer->checkInstall();
         }
+
+        return $this;
     }
 }

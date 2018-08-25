@@ -30,12 +30,13 @@ abstract class Base
     {
         return $this;
     }
-    
+
     /**
      * @param $event
      * @param $callback
      * @param bool $allowMultiples
      * @return $this
+     * @throws Object\Exception
      */
     public function addEvent($event, $callback, $allowMultiples = false)
     {
@@ -49,9 +50,11 @@ abstract class Base
     }
 
     /**
-     * @param $event string
+     * @param $event
      * @param array $params
-     * @return $this
+     * @return Event\Context
+     * @throws Event\Exception
+     * @throws Object\Exception
      */
     public function fireEvent($event, $params = [])
     {
@@ -65,9 +68,10 @@ abstract class Base
     }
 
     /**
-     * @param $event string
-     * @param $callback object|bool
+     * @param $event
+     * @param bool $callback
      * @return $this
+     * @throws Object\Exception
      */
     public function removeEvent($event, $callback = false)
     {
@@ -84,9 +88,10 @@ abstract class Base
     }
 
     /**
-     * @param $optionCode string
-     * @param $value mixed
+     * @param $optionCode
+     * @param $value
      * @return $this
+     * @throws Object\Exception
      */
     public function setOption($optionCode, $value)
     {
@@ -95,8 +100,9 @@ abstract class Base
     }
 
     /**
-     * @param $optionCode string
-     * @return mixed|void
+     * @param $optionCode
+     * @return mixed
+     * @throws Object\Exception
      */
     public function getOption($optionCode)
     {
@@ -129,6 +135,7 @@ abstract class Base
      * @param $identifier
      * @param array $args
      * @return object
+     * @throws Object\Exception
      *
      * Returns an object which typically extends Core/Base and automatically
      * passes in Core/App as the first parameter
@@ -151,7 +158,8 @@ abstract class Base
     }
 
     /**
-     * @return \DaveBaker\Core\Option\Manager
+     * @return Option\Manager|object
+     * @throws Object\Exception
      */
     protected function getOptionManager()
     {
@@ -159,7 +167,8 @@ abstract class Base
     }
 
     /**
-     * @return Event\Manager
+     * @return Event\Manager|object
+     * @throws Object\Exception
      */
     protected function getEventManager()
     {
