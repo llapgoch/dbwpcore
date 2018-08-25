@@ -10,7 +10,11 @@ namespace DaveBaker\Core\Config;
  */
 class General extends Base {
     protected $config = [
-        'datePattern' => '/^(\d{2})\/(\d{2})\/(\d{4})$/',
-        'dbDateFormat' => 'Y-m-d H:i:s'
+        'dateTimeDbFormat' => 'Y-m-d H:i:s',
+        'dateLocalPattern' => '/^(\d{2})\/(\d{2})\/(\d{4})$/',
+        'dateLocalOutputFormat' => 'l, F jS Y',
+        'dateTimeLocalOutputFormat' => 'l, F jS Y, H:i A',
+        'dateLocalShortOutputFormat' => 'j/n/Y',
+        'dateTimeLocalShortOutputFormat' => 'j/n/Y H:i A'
     ];
 }

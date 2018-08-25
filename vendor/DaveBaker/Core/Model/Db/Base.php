@@ -44,6 +44,7 @@ abstract class Base
      * @param $id
      * @param string $column
      * @throws Exception
+     * @return $this
      */
     public function load($id, $column = '')
     {
@@ -67,6 +68,8 @@ abstract class Base
         } catch (\Exception $e){
             throw new Exception($e->getMessage(), $e->getCode());
         }
+
+        return $this;
     }
 
     /**
@@ -147,9 +150,10 @@ abstract class Base
         }
 
         $this->fireEvent('before_insert_save');
-        $currentTime = $this->getDateHelper()->getDbTime();
 
         if($this->getAutoUpdateTime()) {
+            $currentTime = $this->getDateHelper()->utcTimestampToDb();
+
             if ($this->isDateTime(self::DEFAULT_CREATED_AT_COLUMN)
                 && !isset($data[self::DEFAULT_CREATED_AT_COLUMN])
             ) {
@@ -192,7 +196,7 @@ abstract class Base
 
         // Always update updated_at columns on save
         if($this->isDateTime(self::DEFAULT_UPDATED_AT_COLUMN) && $this->getAutoUpdateTime()){
-            $data[self::DEFAULT_UPDATED_AT_COLUMN] = $this->getDateHelper()->getDbTime();
+            $data[self::DEFAULT_UPDATED_AT_COLUMN] = $this->getDateHelper()->utcTimestampToDb();
         }
 
         $this->getDb()->update(
@@ -277,8 +281,8 @@ abstract class Base
     public function getNamespacedEvent($event)
     {
         return self::MODEL_NAMESPACE .
-        "_" . $this->tableName .
-        "_" . $event;
+            "_" . $this->tableName .
+            "_" . $event;
     }
 
     /**
@@ -288,9 +292,9 @@ abstract class Base
     public function getNamespacedOption($optionCode)
     {
         return $this->getApp()->getNamespace() .
-        "_" . self::MODEL_NAMESPACE .
-        "_" .$this->tableName .
-        "_" . $optionCode;
+            "_" . self::MODEL_NAMESPACE .
+            "_" .$this->tableName .
+            "_" . $optionCode;
     }
 
     /**
