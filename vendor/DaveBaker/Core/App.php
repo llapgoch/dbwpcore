@@ -1,56 +1,41 @@
 <?php
 
 namespace DaveBaker\Core;
-
+/**
+ * Class App
+ * @package DaveBaker\Core
+ */
 class App
 {
     const DEFAULT_OBJECT_MANAGER = '\DaveBaker\Core\Object\Manager';
 
+    /** @var array */
     protected static $apps = [];
-    /**
-     * @var string
-     */
+    /** @var string */
     protected $namespace;
-    /**
-     * @var \DaveBaker\Core\Controller\Manager
-     */
+    /** @var \DaveBaker\Core\Controller\Manager */
     protected $controllerManager;
-    /**
-     * @var Page\Manager
-     */
+    /** @var Page\Manager */
     protected $pageManager;
-    /**
-     * @var Option\Manager
-     */
+    /** @var Option\Manager */
     protected $optionManager;
-
     /** @var \DaveBaker\Core\Installer\InstallerInterface object */
     protected $installerManager;
-
     /** @var \DaveBaker\Core\Block\Manager */
     protected $blockManager;
-
     /** @var \DaveBaker\Core\Layout\Manager */
     protected $layoutManager;
-
     /** @var  \DaveBaker\Core\Layout\Handle\Manager */
     protected $handleManager;
-
     /** @var  \DaveBaker\Core\Event\Manager */
     protected $eventManager;
-
     /** @var  \DaveBaker\Core\App\Request */
     protected $request;
-
     /** @var  \DaveBaker\Core\Config\ConfigInterface */
     protected $generalConfig;
-
     /** @var \DaveBaker\Core\Main\MainInterface  */
     protected $main;
-
-    /**
-     * @var
-     */
+    /** @var  \DaveBaker\Core\Object\Manager */
     protected $objectManager;
 
     public function __construct(
@@ -59,6 +44,10 @@ class App
         $objectManagerClassName,
         $objectManagerConfigClassName
     ) {
+        /** @var \wpdb $wpdb */
+        global $wpdb;
+        $wpdb->show_errors(false);
+
 
         $this->namespace = $namespace . "_";
         $this->main = new $mainClassName($this);
@@ -70,9 +59,7 @@ class App
         // For any singleton objects, they'll be stored against the namespace, allowing for multiple
         // singletons across different app definitions
         $this->objectManager->setNamespace($this->getNamespace());
-
         $this->getMain()->init();
-
         $this->addEvents();
     }
 
@@ -98,9 +85,7 @@ class App
      * @param $namespace
      * @param App $app
      */
-    public static function registerApp(
-        $namespace,
-        App $app)
+    public static function registerApp($namespace, App $app)
     {
         self::$apps[$namespace] = $app;
     }
@@ -139,9 +124,7 @@ class App
     protected function initApplication()
     {
         $this->getHandleManager()->registerHandles();
-
         $this->getMain()->registerControllers();
-
         $this->getMain()->registerLayouts();
         
         $this->getContollerManager()->preDispatch();
@@ -238,6 +221,7 @@ class App
 
     /**
      * @return \DaveBaker\Core\Object\Manager
+     * This is created in the constructor
      */
     public function getObjectManager()
     {
@@ -324,5 +308,4 @@ class App
 
         return $this->controllerManager;
     }
-
 }

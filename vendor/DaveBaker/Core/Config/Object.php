@@ -1,7 +1,12 @@
 <?php
 
 namespace DaveBaker\Core\Config;
-
+/**
+ * Class Object
+ * @package DaveBaker\Core\Config
+ *
+ * class should be extended locally
+ */
 class Object extends Base
 {
     protected $config = [
@@ -30,6 +35,9 @@ class Object extends Base
             'singleton' => true
         ],
         '\DaveBaker\Core\Helper\Date' => [
+            'singleton' => true
+        ],
+        '\DaveBaker\Core\Helper\Db' => [
             'singleton' => true
         ]
     ];

@@ -2,11 +2,14 @@
 
 namespace DaveBaker\Core\Layout;
 
+/**
+ * Class Base
+ * @package DaveBaker\Core\Layout
+ */
 abstract class Base extends \DaveBaker\Core\Base
 {
     /** @var string */
     protected $namespaceCode = 'layout_item';
-    
     /** @var array */
     protected $blocks = [];
     

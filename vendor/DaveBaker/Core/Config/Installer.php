@@ -1,7 +1,6 @@
 <?php
 
 namespace DaveBaker\Core\Config;
-
 /**
  * Class Installer
  * @package DaveBaker\Core\Config

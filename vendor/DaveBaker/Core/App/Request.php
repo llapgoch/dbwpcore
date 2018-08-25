@@ -5,7 +5,6 @@ namespace DaveBaker\Core\App;
 /**
  * Class Request
  * @package DaveBaker\Core\App
- *
  */
 class Request
 {
@@ -13,6 +12,7 @@ class Request
     const POST = "post";
     const CUSTOM = "custom";
 
+    /** @var array */
     protected $params = [
         self::GET => [],
         self::POST => [],

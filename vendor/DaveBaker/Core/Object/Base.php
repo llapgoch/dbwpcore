@@ -1,8 +1,10 @@
 <?php
 
 namespace DaveBaker\Core\Object;
-
-// TODO: Refactor
+/**
+ * Class Base
+ * @package DaveBaker\Core\Object
+ */
 class Base extends \DaveBaker\Core\Base
 {
 

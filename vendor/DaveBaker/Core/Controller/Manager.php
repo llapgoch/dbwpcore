@@ -1,7 +1,10 @@
 <?php
 
 namespace DaveBaker\Core\Controller;
-
+/**
+ * Class Manager
+ * @package DaveBaker\Core\Controller
+ */
 class Manager extends \DaveBaker\Core\Base
 {
     /** @var  \WP_Post */
@@ -9,6 +12,7 @@ class Manager extends \DaveBaker\Core\Base
     
     /** @var string */
     protected $namespaceCode = "controller_manager";
+    /** @var array */
     protected $controllers = [];
 
     public function __construct(
@@ -35,6 +39,9 @@ class Manager extends \DaveBaker\Core\Base
         return $this;
     }
 
+    /**
+     * @return $this
+     */
     public final function preDispatch()
     {
         $this->fireEvent('predispatch_before');
@@ -54,6 +61,9 @@ class Manager extends \DaveBaker\Core\Base
         return $this;
     }
 
+    /**
+     * @return $this
+     */
     public function execute()
     {
         $this->fireEvent('execute_before');

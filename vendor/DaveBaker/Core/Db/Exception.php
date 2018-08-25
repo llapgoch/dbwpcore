@@ -1,9 +1,9 @@
 <?php
 
-namespace DaveBaker\Core\Helper;
+namespace DaveBaker\Core\Db;
 /**
  * Class Exception
- * @package DaveBaker\Core\Helper
+ * @package DaveBaker\Core\Db
  */
 class Exception extends \Exception
 {

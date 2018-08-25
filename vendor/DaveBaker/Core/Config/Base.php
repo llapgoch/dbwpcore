@@ -1,11 +1,13 @@
 <?php
-namespace DaveBaker\Core\Config;
 
+namespace DaveBaker\Core\Config;
+/**
+ * Class Base
+ * @package DaveBaker\Core\Config
+ */
 class Base implements ConfigInterface
 {
-    /**
-     * @var array
-     */
+    /** @var array  */
     protected $config = [];
 
     /**
@@ -15,7 +17,11 @@ class Base implements ConfigInterface
     {
         return $this->config;
     }
-    
+
+    /**
+     * @param $key
+     * @return mixed|null
+     */
     public function getConfigValue($key)
     {
         if(isset($this->config[$key])){
@@ -25,6 +31,9 @@ class Base implements ConfigInterface
         return null;
     }
 
+    /**
+     * @param array $config
+     */
     protected function mergeConfig($config = [])
     {
         $this->config = array_replace_recursive($this->getConfig(), $config);

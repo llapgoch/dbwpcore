@@ -1,7 +1,10 @@
 <?php
 
 namespace DaveBaker\Core\Helper;
-
+/**
+ * Class Base
+ * @package DaveBaker\Core\Helper
+ */
 class Base extends \DaveBaker\Core\Base
 {
     /**

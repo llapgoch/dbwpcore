@@ -1,20 +1,27 @@
 <?php
 
 namespace DaveBaker\Core\Model\Db\Collection;
-
+/**
+ * Class Base
+ * @package DaveBaker\Core\Model\Db\Collection
+ */
 abstract class Base extends \DaveBaker\Core\Base
 {
     const COLLECTION_NAMESPACE = 'collection';
-    /**
-     * @var \wpdb
-     */
-    protected $wpdb;
+    /** @var string */
     protected $dbClass;
     /** @var  \DaveBaker\Core\Model\Db\Base */
     protected $baseObject;
+    /** @var array */
     protected $items = [];
+    /** @var  \Zend_Db_Select */
     protected $select;
+    /** @var  \Zend_Db_Adapter_Pdo_Mysql */
     protected $adapter;
+    /** @var  \DaveBaker\Core\Helper\Db */
+    protected $helper;
+    /** @var  \DaveBaker\Core\Db\Query */
+    protected $query;
     
     public function _construct()
     {
@@ -47,6 +54,8 @@ abstract class Base extends \DaveBaker\Core\Base
 
         return $this;
     }
+
+
 
     /**
      * @return \Zend_Db_Select
@@ -132,7 +141,7 @@ abstract class Base extends \DaveBaker\Core\Base
         $this->fireEvent('before_load');
         $this->initSelect();
 
-        $results = $this->wpdb->get_results($this->select->assemble());
+        $results = $this->getQuery()->getResults($this->select->assemble());
 
         foreach($results as $result){
             /** @var \DaveBaker\Core\Model\Db\Base $item */
@@ -153,6 +162,30 @@ abstract class Base extends \DaveBaker\Core\Base
     {
         $this->items = [];
         return $this;
+    }
+
+    /**
+     * @return \DaveBaker\Core\Helper\Db
+     */
+    protected function getHelper()
+    {
+        if(!$this->helper) {
+            $this->helper = $this->getApp()->getHelper('Db');
+        }
+
+        return $this->helper;
+    }
+
+    /**
+     * @return \DaveBaker\Core\Db\Query
+     */
+    protected function getQuery()
+    {
+        if(!$this->query){
+            $this->query = $this->createAppObject('\DaveBaker\Db\Query');
+        }
+
+        return $this->query;
     }
 
 }

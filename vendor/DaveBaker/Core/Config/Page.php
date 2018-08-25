@@ -1,7 +1,12 @@
 <?php
 
 namespace DaveBaker\Core\Config;
-
+/**
+ * Class Page
+ * @package DaveBaker\Core\Config
+ *
+ * class should be extended locally
+ */
 class Page extends Base
 {
     const DEFAULT_VALUES_KEY = 'defaultValues';

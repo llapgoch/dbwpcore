@@ -2,14 +2,16 @@
 
 namespace DaveBaker\Core\Layout\Handle;
 
+/**
+ * Class Manager
+ * @package DaveBaker\Core\Layout\Handle
+ */
 class Manager extends \DaveBaker\Core\Base
 {
     /** @var string */
     protected $namespaceCode = "handle";
-    
     /** @var array */
     protected $handles = [];
-    
     /** @var array */
     protected $defaultHandles = ['default'];
 

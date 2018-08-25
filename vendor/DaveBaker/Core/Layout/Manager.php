@@ -1,7 +1,10 @@
 <?php
 
 namespace DaveBaker\Core\Layout;
-
+/**
+ * Class Manager
+ * @package DaveBaker\Core\Layout
+ */
 class Manager extends \DaveBaker\Core\Base
 {
     const TEMPLATE_BASE_DIR =  "templates";
@@ -9,13 +12,10 @@ class Manager extends \DaveBaker\Core\Base
 
     /** @var string */
     protected $namespaceCode = "layout";
-    
     /** @var array */
     protected $shortcodeBlocks = [];
-    
     /** @var array */
     protected $actionBlocks = [];
-    
     /** @var array  */
     protected $templatePaths = [];
 
@@ -26,10 +26,8 @@ class Manager extends \DaveBaker\Core\Base
     protected $registeredLayouts = [];
     /** @var array  */
     protected $registeredHandles = [];
-    
     /** @var \DaveBaker\Core\Config\ConfigInterface */
     protected $config;
-
     /** @var bool */
     protected $isDispatched = false;
 

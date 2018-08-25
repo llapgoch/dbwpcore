@@ -1,20 +1,20 @@
 <?php
 
 namespace DaveBaker\Core\Object;
-
+/**
+ * Class Manager
+ * @package DaveBaker\Core\Object
+ */
 class Manager extends \DaveBaker\Core\Base
 {
     const SINGLETON_KEY = 'singleton';
     const DEFINITION_KEY = 'definition';
-
     const BASE_HELPER_DEFINITION = '\DaveBaker\Core\Helper\{{helperName}}';
 
     /** @var string */
     protected $namespace = '';
-
     /** @var \DaveBaker\Core\Config\ConfigInterface */
     protected $config;
-
     /** @var array */
     protected $singletonCache = [];
 

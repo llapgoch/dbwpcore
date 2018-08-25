@@ -1,7 +1,10 @@
 <?php
 
 namespace DaveBaker\Core\Installer;
-
+/**
+ * Class Manager
+ * @package DaveBaker\Core\Installer
+ */
 abstract class Manager
     extends \DaveBaker\Core\Base
     implements ManagerInterface
@@ -10,6 +13,8 @@ abstract class Manager
 
     /** @var string  */
     protected $namespaceCode = "installer";
+    /** @var \DaveBaker\Core\Db\Query */
+    protected $query;
 
     /** Override to run local installers */
     public abstract function install();
@@ -31,5 +36,39 @@ abstract class Manager
                 throw new Exception($e->getMessage(), $e->getCode());
             }
         }
+    }
+
+    /**
+     * @return \DaveBaker\Core\Db\Query
+     */
+    protected function getQuery()
+    {
+        if(!$this->query) {
+            $this->query = $this->createAppObject('\DaveBaker\Core\Db\Query');
+        }
+
+        return $this->query;
+    }
+
+    /**
+     * @param $tableName string
+     * @return string
+     */
+    protected function getTableName($tableName)
+    {
+        return $this->getApp()->getHelper('Db')->getTableName($tableName);
+    }
+
+    /**
+     * @param $tableName string
+     * @param $schema string
+     * @return $this
+     * @throws \DaveBaker\Core\Db\Exception
+     */
+    protected function deltaTable($tableName, $schema)
+    {
+        /** @var \DaveBaker\Core\Db\Query $query */
+        $this->getQuery()->deltaTable($tableName, $schema);
+        return $this;
     }
 }

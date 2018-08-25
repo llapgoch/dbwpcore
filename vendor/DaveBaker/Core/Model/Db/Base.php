@@ -1,7 +1,10 @@
 <?php
 
 namespace DaveBaker\Core\Model\Db;
-
+/**
+ * Class Base
+ * @package DaveBaker\Core\Model\Db
+ */
 abstract class Base
     extends \DaveBaker\Core\Object\Base
     implements \DaveBaker\Core\Model\Db\BaseInterface
@@ -14,6 +17,10 @@ abstract class Base
     protected $idColumn;
     protected $schema = [];
     protected $autoUpdateTime = true;
+    /** @var  \DaveBaker\Core\Helper\Db */
+    protected $helper;
+    /** @var  \DaveBaker\Core\Db\Query */
+    protected $query;
 
     protected $namespaceCode = "default";
 
@@ -53,7 +60,7 @@ abstract class Base
         $column = $column ? $column: $this->idColumn;
 
         try {
-            $data = $this->getDb()->get_row(
+            $data = $this->getQuery()->getRow(
                 $sql = $this->getDb()->prepare(
                     "SELECT * FROM {$this->getTableName()} WHERE {$column}=%s",
                     $id
@@ -85,8 +92,10 @@ abstract class Base
      */
     public function getTableName()
     {
-        return $this->getDb()->base_prefix . $this->tableName;
+        return $this->getHelper()->getTableName($this->tableName);
     }
+
+
 
     /**
      * @return $this|void
@@ -319,5 +328,29 @@ abstract class Base
         }
 
         return $this->schema;
+    }
+
+    /**
+     * @return \DaveBaker\Core\Helper\Db
+     */
+    protected function getHelper()
+    {
+        if(!$this->helper) {
+            $this->helper = $this->getApp()->getHelper('Db');
+        }
+
+        return $this->helper;
+    }
+
+    /**
+     * @return \DaveBaker\Core\Db\Query
+     */
+    protected function getQuery()
+    {
+        if(!$this->query){
+            $this->query = $this->createAppObject('\DaveBaker\Db\Query');
+        }
+
+        return $this->query;
     }
 }

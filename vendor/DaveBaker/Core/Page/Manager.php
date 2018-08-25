@@ -1,7 +1,10 @@
 <?php
 
 namespace DaveBaker\Core\Page;
-
+/**
+ * Class Manager
+ * @package DaveBaker\Core\Page
+ */
 class Manager extends \DaveBaker\Core\Base
 {
     const DEFAULT_VALUES_CONFIG_KEY = 'defaultValues';
@@ -11,20 +14,16 @@ class Manager extends \DaveBaker\Core\Base
     const POST_CONTENT_KEY = 'post_content';
     const POST_CONTENT_SUFFIX = "content";
     const PAGE_CONTENT_SHORTCODE = "body_content";
-
     // action is used in the querystring on pages like register
     const ACTION_PARAM = 'action';
     const LOGIN_REGISTER_PARAM_VALUE = 'register';
 
     /** @var string */
     protected $namespaceCode = 'page';
-
     /** @var \DaveBaker\Core\Config\ConfigInterface */
     protected $config;
-
     /** @var array */
     protected $pageCache = [];
-
     /** @var array */
     protected $authorCache = [];
 
@@ -41,6 +40,7 @@ class Manager extends \DaveBaker\Core\Base
      * @param array $pageValues
      * @param bool $overwrite
      * @throws Exception
+     * @return $this
      */
     public function createPage(
         $pageIdentifier,
@@ -63,7 +63,7 @@ class Manager extends \DaveBaker\Core\Base
 
             // Check if the page already exists
             if ($post && $post->post_status == self::PUBLISH_STATUS && !$overwrite) {
-                return;
+                return $this;
             }
 
             wp_delete_post($pageId, true);
@@ -81,21 +81,21 @@ class Manager extends \DaveBaker\Core\Base
         }
 
         $this->setOption($pageIdentifier, $pageId);
+
+        return $this;
     }
 
     /**
      * @param $pageIdentifier
-     * @return mixed|null|void
+     * @return bool
      */
-    public function pageExists(
-        $pageIdentifier
-    )
+    public function pageExists($pageIdentifier)
     {
         if ($page = $this->retrieveFromCache($pageIdentifier)) {
             return $page;
         }
 
-        return $this->getPage($pageIdentifier);
+        return (bool) $this->getPage($pageIdentifier);
     }
 
     /**

@@ -1,7 +1,6 @@
 <?php
 
 namespace DaveBaker\Core\Config;
-
 /**
  * Class General
  * @package DaveBaker\Core\Config

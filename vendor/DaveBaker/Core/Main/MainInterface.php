@@ -1,7 +1,10 @@
 <?php
 
 namespace DaveBaker\Core\Main;
-
+/**
+ * Interface MainInterface
+ * @package DaveBaker\Core\Main
+ */
 interface MainInterface extends BaseInterface{
     public function init();
     public function registerLayouts();

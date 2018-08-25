@@ -1,6 +1,9 @@
 <?php
 namespace DaveBaker\Core\Event;
-
+/**
+ * Class Manager
+ * @package DaveBaker\Core\Event
+ */
 class Manager extends \DaveBaker\Core\Base
 {
     /** @var string */

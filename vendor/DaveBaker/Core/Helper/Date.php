@@ -1,7 +1,6 @@
 <?php
 
 namespace DaveBaker\Core\Helper;
-
 /**
  * Class Date
  * @package DaveBaker\Core\Helper

@@ -1,10 +1,15 @@
 <?php
 
 namespace DaveBaker\Core\Controller;
-
+/**
+ * Class Base
+ * @package DaveBaker\Core\Controller
+ */
 class Base extends \DaveBaker\Core\Base
 {
+    /** @var string */
     protected $namespaceCode = 'controller';
+
     /**
      * @return $this
      */

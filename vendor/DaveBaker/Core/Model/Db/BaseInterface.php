@@ -1,7 +1,10 @@
 <?php
 
 namespace DaveBaker\Core\Model\Db;
-
+/**
+ * Interface BaseInterface
+ * @package DaveBaker\Core\Model\Db
+ */
 interface BaseInterface
 {
     public function load($id, $column = '');

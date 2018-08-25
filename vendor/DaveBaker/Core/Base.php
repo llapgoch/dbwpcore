@@ -1,32 +1,25 @@
 <?php
 
 namespace DaveBaker\Core;
-
+/**
+ * Class Base
+ * @package DaveBaker\Core
+ */
 abstract class Base
 {
     /** @var \DaveBaker\Core\App  */
     protected $app;
-    /**
-     * @var \DaveBaker\Core\Option\Manager
-     */
+    /** @var \DaveBaker\Core\Option\Manager */
     protected $optionManager;
-
     /** @var  \wpdb */
-    protected $wpdb;
-
-    /**
-     * @var string
-     */
+    protected $db;
+    /** @var string  */
     protected $namespaceCode = 'default_';
 
     public function __construct(
         \DaveBaker\Core\App $app
     ) {
         $this->app = $app;
-
-        global $wpdb;
-        $this->wpdb = $wpdb;
-
         $this->_construct();
     }
 
@@ -37,9 +30,7 @@ abstract class Base
     {
         return $this;
     }
-
-
-
+    
     /**
      * @param $event
      * @param $callback
@@ -90,14 +81,6 @@ abstract class Base
     public function getApp()
     {
         return $this->app;
-    }
-
-    /**
-     * @return \wpdb
-     */
-    public function getDb()
-    {
-        return $this->wpdb;
     }
 
     /**
@@ -167,8 +150,6 @@ abstract class Base
         return $this->getApp()->getNamespace() . "_" . $this->namespaceCode . "_" . $optionCode;
     }
 
-
-
     /**
      * @return \DaveBaker\Core\Option\Manager
      */
@@ -183,5 +164,18 @@ abstract class Base
     protected function getEventManager()
     {
         return $this->getApp()->getEventManager();
+    }
+
+    /**
+     * @return \wpdb
+     */
+    protected function getDb()
+    {
+        if(!$this->db){
+            global $wpdb;
+            $this->db = $wpdb;
+        }
+
+        return $this->db;
     }
 }

@@ -1,7 +1,10 @@
 <?php
 
 namespace DaveBaker\Core\Model\Db;
-
+/**
+ * Class Registry
+ * @package DaveBaker\Core\Model\Db
+ */
 class Registry
 {
     static protected $globalZendAdapter;
