@@ -38,4 +38,5 @@ class Manager extends \DaveBaker\Core\Base
         delete_option($option);
         return $this;
     }
+
 }
