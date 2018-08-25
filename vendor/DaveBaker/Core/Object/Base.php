@@ -23,11 +23,13 @@ class Base extends \DaveBaker\Core\Base
      */
     protected static $_underscoreCache = [];
 
+    protected $_syncFieldsMap = [];
+
 
     /**
      * @param $method
      * @param $args
-     * @return bool
+     * @return mixed
      * @throws \Exception
      */
     public function __call($method, $args)
@@ -80,7 +82,7 @@ class Base extends \DaveBaker\Core\Base
      * $key can be a string only. Array will be ignored.
      *
      * @param string $key
-     * @return Varien_Object
+     * @return mixed
      */
     public function unsetData($key=null)
     {
@@ -98,17 +100,8 @@ class Base extends \DaveBaker\Core\Base
     }
 
     /**
-     * Retrieves data from the object
-     *
-     * If $key is empty will return all the data as an array
-     * Otherwise it will return value of the attribute specified by $key
-     *
-     * If $index is specified it will assume that attribute data is an array
-     * and retrieve corresponding member.
-     *
      * @param string $key
-     * @param string|int $index
-     * @return mixed
+     * @return array|mixed|null
      */
     public function getData($key='')
     {
@@ -131,7 +124,7 @@ class Base extends \DaveBaker\Core\Base
                         return $default;
                     }
                     $data = $data[$k];
-                } elseif ($data instanceof Varien_Object) {
+                } elseif ($data instanceof Base) {
                     $data = $data->getData($k);
                 } else {
                     return $default;
@@ -168,7 +161,7 @@ class Base extends \DaveBaker\Core\Base
      *
      * @param string|array $key
      * @param mixed $value
-     * @return Varien_Object
+     * @return mixed
      */
     public function setData($key, $value=null)
     {

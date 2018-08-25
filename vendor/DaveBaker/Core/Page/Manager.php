@@ -154,6 +154,19 @@ class Manager extends \DaveBaker\Core\Base
     }
 
     /**
+     * @param $pageIdentifier
+     * @return false|string
+     */
+    public function getUrl($pageIdentifier)
+    {
+        if($option = $this->getOption($pageIdentifier)){
+            return get_permalink($option);
+        }
+
+        return "";
+    }
+
+    /**
      * @return int
      * @throws Exception
      */

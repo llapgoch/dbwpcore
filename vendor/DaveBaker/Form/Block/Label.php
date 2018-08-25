@@ -10,6 +10,8 @@ class Label extends Base
 {
     /** @var string  */
     protected $forId = '';
+    /** @var string */
+    protected $labelName = '';
 
     protected function init()
     {
@@ -33,5 +35,23 @@ class Label extends Base
     public function getForId()
     {
         return $this->forId;
+    }
+
+    /**
+     * @return string
+     */
+    public function getLabelName()
+    {
+        return $this->labelName;
+    }
+
+    /**
+     * @param $labelName
+     * @return $this
+     */
+    public function setLabelName($labelName)
+    {
+        $this->labelName = (string) $labelName;
+        return $this;
     }
 }

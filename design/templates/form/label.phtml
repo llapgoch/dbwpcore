@@ -2,5 +2,5 @@
 /** @var \DaveBaker\Form\Block\Label $block */
 ?>
 <label for="<?php echo $block->escAttr($this->getForId());?>" <?php echo $block->getAttrs();?>>
-    <?php echo $block->_($block->getLabelName());?>
+    <?php echo $block->escapeHtml($block->_($block->getLabelName()));?>
 </label>

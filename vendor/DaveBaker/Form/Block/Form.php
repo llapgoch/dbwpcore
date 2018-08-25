@@ -9,6 +9,7 @@ namespace DaveBaker\Form\Block;
 class Form extends Base
 {
     protected $method = 'post';
+    protected $action = '';
 
     protected function init()
     {
@@ -32,5 +33,16 @@ class Form extends Base
     public function getMethod()
     {
         return $this->method;
+    }
+
+    public function setAction($action)
+    {
+        $this->action = $action;
+        return $this;
+    }
+
+    public function getAction()
+    {
+        return $this->action;
     }
 }

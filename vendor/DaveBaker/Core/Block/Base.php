@@ -59,6 +59,24 @@ abstract class Base extends \DaveBaker\Core\Object\Base
     }
 
     /**
+     * @param $url string
+     * @return string
+     */
+    public function getUrl($url)
+    {
+        return $this->getApp()->getHelper('Url')->getUrl($url);
+    }
+
+    /**
+     * @param $pageIdentifier string
+     * @return string
+     */
+    public function getPageUrl($pageIdentifier)
+    {
+        return $this->getApp()->getHelper('Url')->getPageUrl($pageIdentifier);
+    }
+
+    /**
      * @param BlockInterface $block
      * @return $this
      */
@@ -245,6 +263,7 @@ abstract class Base extends \DaveBaker\Core\Object\Base
      */
     public function render()
     {
+        var_dump($this->getHtml());
         $this->_preRender();
 
         $this->rendered = true;

@@ -4,6 +4,7 @@
 <form 
     name="<?php echo $block->escAttr($block->getElementName());?>"
     method="<?php echo $block->escAttr($block->getMethod());?>"
+    action="<?php echo $block->escAttr($block->getAction());?>"
     <?php echo $block->getAttrs();?> >
     <?php echo $block->getChildHtml(''); ?>
 </form>
