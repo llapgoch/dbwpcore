@@ -16,6 +16,9 @@ abstract class Base
     /** @var \DaveBaker\Core\Db\Query */
     protected $query;
 
+    /** @var string */
+    protected $installerNamespace;
+
     /** Override to run local installers */
     public abstract function install();
 
@@ -25,6 +28,10 @@ abstract class Base
      */
     public function checkInstall()
     {
+        if(!$this->installerNamespace){
+            throw new Exception("installerNamespace not set in " . getClass($this));
+        }
+
         /** @var $config \DaveBaker\Core\Config\Installer */
         $config = $this->getApp()->getObjectManager()->get('\DaveBaker\Core\Config\Installer');
         $installedVersion = $this->getOption(self::VERSION_OPTION);

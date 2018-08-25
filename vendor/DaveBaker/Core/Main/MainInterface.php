@@ -9,4 +9,5 @@ interface MainInterface extends BaseInterface{
     public function init();
     public function registerLayouts();
     public function registerControllers();
+    public function registerInstallers();
 }

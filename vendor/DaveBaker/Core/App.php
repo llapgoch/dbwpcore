@@ -19,7 +19,7 @@ class App
     protected $pageManager;
     /** @var Option\Manager */
     protected $optionManager;
-    /** @var \DaveBaker\Core\Installer\InstallerInterface object */
+    /** @var \DaveBaker\Core\Installer\ManagerInterface object */
     protected $installerManager;
     /** @var \DaveBaker\Core\Block\Manager */
     protected $blockManager;
@@ -120,6 +120,7 @@ class App
 
     /**
      * @return $this
+     * @throws Event\Exception
      */
     protected function initApplication()
     {
@@ -135,7 +136,8 @@ class App
     }
 
     /**
-     * @throws Installer\Exception
+     * @throws App\Exception
+     * @throws Object\Exception
      */
     protected function install()
     {
@@ -257,7 +259,7 @@ class App
 
 
     /**
-     * @return Installer\InstallerInterface
+     * @return Installer\ManagerInterface
      * @throws App\Exception
      * @throws Object\Exception
      */
@@ -266,7 +268,7 @@ class App
         if(!$this->installerManager){
             $this->installerManager = $this->getObjectManager()->getAppObject('\DaveBaker\Core\Installer\Manager');
 
-            if(!$this->installerManager instanceof \DaveBaker\Core\Installer\InstallerInterface){
+            if(!$this->installerManager instanceof \DaveBaker\Core\Installer\ManagerInterface){
                 throw new \DaveBaker\Core\App\Exception("Installer Manager must implement InstallerInterface");
             }
         }

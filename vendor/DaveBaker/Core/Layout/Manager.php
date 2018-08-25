@@ -40,9 +40,10 @@ class Manager extends \DaveBaker\Core\Base
         
         $this->registerTemplatePaths();
     }
-    
+
     /**
      * @return $this
+     * @throws \DaveBaker\Core\Object\Exception
      */
     public final function preDispatch()
     {
@@ -66,6 +67,7 @@ class Manager extends \DaveBaker\Core\Base
 
     /**
      * @return $this
+     * @throws \DaveBaker\Core\Object\Exception
      */
     public final function postDispatch()
     {

@@ -5,28 +5,49 @@ namespace DaveBaker\Core\Installer;
  * Class Manager
  * @package DaveBaker\Core\Installer
  */
-class Manager extends \DaveBaker\Core\Base
+class Manager
+    extends \DaveBaker\Core\Base
+    implements ManagerInterface
 {
     /** @var array  */
     protected $installers = [];
 
     /**
-     * @param InstallerInterface $installer
+     * @param mixed $installers
      * @return $this
      */
-    public final function add(InstallerInterface $installer)
+    public final function register($installerClass)
     {
-        $this->installers[] = $installer;
+        if(!is_array($installerClass)){
+            $installerClass = [$installerClass];
+        }
+
+        array_map([$this, 'add'], $installerClass);
         return $this;
     }
 
-    protected function checkInstall()
+    /**
+     * @param $installerClass
+     * @return $this
+     * @throws Exception
+     */
+    protected final function add($installerClass)
     {
-        /** @var InstallerInterface $installer */
-        foreach($this->installers as $installer){
-            $installer->c
+        $installerInstance = $this->createAppObject($installerClass);
+
+        if(!($installerInstance instanceof InstallerInterface)){
+            throw new Exception("{$installerClass} must be compatible with InstallerInterface");
         }
+
+        $this->installers[] = $installerInstance;
+        return $this;
     }
 
-
+    public function checkInstall()
+    {
+        /** @var ManagerInterface $installer */
+        foreach($this->installers as $installer){
+            $installer->checkInstall();
+        }
+    }
 }
