@@ -29,10 +29,10 @@ abstract class Base
 
 
     /**
-     * @return $this
+     * @return $this|\DaveBaker\Core\Object\Base
      * @throws Exception
-     *
-     * Set up the database details in init()
+     * @throws \DaveBaker\Core\Event\Exception
+     * @throws \DaveBaker\Core\Object\Exception
      */
     protected function _construct()
     {
@@ -50,8 +50,10 @@ abstract class Base
     /**
      * @param $id
      * @param string $column
-     * @throws Exception
      * @return $this
+     * @throws Exception
+     * @throws \DaveBaker\Core\Event\Exception
+     * @throws \DaveBaker\Core\Object\Exception
      */
     public function load($id, $column = '')
     {
@@ -89,16 +91,17 @@ abstract class Base
 
     /**
      * @return string
+     * @throws \DaveBaker\Core\Object\Exception
      */
     public function getTableName()
     {
         return $this->getHelper()->getTableName($this->tableName);
     }
 
-
-
     /**
      * @return $this|void
+     * @throws \DaveBaker\Core\Event\Exception
+     * @throws \DaveBaker\Core\Object\Exception
      */
     public function delete()
     {
@@ -121,8 +124,10 @@ abstract class Base
     }
 
     /**
-     * @return $this|void
+     * @return $this|Base|void
      * @throws Exception
+     * @throws \DaveBaker\Core\Event\Exception
+     * @throws \DaveBaker\Core\Object\Exception
      */
     public function save()
     {
@@ -151,6 +156,8 @@ abstract class Base
     /**
      * @return $this
      * @throws Exception
+     * @throws \DaveBaker\Core\Event\Exception
+     * @throws \DaveBaker\Core\Object\Exception
      */
     protected function insertSave()
     {
@@ -194,6 +201,8 @@ abstract class Base
 
     /**
      * @return $this
+     * @throws \DaveBaker\Core\Event\Exception
+     * @throws \DaveBaker\Core\Object\Exception
      */
     protected function updateSave()
     {
@@ -240,8 +249,9 @@ abstract class Base
     }
 
     /**
-     * @param $column string
+     * @param $column
      * @return bool
+     * @throws \DaveBaker\Core\Object\Exception
      */
     protected function isDateTime($column)
     {
@@ -255,7 +265,8 @@ abstract class Base
     }
 
     /**
-     * @return \DaveBaker\Core\Helper\Date
+     * @return object
+     * @throws \DaveBaker\Core\Object\Exception
      */
     protected function getDateHelper()
     {
@@ -264,6 +275,7 @@ abstract class Base
 
     /**
      * @return array
+     * @throws \DaveBaker\Core\Object\Exception
      */
     protected function getTableSaveData()
     {
@@ -308,9 +320,10 @@ abstract class Base
 
     /**
      * @param bool $force
-     * @return $this
+     * @return array
+     * @throws \DaveBaker\Core\Object\Exception
      *
-     * TODO: Add caching to this
+     * TODO: Add caching
      */
     protected function getSchema($force = false)
     {
@@ -331,7 +344,8 @@ abstract class Base
     }
 
     /**
-     * @return \DaveBaker\Core\Helper\Db
+     * @return \DaveBaker\Core\Helper\Db|object
+     * @throws \DaveBaker\Core\Object\Exception
      */
     protected function getHelper()
     {
@@ -343,12 +357,13 @@ abstract class Base
     }
 
     /**
-     * @return \DaveBaker\Core\Db\Query
+     * @return \DaveBaker\Core\Db\Query|object
+     * @throws \DaveBaker\Core\Object\Exception
      */
     protected function getQuery()
     {
         if(!$this->query){
-            $this->query = $this->createAppObject('\DaveBaker\Db\Query');
+            $this->query = $this->createAppObject('\DaveBaker\Core\Db\Query');
         }
 
         return $this->query;

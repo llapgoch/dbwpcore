@@ -22,7 +22,6 @@ class CoreApplication
             'page_registry',
             "CREATE TABLE `{{tableName}}` (
               `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-              `application_namespace` varchar(255) DEFAULT NULL,
               `page_identifier` varchar(255) DEFAULT NULL,
               `option_code` varchar(255) DEFAULT NULL,
               `page_id` int(11) DEFAULT NULL,

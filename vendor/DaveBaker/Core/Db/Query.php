@@ -13,28 +13,35 @@ class Query extends \DaveBaker\Core\Base
     protected $helper;
 
     /**
-     * @param $sql string
+     * @param $sql
+     * @return false|int
      * @throws Exception
      */
     public function run($sql)
     {
-        $this->getDb()->query($sql);
+        $results = $this->getDb()->query($sql);
         $this->checkError();
+
+        return $results;
     }
 
     /**
      * @param $query
+     * @return array|null|object|void
      * @throws Exception
      */
     public function getRow($query)
     {
-        $this->getDb()->get_row($query);
+        $row = $this->getDb()->get_row($query);
         $this->checkError();
+
+        return $row;
     }
 
     /**
-     * @param $tableName string
-     * @return string
+     * @param $tableName
+     * @return mixed
+     * @throws \DaveBaker\Core\Object\Exception
      */
     public function getTableName($tableName)
     {
@@ -43,19 +50,24 @@ class Query extends \DaveBaker\Core\Base
 
     /**
      * @param $query
-     * @param $output
+     * @param string $output
+     * @return array|null|object
      * @throws Exception
      */
     public function getResults($query, $output = OBJECT)
     {
-        $this->getDb()->get_results($query, $output);
+        $results = $this->getDb()->get_results($query, $output);
         $this->checkError();
+
+        return $results;
     }
 
     /**
-     * @param $tableName string
-     * @param $schema string
+     * @param string $tableName
+     * @param string $schema
+     * @return $this
      * @throws Exception
+     * @throws \DaveBaker\Core\Object\Exception
      */
     public function deltaTable($tableName, $schema)
     {
@@ -73,10 +85,13 @@ class Query extends \DaveBaker\Core\Base
 
         dbDelta($schema);
         $this->checkError();
+
+        return $this;
     }
 
     /**
-     * @return \DaveBaker\Core\Helper\Db
+     * @return object
+     * @throws \DaveBaker\Core\Object\Exception
      */
     protected function getHelper()
     {

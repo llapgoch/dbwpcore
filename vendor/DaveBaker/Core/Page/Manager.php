@@ -47,8 +47,8 @@ class Manager extends \DaveBaker\Core\Base
         $pageIdentifier,
         $pageValues = [],
         $overwrite = false
-    )
-    {
+    ) {
+
         $pageValues = array_replace_recursive(
             $this->config->getConfigValue(self::DEFAULT_VALUES_CONFIG_KEY),
             $pageValues
@@ -58,16 +58,20 @@ class Manager extends \DaveBaker\Core\Base
             throw new Exception("post_title not set");
         }
 
-        if ($pageId = $this->getOption($pageIdentifier)) {
+        $pageRegistry = $this->getPageRegistryByOption($pageIdentifier);
+
+        var_dump($pageRegistry->getId());
+
+        if ($pageRegistry->getId()) {
             /**  @var \WP_Post $post */
-            $post = get_post($pageId);
+            $post = get_post($pageRegistry->getPageId());
 
             // Check if the page already exists
             if ($post && $post->post_status == self::PUBLISH_STATUS && !$overwrite) {
                 return $this;
             }
 
-            wp_delete_post($pageId, true);
+            wp_delete_post($pageRegistry->getPageId(), true);
         }
 
         $pageValues[self::POST_AUTHOR_CONFIG_KEY] = $this->getPostAuthorID();
@@ -81,7 +85,11 @@ class Manager extends \DaveBaker\Core\Base
             throw new Exception("The post could not be created");
         }
 
-        $this->setOption($pageIdentifier, $pageId);
+        $pageRegistry
+            ->setPageIdentifier($pageIdentifier)
+            ->setPageId($pageId)
+            ->setOptionCode($this->getNamespacedOption($pageIdentifier))
+            ->save();
 
         return $this;
     }
@@ -128,7 +136,6 @@ class Manager extends \DaveBaker\Core\Base
      * @param $pageIdentifier
      * @return mixed|null
      */
-
     protected function retrieveFromCache($pageIdentifier)
     {
         if(isset($this->pageCache[$pageIdentifier])){
@@ -141,6 +148,7 @@ class Manager extends \DaveBaker\Core\Base
     /**
      * @param $pageCode
      * @return bool
+     * @throws \DaveBaker\Core\Object\Exception
      */
     public function isOnPage($pageCode){
         if(!($post = $this->getCurrentPost())){
@@ -155,8 +163,9 @@ class Manager extends \DaveBaker\Core\Base
     }
 
     /**
-     * @param $pageIdentifier
+     * @param string $pageIdentifier
      * @return false|string
+     * @throws \DaveBaker\Core\Object\Exception
      */
     public function getUrl($pageIdentifier)
     {
@@ -185,6 +194,7 @@ class Manager extends \DaveBaker\Core\Base
 
     /**
      * @return bool
+     * @throws \DaveBaker\Core\Object\Exception
      */
     public function isOnLoginPage(){
         global $GLOBALS;
@@ -204,6 +214,7 @@ class Manager extends \DaveBaker\Core\Base
 
     /**
      * @return bool
+     * @throws \DaveBaker\Core\Object\Exception
      */
     public function isOnRegisterPage(){
         if($this->checkPageNow('wp-register.php')){
@@ -246,5 +257,12 @@ class Manager extends \DaveBaker\Core\Base
         }
         
         return in_array($GLOBALS['pagenow'], $pages);
+    }
+
+    protected function getPageRegistryByOption($option)
+    {
+        /** @var \DaveBaker\Core\Model\Db\Page\Registry $registry */
+        $registry = $this->createAppObject('\DaveBaker\Core\Model\Db\Page\Registry');
+        return $registry->load($this->getNamespacedOption($option), 'option_code');
     }
 }

@@ -9,7 +9,7 @@ class Registry extends \DaveBaker\Core\Model\Db\Base
 {
     protected function init()
     {
-        $this->tableName = 'impresario_page_registry';
+        $this->tableName = 'page_registry';
         $this->idColumn = 'id';
     }
 }
