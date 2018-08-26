@@ -7,7 +7,6 @@ namespace DaveBaker\Form;
  *
  * Applies values (most likely from a post) to a form's child ValueSetterInterface elements
  */
-
 class BlockApplicator extends \DaveBaker\Core\Base
 {
     /** @var  Block\Form */
@@ -73,7 +72,7 @@ class BlockApplicator extends \DaveBaker\Core\Base
             return $this->values[$key];
         }
 
-        return $key;
+        return '';
     }
 
     /**

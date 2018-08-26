@@ -38,6 +38,11 @@ abstract class Base extends \DaveBaker\Core\Object\Base
     protected $utilHelper;
     /** @var int */
     protected $anonymousCounter = 1;
+    /**
+     * @var array
+     * Allows the output of data array keys without escapeHtml being used
+     */
+    protected $escapeExcludes = [];
 
     const ORDER_TYPE_BEFORE = "before";
     const ORDER_TYPE_AFTER = "after";
@@ -370,12 +375,17 @@ abstract class Base extends \DaveBaker\Core\Object\Base
     }
 
     /**
-     * @param $html
+     * @param string $html
+     * @param string $dataKey
      * @return string
      * @throws \DaveBaker\Core\Object\Exception
      */
-    public function escapeHtml($html)
+    public function escapeHtml($html, $dataKey = '')
     {
+        if($dataKey && in_array($dataKey, $this->escapeExcludes)){
+            return $html;
+        }
+
         return $this->getUtilHelper()->escapeHtml($html);
     }
 
@@ -393,6 +403,25 @@ abstract class Base extends \DaveBaker\Core\Object\Base
         }
 
         return $this->getApp()->getBlockManager()->createBlock($className, $name);
+    }
+
+    /**
+     * @param array $excludes
+     * @return $this
+     */
+    public function addEscapeExcludes($excludes = [])
+    {
+        if(!is_array($excludes)){
+            $excludes = [$excludes];
+        }
+
+        foreach($excludes as $exclude){
+            if(!in_array($exclude, $this->escapeExcludes)){
+                $this->escapeExcludes[] = $exclude;
+            }
+        }
+
+        return $this;
     }
 
     /**
