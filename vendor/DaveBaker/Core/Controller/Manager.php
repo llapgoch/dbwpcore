@@ -9,21 +9,16 @@ class Manager extends \DaveBaker\Core\Base
 {
     /** @var  \WP_Post */
     protected $post;
-    
     /** @var string */
     protected $namespaceCode = "controller_manager";
     /** @var array */
     protected $controllers = [];
 
-    public function __construct(
-        \DaveBaker\Core\App $app
-    ){
-        parent::__construct($app);
-    }
-
     /**
-     * @param $controllers array
+     * @param $controllers
      * @return $this
+     * @throws Exception
+     * @throws \DaveBaker\Core\Event\Exception
      * @throws \DaveBaker\Core\Object\Exception
      */
     public function register($controllers)
@@ -41,6 +36,8 @@ class Manager extends \DaveBaker\Core\Base
 
     /**
      * @return $this
+     * @throws \DaveBaker\Core\Event\Exception
+     * @throws \DaveBaker\Core\Object\Exception
      */
     public final function preDispatch()
     {
@@ -63,6 +60,8 @@ class Manager extends \DaveBaker\Core\Base
 
     /**
      * @return $this
+     * @throws \DaveBaker\Core\Event\Exception
+     * @throws \DaveBaker\Core\Object\Exception
      */
     public function execute()
     {
@@ -81,6 +80,8 @@ class Manager extends \DaveBaker\Core\Base
 
     /**
      * @return $this
+     * @throws \DaveBaker\Core\Event\Exception
+     * @throws \DaveBaker\Core\Object\Exception
      */
     public final function postDispatch()
     {
@@ -116,9 +117,10 @@ class Manager extends \DaveBaker\Core\Base
     }
 
     /**
-     * @param $handle string
-     * @param $controllerClass string
+     * @param $handle
+     * @param $controllerClass
      * @throws Exception
+     * @throws \DaveBaker\Core\Event\Exception
      * @throws \DaveBaker\Core\Object\Exception
      */
     protected function registerController(
@@ -146,7 +148,9 @@ class Manager extends \DaveBaker\Core\Base
 
     /**
      * @param $handle
-     * @return array
+     * @return mixed
+     * @throws \DaveBaker\Core\Event\Exception
+     * @throws \DaveBaker\Core\Object\Exception
      */
     protected function getControllersForHandle($handle)
     {

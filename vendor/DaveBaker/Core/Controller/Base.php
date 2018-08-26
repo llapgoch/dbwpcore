@@ -12,6 +12,8 @@ class Base extends \DaveBaker\Core\Base
 
     /**
      * @return $this
+     * @throws \DaveBaker\Core\Event\Exception
+     * @throws \DaveBaker\Core\Object\Exception
      */
     public final function preDispatch()
     {
@@ -23,6 +25,8 @@ class Base extends \DaveBaker\Core\Base
 
     /**
      * @return $this
+     * @throws \DaveBaker\Core\Event\Exception
+     * @throws \DaveBaker\Core\Object\Exception
      */
     public final function postDispatch()
     {
@@ -33,11 +37,39 @@ class Base extends \DaveBaker\Core\Base
     }
 
     /**
-     * @return \DaveBaker\Core\App\Request
+     * @return \DaveBaker\Core\App\Request|object
+     * @throws \DaveBaker\Core\Object\Exception
      */
     public function getRequest()
     {
         return $this->getApp()->getRequest();
+    }
+
+    /**
+     * @return \DaveBaker\Core\App\Response|object
+     * @throws \DaveBaker\Core\Object\Exception
+     */
+    public function getResponse()
+    {
+        return $this->getApp()->getResponse();
+    }
+
+    /**
+     * @param $url
+     * @throws \DaveBaker\Core\Object\Exception
+     */
+    public function redirect($url)
+    {
+        return $this->getResponse()->redirect($url);
+    }
+
+    /**
+     * @param $pageIdentifier
+     * @throws \DaveBaker\Core\Object\Exception
+     */
+    public function redirectToPage($pageIdentifier)
+    {
+        return $this->getResponse()->redirectToPage($pageIdentifier);
     }
 
     /**

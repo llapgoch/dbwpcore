@@ -59,8 +59,9 @@ abstract class Base extends \DaveBaker\Core\Object\Base
     }
 
     /**
-     * @param $url string
-     * @return string
+     * @param $url
+     * @return mixed
+     * @throws \DaveBaker\Core\Object\Exception
      */
     public function getUrl($url)
     {
@@ -68,8 +69,9 @@ abstract class Base extends \DaveBaker\Core\Object\Base
     }
 
     /**
-     * @param $pageIdentifier string
-     * @return string
+     * @param $pageIdentifier
+     * @return mixed
+     * @throws \DaveBaker\Core\Object\Exception
      */
     public function getPageUrl($pageIdentifier)
     {
@@ -145,10 +147,12 @@ abstract class Base extends \DaveBaker\Core\Object\Base
     }
 
     /**
-     * @param $type string
-     * @param $blockName string
+     * @param $type
+     * @param $blockName
      * @return $this
      * @throws Exception
+     * @throws \DaveBaker\Core\Event\Exception
+     * @throws \DaveBaker\Core\Object\Exception
      */
     public function setOrder($type, $blockName)
     {
@@ -220,6 +224,8 @@ abstract class Base extends \DaveBaker\Core\Object\Base
      * @param string $blockName
      * @param array $exclude
      * @return string
+     * @throws \DaveBaker\Core\Event\Exception
+     * @throws \DaveBaker\Core\Object\Exception
      */
     public function getChildHtml($blockName = '', $exclude = [])
     {
@@ -259,7 +265,9 @@ abstract class Base extends \DaveBaker\Core\Object\Base
     }
 
     /**
-     * @return string
+     * @return mixed
+     * @throws \DaveBaker\Core\Event\Exception
+     * @throws \DaveBaker\Core\Object\Exception
      */
     public function render()
     {
@@ -284,7 +292,9 @@ abstract class Base extends \DaveBaker\Core\Object\Base
     }
 
     /**
-     * @return $this
+     * @return $this|void
+     * @throws \DaveBaker\Core\Event\Exception
+     * @throws \DaveBaker\Core\Object\Exception
      */
     public final function preDispatch()
     {
@@ -316,7 +326,9 @@ abstract class Base extends \DaveBaker\Core\Object\Base
     }
 
     /**
-     * @return $this
+     * @return $this|void
+     * @throws \DaveBaker\Core\Event\Exception
+     * @throws \DaveBaker\Core\Object\Exception
      */
     public final function postDispatch()
     {
@@ -340,8 +352,9 @@ abstract class Base extends \DaveBaker\Core\Object\Base
     }
 
     /**
-     * @param $attr string
+     * @param $attr
      * @return string|void
+     * @throws \DaveBaker\Core\Object\Exception
      */
     public function escAttr($attr)
     {
@@ -351,6 +364,7 @@ abstract class Base extends \DaveBaker\Core\Object\Base
     /**
      * @param $text
      * @return string
+     * @throws \DaveBaker\Core\Object\Exception
      */
     public function _($text)
     {
@@ -360,6 +374,7 @@ abstract class Base extends \DaveBaker\Core\Object\Base
     /**
      * @param $html
      * @return string
+     * @throws \DaveBaker\Core\Object\Exception
      */
     public function escapeHtml($html)
     {
@@ -368,9 +383,10 @@ abstract class Base extends \DaveBaker\Core\Object\Base
 
     /**
      * @param $className
-     * @param $name
+     * @param string $name
      * @return BlockInterface
      * @throws \DaveBaker\Core\App\Exception
+     * @throws \DaveBaker\Core\Object\Exception
      */
     public function createBlock($className, $name = '')
     {
@@ -416,7 +432,8 @@ abstract class Base extends \DaveBaker\Core\Object\Base
     }
 
     /**
-     * @return \DaveBaker\Core\Helper\Util
+     * @return \DaveBaker\Core\Helper\Util|object
+     * @throws \DaveBaker\Core\Object\Exception
      */
     protected function getUtilHelper()
     {

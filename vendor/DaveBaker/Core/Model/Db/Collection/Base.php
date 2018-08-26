@@ -32,7 +32,7 @@ abstract class Base extends \DaveBaker\Core\Base
         }
 
         try{
-            $this->baseObject = new $this->dbClass();
+            $this->baseObject = $this->createAppObject($this->dbClass);
         } catch (\Exception $e){
             throw new Exception($e->getMessage(), $e->getCode());
         }
@@ -44,6 +44,7 @@ abstract class Base extends \DaveBaker\Core\Base
 
     /**
      * @return $this
+     * @throws \DaveBaker\Core\Object\Exception
      */
     protected function initSelect()
     {
@@ -55,10 +56,9 @@ abstract class Base extends \DaveBaker\Core\Base
         return $this;
     }
 
-
-
     /**
      * @return \Zend_Db_Select
+     * @throws \DaveBaker\Core\Object\Exception
      */
     public function getSelect(){
         $this->initSelect();
@@ -90,6 +90,8 @@ abstract class Base extends \DaveBaker\Core\Base
 
     /**
      * @return $this
+     * @throws \DaveBaker\Core\Event\Exception
+     * @throws \DaveBaker\Core\Object\Exception
      */
     public function reset()
     {
@@ -113,6 +115,7 @@ abstract class Base extends \DaveBaker\Core\Base
     /**
      * @param string $event
      * @return string
+     * @throws \DaveBaker\Core\Object\Exception
      */
     public function getNamespacedEvent($event)
     {
@@ -124,6 +127,7 @@ abstract class Base extends \DaveBaker\Core\Base
     /**
      * @param string $optionCode
      * @return string
+     * @throws \DaveBaker\Core\Object\Exception
      */
     public function getNamespacedOption($optionCode)
     {
@@ -135,6 +139,9 @@ abstract class Base extends \DaveBaker\Core\Base
 
     /**
      * @return array
+     * @throws \DaveBaker\Core\Db\Exception
+     * @throws \DaveBaker\Core\Event\Exception
+     * @throws \DaveBaker\Core\Object\Exception
      */
     public function load()
     {
@@ -145,7 +152,7 @@ abstract class Base extends \DaveBaker\Core\Base
 
         foreach($results as $result){
             /** @var \DaveBaker\Core\Model\Db\Base $item */
-            $item = new $this->dbClass;
+            $item = $this->createAppObject($this->dbClass);
             $item->setObjectData($result);
             $this->items[] = $item;
         }
@@ -165,7 +172,8 @@ abstract class Base extends \DaveBaker\Core\Base
     }
 
     /**
-     * @return \DaveBaker\Core\Helper\Db
+     * @return \DaveBaker\Core\Helper\Db|object
+     * @throws \DaveBaker\Core\Object\Exception
      */
     protected function getHelper()
     {
@@ -177,15 +185,15 @@ abstract class Base extends \DaveBaker\Core\Base
     }
 
     /**
-     * @return \DaveBaker\Core\Db\Query
+     * @return \DaveBaker\Core\Db\Query|object
+     * @throws \DaveBaker\Core\Object\Exception
      */
     protected function getQuery()
     {
         if(!$this->query){
-            $this->query = $this->createAppObject('\DaveBaker\Db\Query');
+            $this->query = $this->createAppObject('\DaveBaker\Core\Db\Query');
         }
 
         return $this->query;
     }
-
 }
