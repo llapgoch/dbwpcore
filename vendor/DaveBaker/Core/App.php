@@ -143,6 +143,12 @@ class App
      */
     protected function install()
     {
+        // Register the core installer
+        // TODO: Change this so multiples can be registered
+        $this->getInstallerManager()->register([
+           '\DaveBaker\Core\Installer\CoreApplication'
+        ]);
+
         $this->getInstallerManager()->checkInstall();
     }
 

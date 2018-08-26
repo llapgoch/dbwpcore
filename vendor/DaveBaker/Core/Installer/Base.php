@@ -9,12 +9,10 @@ abstract class Base
     extends \DaveBaker\Core\Base
     implements BaseInterface
 {
-
     /** @var string  */
     protected $namespaceCode = "installer";
     /** @var \DaveBaker\Core\Db\Query */
     protected $query;
-
     /** @var string */
     protected $installerCode;
 
@@ -26,10 +24,10 @@ abstract class Base
      * @throws \DaveBaker\Core\App\Exception
      * @throws \DaveBaker\Core\Object\Exception
      */
-    public function checkInstall()
+    public final function checkInstall()
     {
         if(!$this->installerCode){
-            throw new Exception("installerNamespace not set in " . get_class($this));
+            throw new Exception("installerCode not set in " . get_class($this));
         }
 
         $currentVersion = $this->getInstallerManager()->getConfigValue($this->installerCode);
