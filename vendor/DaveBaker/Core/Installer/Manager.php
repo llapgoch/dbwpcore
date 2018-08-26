@@ -35,7 +35,6 @@ class Manager
      */
     public function getConfigValue($key)
     {
-        var_dump($key);
         return $this->getConfig()->getConfigValue($key);
     }
 
@@ -46,7 +45,6 @@ class Manager
     {
         /** @var ManagerInterface $installer */
         foreach($this->installers as $installer){
-            var_dump("check");
             $installer->checkInstall();
         }
 
