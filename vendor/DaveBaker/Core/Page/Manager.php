@@ -112,10 +112,17 @@ class Manager extends \DaveBaker\Core\Base
      */
     public function getPage($pageIdentifier, $reload = false)
     {
-        $namespacedId = $this->getApp()->getNamespacedOption($pageIdentifier);
+        $page = null;
+        $pageRegistry = $this->getPageRegistryByPageIdentifier($pageIdentifier);
+
+        if(!$pageRegistry->getId()){
+            return false;
+        }
 
         if ($reload || !($page = $this->retrieveFromCache($pageIdentifier))) {
-            $page = get_post($namespacedId);
+            if($page = get_post($pageRegistry->getPageId())){
+                $this->pageCache[$pageIdentifier] = $page;
+            }
         }
 
         return $page;
@@ -144,7 +151,7 @@ class Manager extends \DaveBaker\Core\Base
     }
 
     /**
-     * @param $pageCode
+     * @param string $pageIdentifier
      * @return bool
      * @throws \DaveBaker\Core\Object\Exception
      */
@@ -153,10 +160,13 @@ class Manager extends \DaveBaker\Core\Base
             return false;
         }
 
+        $pageRegistry = $this->getPageRegistryByPageIdentifier($pageIdentifier);
 
+        if(!$pageRegistry->getId()){
+            return false;
+        }
 
-
-        return false;
+        return $post->ID == $pageRegistry->getPageId();
     }
 
     /**
@@ -166,8 +176,10 @@ class Manager extends \DaveBaker\Core\Base
      */
     public function getUrl($pageIdentifier)
     {
-        if($option = $this->getOption($pageIdentifier)){
-            return get_permalink($option);
+        $pageRegistry = $this->getPageRegistryByPageIdentifier($pageIdentifier);
+
+        if($id = $pageRegistry->getPageId()){
+            return get_permalink($id);
         }
 
         return "";
@@ -256,10 +268,31 @@ class Manager extends \DaveBaker\Core\Base
         return in_array($GLOBALS['pagenow'], $pages);
     }
 
-    protected function getPageRegistryByPageIdentifier($pageIdentifier)
+    /**
+     * @param $pageIdentifier
+     * @return \DaveBaker\Core\Model\Db\Page\Registry
+     * @throws \DaveBaker\Core\Event\Exception
+     * @throws \DaveBaker\Core\Model\Db\Exception
+     * @throws \DaveBaker\Core\Object\Exception
+     */
+    public function getPageRegistryByPageIdentifier($pageIdentifier)
     {
         /** @var \DaveBaker\Core\Model\Db\Page\Registry $registry */
         $registry = $this->createAppObject('\DaveBaker\Core\Model\Db\Page\Registry');
         return $registry->load($pageIdentifier, 'page_identifier');
+    }
+
+    /**
+     * @param int $pageId
+     * @return \DaveBaker\Core\Model\Db\Page\Registry
+     * @throws \DaveBaker\Core\Event\Exception
+     * @throws \DaveBaker\Core\Model\Db\Exception
+     * @throws \DaveBaker\Core\Object\Exception
+     */
+    public function getPageRegistryByPageId($pageId)
+    {
+        /** @var \DaveBaker\Core\Model\Db\Page\Registry $registry */
+        $registry = $this->createAppObject('\DaveBaker\Core\Model\Db\Page\Registry');
+        return $registry->load($pageId, 'page_id');
     }
 }

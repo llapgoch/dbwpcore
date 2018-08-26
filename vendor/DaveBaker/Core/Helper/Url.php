@@ -17,8 +17,9 @@ class Url extends Base
     }
 
     /**
-     * @param $pageIdentidier string
+     * @param string $pageIdentidier
      * @return false|string
+     * @throws \DaveBaker\Core\Object\Exception
      */
     public function getPageUrl($pageIdentidier)
     {

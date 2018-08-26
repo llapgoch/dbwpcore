@@ -18,6 +18,8 @@ class Manager extends \DaveBaker\Core\Base
     /**
      * @return $this
      * @throws \DaveBaker\Core\Event\Exception
+     * @throws \DaveBaker\Core\Model\Db\Exception
+     * @throws \DaveBaker\Core\Object\Exception
      */
     public function registerHandles()
     {
@@ -26,27 +28,45 @@ class Manager extends \DaveBaker\Core\Base
         $pageManager = $this->getApp()->getPageManager();
 
         // Add page handle
-        $post = $pageManager->getCurrentPost();
+        if ($post = $pageManager->getCurrentPost()) {
+            $pageRegistry = $pageManager->getPageRegistryByPageId($post->ID);
 
-        if ($post) {
+            if($pageRegistry->getId()){
+                $pageSuffix = str_replace("-", "_", $pageRegistry->getPageIdentifier());
+                $this->addHandle($pageSuffix);
+            }
+
             $pageSuffix = str_replace("-", "_", $post->post_name);
-            $this->handles[] = $pageSuffix;
+            $this->addHandle($pageSuffix);
         }
 
         if($pageManager->isOnHomepage()){
-            $this->handles[] = "index";
+            $this->addHandle($pageSuffix);
         }
 
         if($pageManager->isOnLoginPage()){
-            $this->handles[] = 'login';
+            $this->addHandle($pageSuffix);
         }
 
         if($pageManager->isOnRegisterPage()){
-            $this->handles[] = 'register';
+            $this->addHandle($pageSuffix);
         }
 
         $context = $this->fireEvent('register_handles', ['handles' => $this->handles]);
         $this->handles = $context->getHandles();
+
+        return $this;
+    }
+
+    /**
+     * @param string $handle
+     * @return $this
+     */
+    protected function addHandle($handle)
+    {
+        if(!in_array($handle, $this->handles)){
+            $this->handles[] = $handle;
+        }
 
         return $this;
     }

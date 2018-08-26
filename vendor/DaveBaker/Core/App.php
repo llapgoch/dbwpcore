@@ -31,6 +31,8 @@ class App
     protected $eventManager;
     /** @var  \DaveBaker\Core\App\Request */
     protected $request;
+    /** @var  \DaveBaker\Core\App\Response */
+    protected $response;
     /** @var  \DaveBaker\Core\Config\ConfigInterface */
     protected $generalConfig;
     /** @var \DaveBaker\Core\Main\MainInterface  */
@@ -300,6 +302,19 @@ class App
         }
 
         return $this->request;
+    }
+
+    /**
+     * @return App\Response|object
+     * @throws Object\Exception
+     */
+    public function getResponse()
+    {
+        if(!$this->response){
+            $this->response = $this->getObjectManager()->getAppObject('\DaveBaker\Core\App\Response');
+        }
+
+        return $this->response;
     }
 
     /**
