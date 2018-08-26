@@ -14,6 +14,6 @@ class Db extends Base
     public function getTableName($tableName)
     {
         global $wpdb;
-        return $wpdb->base_prefix . $tableName;
+        return $wpdb->prefix . $this->getApp()->getNamespace() . $tableName;
     }
 }

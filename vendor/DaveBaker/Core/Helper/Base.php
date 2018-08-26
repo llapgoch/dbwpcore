@@ -9,6 +9,7 @@ class Base extends \DaveBaker\Core\Base
 {
     /**
      * @return \DaveBaker\Core\Config\ConfigInterface
+     * @throws \DaveBaker\Core\Object\Exception
      */
     public function getGeneralConfig()
     {
@@ -19,6 +20,7 @@ class Base extends \DaveBaker\Core\Base
      * @param $key
      * @return mixed
      * @throws Exception
+     * @throws \DaveBaker\Core\Object\Exception
      */
     public function getGeneralConfigValue($key)
     {
