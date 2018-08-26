@@ -96,6 +96,12 @@ class App
     protected function addEvents()
     {
         add_action('init', function(){
+            // Register the core installer before any other installers
+            // TODO: Change this so multiples can be registered
+            $this->getInstallerManager()->register([
+                '\DaveBaker\Core\Installer\CoreApplication'
+            ]);
+
             $this->getMain()->registerInstallers();
             $this->install();
         });
@@ -143,12 +149,6 @@ class App
      */
     protected function install()
     {
-        // Register the core installer
-        // TODO: Change this so multiples can be registered
-        $this->getInstallerManager()->register([
-           '\DaveBaker\Core\Installer\CoreApplication'
-        ]);
-
         $this->getInstallerManager()->checkInstall();
     }
 

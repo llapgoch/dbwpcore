@@ -58,9 +58,7 @@ class Manager extends \DaveBaker\Core\Base
             throw new Exception("post_title not set");
         }
 
-        $pageRegistry = $this->getPageRegistryByOption($pageIdentifier);
-
-        var_dump($pageRegistry->getId());
+        $pageRegistry = $this->getPageRegistryByPageIdentifier($pageIdentifier);
 
         if ($pageRegistry->getId()) {
             /**  @var \WP_Post $post */
@@ -150,14 +148,13 @@ class Manager extends \DaveBaker\Core\Base
      * @return bool
      * @throws \DaveBaker\Core\Object\Exception
      */
-    public function isOnPage($pageCode){
+    public function isOnPage($pageIdentifier){
         if(!($post = $this->getCurrentPost())){
             return false;
         }
 
-        if($this->getOption($pageCode) == $post->ID){
-            return true;
-        }
+
+
 
         return false;
     }
@@ -259,10 +256,10 @@ class Manager extends \DaveBaker\Core\Base
         return in_array($GLOBALS['pagenow'], $pages);
     }
 
-    protected function getPageRegistryByOption($option)
+    protected function getPageRegistryByPageIdentifier($pageIdentifier)
     {
         /** @var \DaveBaker\Core\Model\Db\Page\Registry $registry */
         $registry = $this->createAppObject('\DaveBaker\Core\Model\Db\Page\Registry');
-        return $registry->load($this->getNamespacedOption($option), 'option_code');
+        return $registry->load($pageIdentifier, 'page_identifier');
     }
 }

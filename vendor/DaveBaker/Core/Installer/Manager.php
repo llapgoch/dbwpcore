@@ -47,7 +47,7 @@ class Manager
         foreach($this->installers as $installer){
             $installer->checkInstall();
         }
-
+        
         return $this;
     }
 
