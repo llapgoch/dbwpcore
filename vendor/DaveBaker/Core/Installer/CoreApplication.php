@@ -12,7 +12,10 @@ class CoreApplication
     /** @var string */
     protected $installerCode = 'core_application';
 
-    /** Override to run local installers */
+    /**
+     * @throws \DaveBaker\Core\Db\Exception
+     * @throws \DaveBaker\Core\Object\Exception
+     */
     public function install()
     {
         $this->getQuery()->deltaTable(
