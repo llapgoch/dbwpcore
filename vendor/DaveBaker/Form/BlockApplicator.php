@@ -17,8 +17,9 @@ class BlockApplicator extends \DaveBaker\Core\Base
 
     /**
      * @param Block\Form $form
-     * @param array $values
+     * @param $values
      * @return $this
+     * @throws Exception
      */
     public function configure(
         Block\Form $form,

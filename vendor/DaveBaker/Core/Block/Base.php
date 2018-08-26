@@ -252,7 +252,6 @@ abstract class Base extends \DaveBaker\Core\Object\Base
 
         $blockList->order();
 
-
         $html = '';
 
         /** @var \DaveBaker\Core\Block\BlockInterface $block */
@@ -271,7 +270,6 @@ abstract class Base extends \DaveBaker\Core\Object\Base
      */
     public function render()
     {
-        var_dump($this->getHtml());
         $this->_preRender();
 
         $this->rendered = true;

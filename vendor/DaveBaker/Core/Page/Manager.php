@@ -151,8 +151,10 @@ class Manager extends \DaveBaker\Core\Base
     }
 
     /**
-     * @param string $pageIdentifier
+     * @param $pageIdentifier
      * @return bool
+     * @throws \DaveBaker\Core\Event\Exception
+     * @throws \DaveBaker\Core\Model\Db\Exception
      * @throws \DaveBaker\Core\Object\Exception
      */
     public function isOnPage($pageIdentifier){
@@ -170,16 +172,18 @@ class Manager extends \DaveBaker\Core\Base
     }
 
     /**
-     * @param string $pageIdentifier
+     * @param $pageIdentifier
      * @return false|string
+     * @throws \DaveBaker\Core\Event\Exception
+     * @throws \DaveBaker\Core\Model\Db\Exception
      * @throws \DaveBaker\Core\Object\Exception
      */
-    public function getUrl($pageIdentifier)
+    public function getUrl($pageIdentifier, $params = [])
     {
         $pageRegistry = $this->getPageRegistryByPageIdentifier($pageIdentifier);
 
         if($id = $pageRegistry->getPageId()){
-            return get_permalink($id);
+            return add_query_arg($params, get_permalink($id));
         }
 
         return "";

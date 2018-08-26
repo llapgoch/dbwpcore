@@ -2,7 +2,7 @@
 
 namespace DaveBaker\Core\Block\Html;
 
-class Heading extends \DaveBaker\Core\Block\Template
+class Heading extends Base
 {
     protected function init()
     {

@@ -8,21 +8,25 @@ namespace DaveBaker\Core\Helper;
 class Url extends Base
 {
     /**
-     * @param $url
+     * @param string $url
+     * @param array $params
      * @return string
      */
-    public function getUrl($url)
+    public function getUrl($url, $params = [])
     {
-        return get_site_url() . $url;
+        return add_query_arg($params, get_site_url() . $url);
     }
 
     /**
      * @param string $pageIdentidier
+     * @param array $params
      * @return false|string
+     * @throws \DaveBaker\Core\Event\Exception
+     * @throws \DaveBaker\Core\Model\Db\Exception
      * @throws \DaveBaker\Core\Object\Exception
      */
-    public function getPageUrl($pageIdentidier)
+    public function getPageUrl($pageIdentidier, $params = [])
     {
-        return $this->getApp()->getPageManager()->getUrl($pageIdentidier);
+        return $this->getApp()->getPageManager()->getUrl($pageIdentidier, $params);
     }
 }
