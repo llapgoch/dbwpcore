@@ -41,15 +41,15 @@ class Manager extends \DaveBaker\Core\Base
         }
 
         if($pageManager->isOnHomepage()){
-            $this->addHandle($pageSuffix);
+            $this->addHandle('index');
         }
 
         if($pageManager->isOnLoginPage()){
-            $this->addHandle($pageSuffix);
+            $this->addHandle('login');
         }
 
         if($pageManager->isOnRegisterPage()){
-            $this->addHandle($pageSuffix);
+            $this->addHandle('register');
         }
 
         $context = $this->fireEvent('register_handles', ['handles' => $this->handles]);
