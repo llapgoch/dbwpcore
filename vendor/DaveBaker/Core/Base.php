@@ -175,6 +175,15 @@ abstract class Base
     }
 
     /**
+     * @return App\Request|object
+     * @throws Object\Exception
+     */
+    public function getRequest()
+    {
+        return $this->getApp()->getRequest();
+    }
+
+    /**
      * @return \wpdb
      */
     protected function getDb()

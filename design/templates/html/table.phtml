@@ -1,0 +1,62 @@
+<?php
+/** @var $block \DaveBaker\Core\Block\Html\Table */
+// TODO: TAKE TEMP CSS OUT!
+?>
+<style>
+    table {
+        color: #333;
+        font-family: Helvetica, Arial, sans-serif;
+        width: 640px;
+        border-collapse:
+            collapse; border-spacing: 0;
+    }
+
+    td, th {
+        border: 1px solid transparent; /* No more visible border */
+        height: 30px;
+        transition: all 0.3s;  /* Simple transition for hover effect */
+    }
+
+    th {
+        background: #DFDFDF;  /* Darken header a bit */
+        font-weight: bold;
+    }
+
+    td {
+        background: #FAFAFA;
+        text-align: center;
+    }
+
+    /* Cells in even rows (2,4,6...) are one color */
+    tr:nth-child(even) td { background: #F1F1F1; }
+
+    /* Cells in odd rows (1,3,5...) are another (excludes header cells)  */
+    tr:nth-child(odd) td { background: #FEFEFE; }
+
+    tr td:hover { background: #666; color: #FFF; }
+    /* Hover cell effect! */
+</style>
+<table <?php echo $block->getAttrs();?>>
+
+    <?php if($this->getHeaders()):?>
+        <thead>
+            <tr>
+                <?php foreach($block->getHeaders() as $header):?>
+                    <th><?php echo $block->escapeHtml($header);?></th>
+                <?php endforeach;?>
+            </tr>
+        </thead>
+
+
+        <tbody>
+            <?php foreach($block->getRecords() as $record):?>
+            <tr>
+                <?php foreach($block->getHeaders() as $k => $header):?>
+                    <td><?php echo $this->escapeHtml($record->getData($header), $header); ?></td>
+                <?php endforeach; ?>
+            </tr>
+            <?php endforeach; ?>
+        </tbody>
+    <?php endif; ?>
+
+</table>

@@ -72,7 +72,7 @@ class BlockApplicator extends \DaveBaker\Core\Base
             return $this->values[$key];
         }
 
-        return '';
+        return null;
     }
 
     /**
@@ -103,9 +103,11 @@ class BlockApplicator extends \DaveBaker\Core\Base
 
         /** @var Block\BaseInterface $element */
         foreach($this->getChildFormElements() as $element){
-            $element->setElementValue(
-                $this->getValue($element->getElementName())
-            );
+            if($this->getValue($element->getElementName()) !== null) {
+                $element->setElementValue(
+                    $this->getValue($element->getElementName())
+                );
+            }
         }
         
         return $this;
