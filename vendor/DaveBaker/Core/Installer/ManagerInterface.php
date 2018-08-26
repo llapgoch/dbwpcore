@@ -9,4 +9,5 @@ interface ManagerInterface
 {
     public function checkInstall();
     public function register($installers);
+    public function getConfigValue($key);
 }

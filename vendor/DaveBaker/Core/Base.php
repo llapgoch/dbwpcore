@@ -113,7 +113,6 @@ abstract class Base
      * @param $event string
      * @return string
      *
-     * Returns, for example "layout_create"
      */
     public function getNamespacedEvent($event)
     {

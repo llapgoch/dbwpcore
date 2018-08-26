@@ -34,13 +34,14 @@ class Manager extends \DaveBaker\Core\Base
         parent::__construct($app);
         $this->config = $config;
     }
-    
+
     /**
-     * @param $pageIdentifier
+     * @param string $pageIdentifier
      * @param array $pageValues
      * @param bool $overwrite
-     * @throws Exception
      * @return $this
+     * @throws Exception
+     * @throws \DaveBaker\Core\Object\Exception
      */
     public function createPage(
         $pageIdentifier,

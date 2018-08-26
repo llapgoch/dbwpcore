@@ -11,6 +11,8 @@ class Manager
 {
     /** @var array  */
     protected $installers = [];
+    /** @var \DaveBaker\Core\Config\ConfigInterface */
+    protected $config;
 
     /**
      * @param mixed $installers
@@ -18,12 +20,36 @@ class Manager
      */
     public final function register($installerClass)
     {
-        var_dump("ref");
         if(!is_array($installerClass)){
             $installerClass = [$installerClass];
         }
 
         array_map([$this, 'add'], $installerClass);
+        return $this;
+    }
+
+    /**
+     * @param $key stting
+     * @return mixed
+     * @throws \DaveBaker\Core\Object\Exception
+     */
+    public function getConfigValue($key)
+    {
+        var_dump($key);
+        return $this->getConfig()->getConfigValue($key);
+    }
+
+    /**
+     * @return $this
+     */
+    public function checkInstall()
+    {
+        /** @var ManagerInterface $installer */
+        foreach($this->installers as $installer){
+            var_dump("check");
+            $installer->checkInstall();
+        }
+
         return $this;
     }
 
@@ -46,16 +72,15 @@ class Manager
     }
 
     /**
-     * @return $this
+     * @return \DaveBaker\Core\Config\ConfigInterface|object
+     * @throws \DaveBaker\Core\Object\Exception
      */
-    public function checkInstall()
+    protected function getConfig()
     {
-        /** @var ManagerInterface $installer */
-        foreach($this->installers as $installer){
-            var_dump("check");
-            $installer->checkInstall();
+        if(!$this->config) {
+            $this->config = $this->createObject('\DaveBaker\Core\Config\Installer');
         }
 
-        return $this;
+        return $this->config;
     }
 }

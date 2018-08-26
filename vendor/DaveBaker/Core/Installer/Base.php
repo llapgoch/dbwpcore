@@ -23,6 +23,7 @@ abstract class Base
 
     /**
      * @throws Exception
+     * @throws \DaveBaker\Core\App\Exception
      * @throws \DaveBaker\Core\Object\Exception
      */
     public function checkInstall()
@@ -31,12 +32,15 @@ abstract class Base
             throw new Exception("installerNamespace not set in " . get_class($this));
         }
 
+        $currentVersion = $this->getInstallerManager()->getConfigValue($this->installerCode);
+
+        if(!$currentVersion){
+            throw new Exception("Installer version not found in config for " . get_class($this));
+        }
+
+
         /** @var $config \DaveBaker\Core\Config\Installer */
         $config = $this->getApp()->getObjectManager()->get('\DaveBaker\Core\Config\Installer');
-
-        if(!$this->getConfigValue($this->installerCode)){
-            return;
-        }
 
         $installedVersion = $this->getOption($this->installerCode);
         $currentVersion = $config->getConfigValue($this->installerCode);
@@ -46,17 +50,16 @@ abstract class Base
                 $this->install();
 
                 // Upgrade the version in the database
-                $this->setOption(self::VERSION_OPTION, $currentVersion);
+                $this->setOption($this->installerCode, $currentVersion);
             }catch (\Exception $e){
                 throw new Exception($e->getMessage(), $e->getCode());
             }
         }
     }
 
-
-
     /**
-     * @return \DaveBaker\Core\Db\Query
+     * @return \DaveBaker\Core\Db\Query|object
+     * @throws \DaveBaker\Core\Object\Exception
      */
     protected function getQuery()
     {
@@ -68,8 +71,19 @@ abstract class Base
     }
 
     /**
-     * @param $tableName string
-     * @return string
+     * @return ManagerInterface
+     * @throws \DaveBaker\Core\App\Exception
+     * @throws \DaveBaker\Core\Object\Exception
+     */
+    public function getInstallerManager()
+    {
+        return $this->getApp()->getInstallerManager();
+    }
+
+    /**
+     * @param $tableName
+     * @return mixed
+     * @throws \DaveBaker\Core\Object\Exception
      */
     protected function getTableName($tableName)
     {
@@ -81,6 +95,7 @@ abstract class Base
      * @param $schema string
      * @return $this
      * @throws \DaveBaker\Core\Db\Exception
+     * @throws \DaveBaker\Core\Object\Exception
      */
     protected function deltaTable($tableName, $schema)
     {
