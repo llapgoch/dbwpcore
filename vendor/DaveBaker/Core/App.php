@@ -39,6 +39,10 @@ class App
     protected $main;
     /** @var  \DaveBaker\Core\Object\Manager */
     protected $objectManager;
+    /** @var \DaveBaker\Core\App\Registry */
+    protected $registry;
+    /** @var \DaveBaker\Core\Session\SessionInterface */
+    protected $generalSession;
 
     public function __construct(
         $namespace,
@@ -63,6 +67,17 @@ class App
         $this->objectManager->setNamespace($this->getNamespace());
         $this->getMain()->init();
         $this->addEvents();
+
+
+        var_dump($this->getGeneralSession()->getMessages(
+            \DaveBaker\Core\Definitions\Messages::SUCCESS
+        ));
+
+        $this->getGeneralSession()->addMessage(
+            'Ooh, a new message!',
+            \DaveBaker\Core\Definitions\Messages::SUCCESS
+        );
+
     }
 
     /**
@@ -131,6 +146,7 @@ class App
     /**
      * @return $this
      * @throws Event\Exception
+     * @throws Model\Db\Exception
      * @throws Object\Exception
      */
     protected function initApplication()
@@ -234,6 +250,21 @@ class App
         }
 
         return $this->pageManager;
+    }
+
+    /**
+     * @return App\Registry|object
+     * @throws Object\Exception
+     */
+    public function getRegistry()
+    {
+        if(!$this->registry){
+            $this->registry = $this->getObjectManager()->get(
+                '\DaveBaker\Core\App\Registry'
+            );
+        }
+
+        return $this->registry;
     }
 
     /**
@@ -342,5 +373,18 @@ class App
         }
 
         return $this->controllerManager;
+    }
+
+    /**
+     * @return \DaveBaker\Core\Session\General|object
+     * @throws Object\Exception
+     */
+    public function getGeneralSession()
+    {
+        if(!$this->generalSession){
+            $this->generalSession = $this->getObjectManager()->getAppObject('\DaveBaker\Core\Session\General');
+        }
+
+        return $this->generalSession;
     }
 }

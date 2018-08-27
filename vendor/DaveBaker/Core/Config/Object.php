@@ -40,6 +40,11 @@ class Object extends Base
         ],
         '\DaveBaker\Core\Helper\Directory' => [
             'singleton' => true
+        ],
+
+        /* Session */
+        '\DaveBaker\Core\Session\General' => [
+            'singleton' => true
         ]
 
     ];
