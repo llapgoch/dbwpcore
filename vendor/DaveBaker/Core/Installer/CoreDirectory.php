@@ -5,11 +5,11 @@ namespace DaveBaker\Core\Installer;
  * Class CountryInstaller
  * @package DaveBaker\Core\Installer
  */
-class CountryInstaller
+class CoreDirectory
     extends Base
     implements InstallerInterface
 {
-    protected $installerCode = 'core_country';
+    protected $installerCode = 'core_directory';
 
     protected $countries = [
         'AF' => 'Afghanistan',
@@ -259,9 +259,13 @@ class CountryInstaller
         'ZW' => 'Zimbabwe'
     ];
 
+    /**
+     * @throws \DaveBaker\Core\Db\Exception
+     * @throws \DaveBaker\Core\Object\Exception
+     */
     public function install()
     {
-        $tableName = $this->getTableName('directory_country';
+        $tableName = $this->getTableName('directory_country');
 
         $this->deltaTable(
             'directory_country',
@@ -269,17 +273,21 @@ class CountryInstaller
               `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
               `country_code` varchar(4) DEFAULT NULL,
               `country_name` varchar(255) DEFAULT NULL,
-              PRIMARY KEY (`id`)
-            ) ENGINE=InnoDB DEFAULT CHARSET=utf8;'
+              PRIMARY KEY (`id`),
+              KEY `country_code` (`country_code`)
+            ) ENGINE=InnoDB AUTO_INCREMENT=246 DEFAULT CHARSET=utf8;'
         );
 
         $this->getQuery()->run(
           "DELETE FROM {$tableName}"
         );
 
-        foreach($this->countries as $country){
-
+        foreach($this->countries as $code => $country){
+            $instance = $this->createAppObject('\DaveBaker\Core\Model\Db\Directory\Country')
+                ->setCountryCode($code)
+                ->setCountryName($country)
+                ->save();
         }
-)
+
     }
 }

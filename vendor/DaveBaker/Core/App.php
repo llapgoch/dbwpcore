@@ -101,7 +101,8 @@ class App
             // Register the core installer before any other installers
             // TODO: Change this so multiples can be registered
             $this->getInstallerManager()->register([
-                '\DaveBaker\Core\Installer\CoreApplication'
+                '\DaveBaker\Core\Installer\CoreApplication',
+                '\DaveBaker\Core\Installer\CoreDirectory'
             ]);
 
             $this->getMain()->registerInstallers();

@@ -9,6 +9,7 @@ namespace DaveBaker\Core\Config;
  */
 class Object extends Base
 {
+    /** @var array  */
     protected $config = [
         /* Config objects */
         '\DaveBaker\Core\Config\General' => [
@@ -26,10 +27,7 @@ class Object extends Base
         '\DaveBaker\Core\Config\Page' => [
             'singleton' => true
         ],
-        '\DaveBaker\Core\Config\General' => [
-            'singleton' => true
-        ],
-        
+
         /* Helpers */
         '\DaveBaker\Core\Helper\Util' => [
             'singleton' => true
@@ -39,7 +37,11 @@ class Object extends Base
         ],
         '\DaveBaker\Core\Helper\Db' => [
             'singleton' => true
+        ],
+        '\DaveBaker\Core\Helper\Directory' => [
+            'singleton' => true
         ]
+
     ];
 
 }
