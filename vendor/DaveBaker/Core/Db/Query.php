@@ -40,6 +40,48 @@ class Query extends \DaveBaker\Core\Base
 
     /**
      * @param $tableName
+     * @param $data
+     * @return $this
+     * @throws Exception
+     * @throws \DaveBaker\Core\Object\Exception
+     */
+    public function insert($tableName, $data)
+    {
+        $this->getDb()->insert(
+            $this->getTableName($tableName),
+            $data
+        );
+        $this->checkError();
+
+        return $this;
+    }
+
+    /**
+     * @param string $tableName
+     * @param array $data
+     * @param array $where
+     * @param null $format
+     * @param null $whereFormat
+     * @return $this
+     * @throws Exception
+     * @throws \DaveBaker\Core\Object\Exception
+     */
+    public function update($tableName, $data, $where, $format = null, $whereFormat = null)
+    {
+        $this->getDb()->update(
+            $this->getTableName($tableName),
+            $data,
+            $where,
+            $format,
+            $whereFormat
+        );
+
+        $this->checkError();
+        return $this;
+    }
+
+    /**
+     * @param $tableName
      * @return mixed
      * @throws \DaveBaker\Core\Object\Exception
      */
