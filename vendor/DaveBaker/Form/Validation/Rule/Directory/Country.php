@@ -6,7 +6,7 @@ use DaveBaker\Form\Validation\Rule\Error;
 
 /**
  * Class Country
- * @package DaveBaker\Form\Validation\Dirctory
+ * @package DaveBaker\Form\Validation\Directory
  */
 class Country
     extends \DaveBaker\Form\Validation\Rule\Base
