@@ -1,0 +1,13 @@
+<?php
+/** @var \DaveBaker\Form\Block\Select $block */
+?>
+<?php if($this->getSelectOptions()):?>
+    <select name="<?php echo $block->escAttr($block->getElementName());?>"
+        <?php echo $block->getAttrs();?>>
+        <?php foreach($this->getSelectOptions() as $selectOption):?>
+            <option value="<?php echo $block->escAttr($selectOption['value']);?>" <?php echo $block->getSelectedAttribute($selectOption['value']);?>>
+                <?php echo $block->escapeHtml($selectOption['name']);?>
+            </option>
+        <?php endforeach;?>
+    </select>
+<?php endif; ?>

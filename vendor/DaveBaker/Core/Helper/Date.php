@@ -15,9 +15,10 @@ class Date extends Base
     const CONFIG_LOCAL_DATE_TIME_SHORT_OUTPUT_FORMAT = 'dateTimeLocalShortOutputFormat';
 
     /**
-     * @param $timestamp
-     * @return bool|string
-     *
+     * @param null|int $timestamp
+     * @return false|string
+     * @throws Exception
+     * @throws \DaveBaker\Core\Object\Exception
      */
     public function utcTimestampToDb($timestamp = null)
     {
@@ -40,8 +41,10 @@ class Date extends Base
     }
 
     /**
-     * @param $utcDateTime string
-     * @return bool|string
+     * @param string $utcDateTime
+     * @return false|string
+     * @throws Exception
+     * @throws \DaveBaker\Core\Object\Exception
      */
     public function utcDbDateToLocalOutput($utcDateTime)
     {
@@ -52,8 +55,10 @@ class Date extends Base
     }
 
     /**
-     * @param $utcDateTime string
-     * @return bool|string
+     * @param string $utcDateTime
+     * @return false|string
+     * @throws Exception
+     * @throws \DaveBaker\Core\Object\Exception
      */
     public function utcDbDateTimeToLocalOutput($utcDateTime)
     {
@@ -64,8 +69,10 @@ class Date extends Base
     }
 
     /**
-     * @param $utcDateTime string
-     * @return bool|string
+     * @param string $utcDateTime
+     * @return false|string
+     * @throws Exception
+     * @throws \DaveBaker\Core\Object\Exception
      */
     public function utcDbDateToShortLocalOutput($utcDateTime)
     {
@@ -76,8 +83,10 @@ class Date extends Base
     }
 
     /**
-     * @param $utcDateTime string
-     * @return bool|string
+     * @param string $utcDateTime
+     * @return false|string
+     * @throws Exception
+     * @throws \DaveBaker\Core\Object\Exception
      */
     public function utcDbDateTimeToShortLocalOutput($utcDateTime)
     {
@@ -87,10 +96,11 @@ class Date extends Base
         );
     }
 
-
     /**
-     * @param $utcTimestamp int
-     * @return string
+     * @param string $utcTimestamp
+     * @return mixed
+     * @throws Exception
+     * @throws \DaveBaker\Core\Object\Exception
      */
     function utcTimestampToLocal($utcTimestamp)
     {
@@ -100,8 +110,9 @@ class Date extends Base
     }
 
     /**
-     * @return string
+     * @return mixed
      * @throws Exception
+     * @throws \DaveBaker\Core\Object\Exception
      */
     public function getLocalDatePattern()
     {
@@ -109,8 +120,9 @@ class Date extends Base
     }
 
     /**
-     * @return string
+     * @return mixed
      * @throws Exception
+     * @throws \DaveBaker\Core\Object\Exception
      */
     public function getDbDateTimeFormat()
     {
@@ -118,8 +130,9 @@ class Date extends Base
     }
 
     /**
-     * @return string
+     * @return mixed
      * @throws Exception
+     * @throws \DaveBaker\Core\Object\Exception
      */
     public function getDateLocalOutputFormat()
     {
@@ -127,8 +140,9 @@ class Date extends Base
     }
 
     /**
-     * @return string
+     * @return mixed
      * @throws Exception
+     * @throws \DaveBaker\Core\Object\Exception
      */
     public function getDateTimeLocalOutputFormat()
     {
@@ -136,8 +150,9 @@ class Date extends Base
     }
 
     /**
-     * @return string
+     * @return mixed
      * @throws Exception
+     * @throws \DaveBaker\Core\Object\Exception
      */
     public function getDateShortLocalOutputFormat()
     {
@@ -145,8 +160,9 @@ class Date extends Base
     }
 
     /**
-     * @return string
+     * @return mixed
      * @throws Exception
+     * @throws \DaveBaker\Core\Object\Exception
      */
     public function getDateTimeShortLocalOutputFormat()
     {

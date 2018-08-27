@@ -13,7 +13,7 @@ class General extends Base {
         'dateLocalPattern' => '/^(\d{2})\/(\d{2})\/(\d{4})$/',
         'dateLocalOutputFormat' => 'l, F jS Y',
         'dateTimeLocalOutputFormat' => 'l, F jS Y, H:i A',
-        'dateLocalShortOutputFormat' => 'j/n/Y',
-        'dateTimeLocalShortOutputFormat' => 'j/n/Y H:i A'
+        'dateLocalShortOutputFormat' => 'd/m/Y',
+        'dateTimeLocalShortOutputFormat' => 'd/m/Y H:i A'
     ];
 }
