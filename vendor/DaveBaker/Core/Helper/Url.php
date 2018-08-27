@@ -29,4 +29,12 @@ class Url extends Base
     {
         return $this->getApp()->getPageManager()->getUrl($pageIdentidier, $params);
     }
+
+    /**
+     * @return false|string
+     */
+    public function getRefererUrl()
+    {
+        return wp_get_referer();
+    }
 }

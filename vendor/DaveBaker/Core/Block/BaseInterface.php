@@ -15,7 +15,7 @@ interface BaseInterface extends \DaveBaker\Core\BaseInterface
     public function getName();
     public function getOrderType();
     public function getOrderBlock();
-    public function addChildBlock(\DaveBaker\Core\Block\BlockInterface $block);
+    public function addChildBlock($blocks);
     public function getChildBlocks();
 
     // Actions and shortcodes are only used by blocks registered with the layout manager

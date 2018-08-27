@@ -93,7 +93,7 @@ class Template
      * @return string
      * @throws Exception
      */
-    public function render()
+    protected function _render()
     {
         if(!$this->getTemplate()){
             throw new Exception("Template file not set for {$this->getName()}");

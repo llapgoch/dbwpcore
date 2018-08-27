@@ -57,7 +57,7 @@ abstract class Base extends \DaveBaker\Core\Object\Base
 
         $this->blockName = $name;
         $this->app = $app;
-        $this->childBlocks = $this->app->getBlockManager()->createBlockList();
+        $this->childBlocks = $this->getBlockManager()->createBlockList();
 
         $this->fireEvent('create');
         $this->init();
@@ -84,13 +84,21 @@ abstract class Base extends \DaveBaker\Core\Object\Base
     }
 
     /**
-     * @param BlockInterface $block
+     * @param array $blocks
      * @return $this
+     * @throws Exception
      */
-    public function addChildBlock(
-        \DaveBaker\Core\Block\BlockInterface $block
-    ) {
-        $this->childBlocks->add($block);
+    public function addChildBlock($blocks)
+    {
+        if(!is_array($blocks)){
+            $blocks = [$blocks];
+        }
+        foreach($blocks as $block) {
+            if(!$block instanceof \DaveBaker\Core\Block\BlockInterface){
+                throw new Exception("Block is not compatible with BlockInterface");
+            }
+            $this->childBlocks->add($block);
+        }
         return $this;
     }
 
@@ -269,30 +277,31 @@ abstract class Base extends \DaveBaker\Core\Object\Base
     }
 
     /**
-     * @return mixed
-     * @throws \DaveBaker\Core\Event\Exception
-     * @throws \DaveBaker\Core\Object\Exception
-     */
-    public function render()
-    {
-        $this->_preRender();
-
-        $this->rendered = true;
-        $context = $this->fireEvent(
-            'render',
-             ["html" => $this->getHtml() . $this->getChildHtml('')]
-        );
-
-        return $context->getHtml();
-    }
-
-    /**
      * @return $this
      */
     protected function init()
     {
         return $this;
     }
+
+    /**
+     * @return mixed
+     * @throws \DaveBaker\Core\Event\Exception
+     * @throws \DaveBaker\Core\Object\Exception
+     */
+    public final function render()
+    {
+        $this->_preRender();
+
+        $this->rendered = true;
+        $context = $this->fireEvent(
+            'render',
+             ["html" => $this->_render()]
+        );
+
+        return $context->getHtml();
+    }
+
 
     /**
      * @return $this|void
@@ -402,7 +411,16 @@ abstract class Base extends \DaveBaker\Core\Object\Base
             $name = $this->getAnonymousChildBlockName();
         }
 
-        return $this->getApp()->getBlockManager()->createBlock($className, $name);
+        return $this->getBlockManager()->createBlock($className, $name);
+    }
+
+    /**
+     * @return Manager|object
+     * @throws \DaveBaker\Core\Object\Exception
+     */
+    public function getBlockManager()
+    {
+        return $this->getApp()->getBlockManager();
     }
 
     /**
@@ -446,6 +464,16 @@ abstract class Base extends \DaveBaker\Core\Object\Base
     protected function _postDispatch()
     {
         return $this;
+    }
+
+    /**
+     * @return string
+     * @throws \DaveBaker\Core\Event\Exception
+     * @throws \DaveBaker\Core\Object\Exception
+     */
+    protected function _render()
+    {
+        return $this->getHtml() . $this->getChildHtml('');
     }
 
     /**
