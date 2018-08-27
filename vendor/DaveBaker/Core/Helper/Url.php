@@ -31,10 +31,14 @@ class Url extends Base
     }
 
     /**
-     * @return false|string
+     * @return string
      */
     public function getRefererUrl()
     {
-        return wp_get_referer();
+        if(isset($_SERVER['HTTP_REFERER'])){
+            return $_SERVER['HTTP_REFERER'];
+        }
+
+        return '';
     }
 }
