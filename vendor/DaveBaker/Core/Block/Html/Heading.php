@@ -1,7 +1,10 @@
 <?php
 
 namespace DaveBaker\Core\Block\Html;
-
+/**
+ * Class Heading
+ * @package DaveBaker\Core\Block\Html
+ */
 class Heading extends Base
 {
     protected function init()

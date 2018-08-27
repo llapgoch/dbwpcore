@@ -67,17 +67,6 @@ class App
         $this->objectManager->setNamespace($this->getNamespace());
         $this->getMain()->init();
         $this->addEvents();
-
-
-        var_dump($this->getGeneralSession()->getMessages(
-            \DaveBaker\Core\Definitions\Messages::SUCCESS
-        ));
-
-        $this->getGeneralSession()->addMessage(
-            'Ooh, a new message!',
-            \DaveBaker\Core\Definitions\Messages::SUCCESS
-        );
-
     }
 
     /**

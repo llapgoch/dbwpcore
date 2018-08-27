@@ -37,6 +37,31 @@ class Base extends \DaveBaker\Core\Base
     }
 
     /**
+     * @param string $message
+     * @param string|null $type
+     * @return $this
+     * @throws \DaveBaker\Core\Object\Exception
+     */
+    public function addMessage(
+        $message,
+        $type = \DaveBaker\Core\Definitions\Messages::SUCCESS
+    ) {
+        $this->getApp()->getGeneralSession()->addMessage($message, $type);
+        return $this;
+    }
+
+    /**
+     * @param string|null $type
+     * @return $this
+     * @throws \DaveBaker\Core\Object\Exception
+     */
+    public function clearMessages($type = null)
+    {
+        $this->getApp()->getGeneralSession()->clearMessages($type);
+        return $this;
+    }
+
+    /**
      * @return \DaveBaker\Core\App\Request|object
      * @throws \DaveBaker\Core\Object\Exception
      */
@@ -65,6 +90,8 @@ class Base extends \DaveBaker\Core\Base
 
     /**
      * @param $pageIdentifier
+     * @throws \DaveBaker\Core\Event\Exception
+     * @throws \DaveBaker\Core\Model\Db\Exception
      * @throws \DaveBaker\Core\Object\Exception
      */
     public function redirectToPage($pageIdentifier)
