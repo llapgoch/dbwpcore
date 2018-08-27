@@ -5,7 +5,9 @@ namespace DaveBaker\Form\Block;
  * Class Select
  * @package DaveBaker\Form\Block
  */
-class Select extends Base
+class Select
+    extends Base
+    implements \DaveBaker\Form\Block\ValueSetterInterface
 {
     /** @var array  */
     protected $selectOptions = [];

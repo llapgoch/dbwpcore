@@ -1,9 +1,13 @@
 <?php
+
 namespace DaveBaker\Form\Validation;
 
-use DaveBaker\Form\Validation\Error\ErrorInterface;
 use DaveBaker\Form\Validation\Rule\Configurator\Exception;
 
+/**
+ * Class Validator
+ * @package DaveBaker\Form\Validation
+ */
 class Validator extends \DaveBaker\Core\Base
 {
     /** @var array */
@@ -12,7 +16,6 @@ class Validator extends \DaveBaker\Core\Base
     protected $values;
     /** @var string */
     protected $breakAtFirst = false;
-
     /** @var array */
     private $errors = [];
 

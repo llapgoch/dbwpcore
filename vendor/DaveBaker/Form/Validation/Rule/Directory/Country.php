@@ -1,6 +1,6 @@
 <?php
 
-namespace DaveBaker\Form\Validation\Dirctory;
+namespace DaveBaker\Form\Validation\Rule\Directory;
 
 use DaveBaker\Form\Validation\Rule\Error;
 
@@ -12,6 +12,8 @@ class Country
     extends \DaveBaker\Form\Validation\Rule\Base
     implements \DaveBaker\Form\Validation\Rule\RuleInterface
 {
+    protected $mainError = "Please select a valid country for '{{niceName}}'";
+    protected $inputError = "This needs to be a valid country";
 
     /**
      * @return bool|Error

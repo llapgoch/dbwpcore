@@ -55,8 +55,8 @@ class Collection extends \DaveBaker\Core\Base
      */
     public function configure(
         \DaveBaker\Core\Model\Db\Collection\Base $collection,
-        $nameField,
-        $valueField
+        $valueField,
+        $nameField
     ) {
         $this->collection = $collection;
         $this->nameField = $nameField;
