@@ -110,7 +110,7 @@ class Builder extends \DaveBaker\Core\Base
         }
 
         if(isset($scheme['attributes'])){
-            $inputBlock->setAttributes($scheme['attributes']);
+            $inputBlock->addAttribute($scheme['attributes']);
         }
 
         return $blocks;
