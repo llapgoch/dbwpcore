@@ -21,8 +21,7 @@ class Builder extends \DaveBaker\Core\Base
      *
      * schema - an array of elements;
      *  - name
-     *  - short_type (E.g. Input\Text)
-     *  - type (Fully qualified class name
+     *  - type (Fully qualified class name or Core Rule E.g. Input\Text)
      *  - labelName
      *  - value
      *  - attributes
@@ -60,7 +59,7 @@ class Builder extends \DaveBaker\Core\Base
      * @throws \DaveBaker\Core\App\Exception
      * @throws \DaveBaker\Core\Object\Exception
      */
-    protected function createElements($scheme = [])
+    public function createElements($scheme = [])
     {
         $blocks = [];
 
@@ -72,14 +71,17 @@ class Builder extends \DaveBaker\Core\Base
             throw new Exception('name not set');
         }
 
-        if(!isset($scheme['short_type']) && !isset($scheme['type'])){
-            throw new Exception('short_type or type not set');
+        if(!isset($scheme['type'])){
+            throw new Exception('type not set');
         }
 
-        $elementType = isset($scheme['type']) ? $scheme['type'] : self::BASE_ELEMENT_NAMESPACE . $scheme['short_type'];
+        // If the class name is fully qualified, just create it, otherwise add it to the base path
+        if(substr($scheme['type'], 0, 1) !== '\\') {
+            $scheme['type'] = self::BASE_ELEMENT_NAMESPACE . $scheme['type'];
+        }
 
         $inputBlock = $this->getApp()->getBlockManager()->createBlock(
-            $elementType,
+            $scheme['type'],
             $this->formName . "." . str_replace("_", ".", $scheme['name']) . 'element'
         )->setElementName($scheme['name']);
 
@@ -101,6 +103,10 @@ class Builder extends \DaveBaker\Core\Base
 
         if(isset($scheme['class'])){
             $inputBlock->addClass($scheme['class']);
+        }
+
+        if(isset($scheme['value'])){
+            $inputBlock->setElementValue($scheme['value']);
         }
 
         if(isset($scheme['attributes'])){

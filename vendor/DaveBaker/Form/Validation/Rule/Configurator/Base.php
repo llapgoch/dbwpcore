@@ -13,15 +13,24 @@ abstract class Base
 
     /**
      * @param $classSuffix
-     * @return \DaveBaker\Form\Validation\Rule\RuleInterface
+     * @param $name
+     * @param null $niceName
+     * @param null $value
+     * @return object
      * @throws Exception
+     * @throws \DaveBaker\Core\Object\Exception
      */
-    public function createRule($classSuffix, $name, $niceName = null, $value = null)
+    public function createRule($className, $name, $niceName = null, $value = null)
     {
-        $rule = $this->createAppObject(self::RULE_BASE . $classSuffix);
+        // If the class name is fully qualified, just create it, otherwise add it to the base path
+        if(substr($className, 0, 1) !== '\\') {
+            $className = self::RULE_BASE . $className;
+        }
+
+        $rule = $this->createAppObject($className);
         
         if(!($rule instanceof \DaveBaker\Form\Validation\Rule\RuleInterface)){
-            throw new Exception("Rule {$classSuffix} is not compatible with RuleInterface");
+            throw new Exception("Rule {$className} is not compatible with RuleInterface");
         }
 
         $rule->configure(
