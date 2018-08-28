@@ -131,7 +131,8 @@ abstract class Base
     }
 
     /**
-     * @return \DaveBaker\Form\Validation\Error\ErrorInterface
+     * @return mixed
+     * @throws \DaveBaker\Core\Object\Exception
      */
     protected function createError()
     {
