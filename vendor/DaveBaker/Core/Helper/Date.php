@@ -102,11 +102,27 @@ class Date extends Base
      * @throws Exception
      * @throws \DaveBaker\Core\Object\Exception
      */
-    function utcTimestampToLocal($utcTimestamp)
+    public function utcTimestampToLocal($utcTimestamp)
     {
         return $this->utcDateStringToLocal(
             date($this->getDbDateTimeFormat(), $utcTimestamp)
         );
+    }
+
+    /**
+     * @param $dateString
+     * @return string
+     * @throws Exception
+     * @throws \DaveBaker\Core\Object\Exception
+     */
+    public function localDateToDb($dateString){
+        preg_match($this->getLocalDatePattern(), $dateString, $matches);
+
+        if(!(count($matches) <= 4)){
+            throw new Exception('Local date could not be converted to db');
+        }
+
+        return $matches[3] . "-" . $matches[2] . "-" . $matches[1];
     }
 
     /**
