@@ -14,7 +14,7 @@ class Url extends Base
      */
     public function getUrl($url, $params = [])
     {
-        return add_query_arg($params, get_site_url() . $url);
+        return add_query_arg($params, home_url($url));
     }
 
     /**
@@ -67,5 +67,22 @@ class Url extends Base
     public function getForgotPasswordUrl($params = [])
     {
         return $this->getUrl(wp_lostpassword_url(), $params);
+    }
+
+    /**
+     * @param bool $withQueryString
+     * @param array $params
+     * @return string
+     */
+    public function getCurrentUrl($params = [], $withQueryString = true)
+    {
+        global $wp;
+        $url = $wp->request;
+
+        if($withQueryString && isset($_SERVER['QUERY_STRING'])){
+            $url = add_query_arg($_SERVER['QUERY_STRING'], '', $url);
+        }
+
+        return $this->getUrl($url, $params);
     }
 }
