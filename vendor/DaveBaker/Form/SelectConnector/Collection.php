@@ -23,10 +23,10 @@ class Collection extends \DaveBaker\Core\Base
      * @throws \DaveBaker\Core\Event\Exception
      * @throws \DaveBaker\Core\Object\Exception
      */
-    public function getData()
+    public function getElementData()
     {
         if(!$this->collection || !$this->valueField || !$this->nameField){
-            throw new Exception('SelecConnector requires collectionClass, valueField, and nameField to be set via configure');
+            throw new Exception('SelectConnector requires collectionClass, valueField, and nameField to be set via configure');
         }
 
         $data = [];
@@ -69,7 +69,7 @@ class Collection extends \DaveBaker\Core\Base
         $this->valueField = $valueField;
 
         if($selectElement){
-            $selectElement->setSelectOptions($this->getData());
+            $selectElement->setSelectOptions($this->getElementData());
         }
 
         return $this;
