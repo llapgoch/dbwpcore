@@ -10,11 +10,12 @@ class Date
     protected $inputError = "This needs to be a valid date";
 
     /**
-     * @return bool|Error
+     * @return bool|\DaveBaker\Form\Validation\Error\ErrorInterface|Error
+     * @throws \DaveBaker\Core\Object\Exception
      */
     public function validate()
     {
-        if(!preg_match($this->getApp()->getHelper('Date')->getDatePattern(), $this->getValue())){
+        if(!preg_match($this->getApp()->getHelper('Date')->getLocalDatePattern(), $this->getValue())){
             return $this->createError();
         }
 

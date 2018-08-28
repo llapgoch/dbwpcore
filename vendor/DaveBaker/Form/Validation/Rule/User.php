@@ -8,7 +8,7 @@ namespace DaveBaker\Form\Validation\Rule;
 class User extends Base
     implements RuleInterface
 {
-    protected $mainError = "{{niceName}} should be a valid user";
+    protected $mainError = "Please select a user for '{{niceName}}'";
     protected $inputError = "This needs to be a valid user";
 
     /**
