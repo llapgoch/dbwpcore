@@ -41,4 +41,31 @@ class Url extends Base
 
         return '';
     }
+
+    /**
+     * @param array $params
+     * @return string
+     */
+    public function getLoginUrl($params = [])
+    {
+        return $this->getUrl(wp_login_url(), $params);
+    }
+
+    /**
+     * @param array $params
+     * @return string
+     */
+    public function getRegistrationUrl($params = [])
+    {
+        return $this->getUrl(wp_registration_url(), $params);
+    }
+
+    /**
+     * @param array $params
+     * @return string
+     */
+    public function getForgotPasswordUrl($params = [])
+    {
+        return $this->getUrl(wp_lostpassword_url(), $params);
+    }
 }

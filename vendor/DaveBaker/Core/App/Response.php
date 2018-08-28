@@ -18,6 +18,7 @@ class Response extends \DaveBaker\Core\Base
 
     /**
      * @param $pageIdentifier
+     * @return $this
      * @throws \DaveBaker\Core\Event\Exception
      * @throws \DaveBaker\Core\Model\Db\Exception
      * @throws \DaveBaker\Core\Object\Exception
@@ -27,13 +28,27 @@ class Response extends \DaveBaker\Core\Base
         $this->redirect(
             $this->getApp()->getPageManager()->getUrl($pageIdentifier)
         );
+        return $this;
     }
 
     /**
+     * @return $this
      * @throws \DaveBaker\Core\Object\Exception
      */
     public function redirectReferer()
     {
         $this->redirect($this->getApp()->getHelper('Url')->getRefererUrl());
+        return $this;
+    }
+
+    /**
+     * @return $this
+     *
+     * Redirects the user to the login page
+     */
+    public function authRedirect()
+    {
+        auth_redirect();
+        return $this;
     }
 }

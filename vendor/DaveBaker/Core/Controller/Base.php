@@ -9,6 +9,7 @@ class Base extends \DaveBaker\Core\Base
 {
     /** @var string */
     protected $namespaceCode = 'controller';
+    protected $requiresLogin = false;
 
     /**
      * @return $this
@@ -17,6 +18,7 @@ class Base extends \DaveBaker\Core\Base
      */
     public final function preDispatch()
     {
+        $this->checkAllowed();
         $this->fireEvent('predispatch_before');
         $this->_preDispatch();
         $this->fireEvent('predispatch_after');
@@ -90,6 +92,7 @@ class Base extends \DaveBaker\Core\Base
 
     /**
      * @param $pageIdentifier
+     * @return \DaveBaker\Core\App\Response
      * @throws \DaveBaker\Core\Event\Exception
      * @throws \DaveBaker\Core\Model\Db\Exception
      * @throws \DaveBaker\Core\Object\Exception
@@ -97,6 +100,23 @@ class Base extends \DaveBaker\Core\Base
     public function redirectToPage($pageIdentifier)
     {
         return $this->getResponse()->redirectToPage($pageIdentifier);
+    }
+
+    /**
+     * @return $this
+     * @throws \DaveBaker\Core\Object\Exception
+     */
+    protected function checkAllowed()
+    {
+        $pageManager = $this->getApp()->getPageManager();
+
+        if(!($pageManager->isOnRegisterPage() || $pageManager->isOnLoginPage())){
+            if($this->requiresLogin && !($this->getApp()->getHelper('User')->isLoggedIn())){
+                $this->getResponse()->authRedirect();
+            }
+        }
+
+        return $this;
     }
 
     /**

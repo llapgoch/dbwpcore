@@ -26,4 +26,20 @@ class User extends Base
     {
         return $this->createAppObject('\DaveBaker\Core\Model\Db\Core\User')->load($userId);
     }
+
+    /**
+     * @return int
+     */
+    public function getCurrentUserId()
+    {
+        return get_current_user_id();
+    }
+
+    /**
+     * @return bool
+     */
+    public function isLoggedIn()
+    {
+        return (bool) $this->getCurrentUserId();
+    }
 }
