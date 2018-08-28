@@ -118,7 +118,7 @@ class Date extends Base
     public function localDateToDb($dateString){
         preg_match($this->getLocalDatePattern(), $dateString, $matches);
 
-        if(count($matches) <= 4){
+        if(count($matches) < 4){
             return null;
         }
 

@@ -18,11 +18,15 @@ class Future
      */
     public function validate()
     {
-        $now = new \DateTime();
-        $date = new \DateTime($this->getValue());
+        try {
+            $now = new \DateTime();
+            $date = new \DateTime($this->getValue());
+        }catch (\Exception $e){
+            return $this->createError();
+        }
 
         if($date < $now){
-            $this->createError();
+            return $this->createError();
         }
 
         return true;
