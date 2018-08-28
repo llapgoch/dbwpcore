@@ -11,9 +11,11 @@ class Db extends Base
      * @param $tableName string
      * @return string
      */
-    public function getTableName($tableName)
+    public function getTableName($tableName, $useNamespace = true)
     {
         global $wpdb;
-        return $wpdb->prefix . $this->getApp()->getNamespace() . $tableName;
+        return $wpdb->prefix .
+            ($useNamespace ? $this->getApp()->getNamespace() : '') .
+            $tableName;
     }
 }

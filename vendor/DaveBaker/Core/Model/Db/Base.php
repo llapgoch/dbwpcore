@@ -24,6 +24,9 @@ abstract class Base
 
     protected $namespaceCode = "default";
 
+    /** @var bool */
+    protected $useTableNamespace = true;
+
     // Set the table name and idColumn in an init
     protected abstract function init();
 
@@ -95,7 +98,8 @@ abstract class Base
      */
     public function getTableName()
     {
-        return $this->getHelper()->getTableName($this->tableName);
+        // Turn this off to use models with non-namespaced (typically core Wordpress tables)
+        return $this->getHelper()->getTableName($this->tableName, $this->useTableNamespace);
     }
 
     /**

@@ -49,18 +49,28 @@ class Collection extends \DaveBaker\Core\Base
 
     /**
      * @param \DaveBaker\Core\Model\Db\Collection\Base $collection
-     * @param string $valueField
-     * @param string $nameField
+     * @param $valueField
+     * @param $nameField
+     * @param \DaveBaker\Form\Block\Select|null $selectElement
      * @return $this
+     * @throws Exception
+     * @throws \DaveBaker\Core\Db\Exception
+     * @throws \DaveBaker\Core\Event\Exception
+     * @throws \DaveBaker\Core\Object\Exception
      */
     public function configure(
         \DaveBaker\Core\Model\Db\Collection\Base $collection,
         $valueField,
-        $nameField
+        $nameField,
+        \DaveBaker\Form\Block\Select $selectElement = null
     ) {
         $this->collection = $collection;
         $this->nameField = $nameField;
         $this->valueField = $valueField;
+
+        if($selectElement){
+            $selectElement->setSelectOptions($this->getData());
+        }
 
         return $this;
     }
