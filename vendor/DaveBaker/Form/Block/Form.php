@@ -8,8 +8,8 @@ namespace DaveBaker\Form\Block;
  */
 class Form extends Base
 {
-    protected $method = 'post';
-    protected $action = '';
+    protected $formMethod = 'post';
+    protected $formAction = '';
 
     protected function init()
     {
@@ -21,28 +21,28 @@ class Form extends Base
      * @param $method
      * @return $this
      */
-    public function setMethod($method)
+    public function setFormMethod($method)
     {
-        $this->method = $method;
+        $this->formMethod = $method;
         return $this;
     }
 
     /**
      * @return string
      */
-    public function getMethod()
+    public function getFormMethod()
     {
-        return $this->method;
+        return $this->formMethod;
     }
 
-    public function setAction($action)
+    public function setFormAction($action)
     {
-        $this->action = $action;
+        $this->formAction = $action;
         return $this;
     }
 
-    public function getAction()
+    public function getFormAction()
     {
-        return $this->action;
+        return $this->formAction;
     }
 }
