@@ -29,7 +29,7 @@
       * @param string $type
       * @return $this
       */
-     public function addMessage($message, $type = \DaveBaker\Core\Definitions\Messages::SUCCESS)
+     public function addMessage($message, $type = \DaveBaker\Core\Definitions\Messages::ERROR)
      {
          $optionKey = $this->getNamespacedOption('');
 

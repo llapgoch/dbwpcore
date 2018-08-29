@@ -92,6 +92,17 @@ abstract class Base
     }
 
     /**
+     * @return mixed
+     * @throws \DaveBaker\Core\Object\Exception
+     */
+    public function createError()
+    {
+        /** @var \DaveBaker\Form\Validation\Error\ErrorInterface $error */
+        $error = $this->createObject('\DaveBaker\Form\Validation\Error\Error');
+        return $error->setErrors($this->getMainErrorOutput(), $this->getInputErrorOutput());
+    }
+
+    /**
      * @param string $string
      * @return string
      */
@@ -130,14 +141,4 @@ abstract class Base
         return $this->doErrorReplacers($this->inputError);
     }
 
-    /**
-     * @return mixed
-     * @throws \DaveBaker\Core\Object\Exception
-     */
-    protected function createError()
-    {
-        /** @var \DaveBaker\Form\Validation\Error\ErrorInterface $error */
-        $error = $this->createObject('\DaveBaker\Form\Validation\Error\Error');
-        return $error->setErrors($this->getMainErrorOutput(), $this->getInputErrorOutput());
-    }
 }

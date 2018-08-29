@@ -6,7 +6,7 @@ class Date
     extends Base
     implements RuleInterface
 {
-    protected $mainError = "{{niceName}} needs to be a valid date";
+    protected $mainError = "'{{niceName}}' needs to be a valid date";
     protected $inputError = "This needs to be a valid date";
 
     /**

@@ -46,7 +46,7 @@ class Base extends \DaveBaker\Core\Base
      */
     public function addMessage(
         $message,
-        $type = \DaveBaker\Core\Definitions\Messages::SUCCESS
+        $type = \DaveBaker\Core\Definitions\Messages::ERROR
     ) {
         $this->getApp()->getGeneralSession()->addMessage($message, $type);
         return $this;
