@@ -68,22 +68,24 @@ abstract class Base extends \DaveBaker\Core\Object\Base
 
     /**
      * @param $url
+     * @param array $params
      * @return mixed
      * @throws \DaveBaker\Core\Object\Exception
      */
-    public function getUrl($url)
+    public function getUrl($url, $params = [])
     {
-        return $this->getApp()->getHelper('Url')->getUrl($url);
+        return $this->getApp()->getHelper('Url')->getUrl($url, $params);
     }
 
     /**
      * @param $pageIdentifier
+     * @param array $params
      * @return mixed
      * @throws \DaveBaker\Core\Object\Exception
      */
-    public function getPageUrl($pageIdentifier)
+    public function getPageUrl($pageIdentifier, $params = [])
     {
-        return $this->getApp()->getHelper('Url')->getPageUrl($pageIdentifier);
+        return $this->getApp()->getHelper('Url')->getPageUrl($pageIdentifier, $params);
     }
 
     /**
