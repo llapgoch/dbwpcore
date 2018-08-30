@@ -163,6 +163,23 @@ abstract class Base extends \DaveBaker\Core\Base
     }
 
     /**
+     * @return mixed|null
+     * @throws \DaveBaker\Core\Db\Exception
+     * @throws \DaveBaker\Core\Event\Exception
+     * @throws \DaveBaker\Core\Object\Exception
+     */
+    public function firstItem()
+    {
+        $items = $this->load();
+
+        if(count($items)){
+            return $items[0];
+        }
+
+        return null;
+    }
+
+    /**
      * @return $this
      */
     protected function resetItems()
