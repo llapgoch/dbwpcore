@@ -26,6 +26,24 @@ class Custom
     }
 
     /**
+     * @param $name
+     * @param $niceName
+     * @param $value
+     * @return $this
+     */
+    public function configure(
+        $name,
+        $niceName,
+        $value
+    ) {
+        $this->name = $name;
+        $this->niceName = $niceName;
+        $this->value = $value;
+
+        return $this;
+    }
+
+    /**
      * @param $method
      * @return $this
      */

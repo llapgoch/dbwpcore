@@ -72,9 +72,9 @@ abstract class Base extends \DaveBaker\Core\Object\Base
      * @return mixed
      * @throws \DaveBaker\Core\Object\Exception
      */
-    public function getUrl($url, $params = [])
+    public function getUrl($url, $params = [], $redirectUrl = '')
     {
-        return $this->getApp()->getHelper('Url')->getUrl($url, $params);
+        return $this->getApp()->getHelper('Url')->getUrl($url, $params, $redirectUrl);
     }
 
     /**
@@ -83,9 +83,9 @@ abstract class Base extends \DaveBaker\Core\Object\Base
      * @return mixed
      * @throws \DaveBaker\Core\Object\Exception
      */
-    public function getPageUrl($pageIdentifier, $params = [])
+    public function getPageUrl($pageIdentifier, $params = [], $redirectUrl = '')
     {
-        return $this->getApp()->getHelper('Url')->getPageUrl($pageIdentifier, $params);
+        return $this->getApp()->getHelper('Url')->getPageUrl($pageIdentifier, $params, $redirectUrl);
     }
 
     /**

@@ -6,11 +6,13 @@ namespace DaveBaker\Core\App;
  * Class Request
  * @package DaveBaker\Core\App
  */
-class Request
+class Request extends \DaveBaker\Core\Base
 {
     const GET = "get";
     const POST = "post";
     const CUSTOM = "custom";
+
+    const RETURN_URL_PARAM = '_ret';
 
     /** @var array */
     protected $params = [
@@ -20,7 +22,7 @@ class Request
     ];
 
 
-    public function __construct()
+    protected function _construct()
     {
         $this->compileParams();
     }
@@ -28,9 +30,11 @@ class Request
 
     /**
      * @return $this
+     * @throws \DaveBaker\Core\Object\Exception
      *
      * Compiles a local registry of requests.
      * Undo Wordpress' Magic Quote nonsense.
+     * Sets the return url in the session for later local use
      */
     protected function compileParams()
     {
@@ -46,7 +50,29 @@ class Request
             }
         }
 
+        if($returnUrl = base64_decode($this->getParam(self::RETURN_URL_PARAM))){
+            $this->getApp()->getGeneralSession()->set(self::RETURN_URL_PARAM, $returnUrl);
+        }
+
         return $this;
+    }
+
+    /**
+     * @param string $returnUrl
+     * @return string
+     */
+    public function createReturnUrlParam($returnUrl)
+    {
+        return base64_encode($returnUrl);
+    }
+
+    /**
+     * @return null|string
+     * @throws \DaveBaker\Core\Object\Exception
+     */
+    public function getReturnUrl()
+    {
+        return $this->getApp()->getGeneralSession()->get(self::RETURN_URL_PARAM);
     }
 
     /**

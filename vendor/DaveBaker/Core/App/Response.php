@@ -51,4 +51,18 @@ class Response extends \DaveBaker\Core\Base
         auth_redirect();
         return $this;
     }
+
+    /**
+     * @return null|bool
+     * @throws \DaveBaker\Core\Object\Exception
+     */
+    public function redirectToReturnUrl()
+    {
+        if($url = $this->getApp()->getRequest()->getReturnUrl()){
+            return $this->redirect($url);
+        }
+
+        return false;
+    }
+
 }
