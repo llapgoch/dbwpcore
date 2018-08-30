@@ -37,6 +37,14 @@ class Table extends Base
     /**
      * @return array
      */
+    public function getHeaderKeys()
+    {
+        return array_keys($this->headers);
+    }
+
+    /**
+     * @return array
+     */
     public function getRecords()
     {
         return $this->records;

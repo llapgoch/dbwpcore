@@ -89,6 +89,96 @@ abstract class Base extends \DaveBaker\Core\Base
     }
 
     /**
+     * @param $name
+     * @param $cond
+     * @param string $cols
+     * @param null $schema
+     * @return \Zend_Db_Select
+     * @throws \DaveBaker\Core\Object\Exception
+     */
+    public function joinLeft($name, $cond, $cols = \Zend_Db_Select::SQL_WILDCARD, $schema = null)
+    {
+        $name = $this->replaceTablesIn($name);
+        $cond = $this->replaceTablesIn($cond);
+
+        return $this->getSelect()->join($name, $cond, $cols, $schema);
+    }
+
+    /**
+     * @param $name
+     * @param $cond
+     * @param string $cols
+     * @param null $schema
+     * @return \Zend_Db_Select
+     * @throws \DaveBaker\Core\Object\Exception
+     */
+    public function joinRight($name, $cond, $cols = \Zend_Db_Select::SQL_WILDCARD, $schema = null)
+    {
+        $name = $this->replaceTablesIn($name);
+        $cond = $this->replaceTablesIn($cond);
+
+        return $this->getSelect()->joinRight($name, $cond, $cols, $schema);
+    }
+
+    /**
+     * @param $name
+     * @param $cond
+     * @param $cols
+     * @param null $schema
+     * @return \Zend_Db_Select
+     * @throws \DaveBaker\Core\Object\Exception
+     */
+    public function join($name, $cond, $cols = self::SQL_WILDCARD, $schema = null)
+    {
+        $name = $this->replaceTablesIn($name);
+        $cond = $this->replaceTablesIn($cond);
+
+        return $this->getSelect()->joinInner($name, $cond, $cols, $schema);
+    }
+
+    /**
+     * @param $string
+     * @return null|string|string[]
+     */
+    public function replaceTablesIn($strings)
+    {
+        $returnString = false;
+
+        if(!is_array($strings)){
+            $strings = [$strings];
+            $returnString = true;
+        }
+
+        foreach($strings as $k => $string) {
+            $string = preg_replace_callback(
+                "/{{([^}]+)}}/",
+                function ($matches) {
+                    return $this->getTableName($matches[1]);
+                },
+                $string
+            );
+
+            $strings[$k] = $string;
+        }
+
+        if($returnString){
+            return $strings[0];
+        }
+
+        return $strings;
+    }
+
+    /**
+     * @param $tableName
+     * @return mixed
+     * @throws \DaveBaker\Core\Object\Exception
+     */
+    public function getTableName($tableName)
+    {
+        return $this->getQuery()->getTableName($tableName);
+    }
+
+    /**
      * @return $this
      * @throws \DaveBaker\Core\Event\Exception
      * @throws \DaveBaker\Core\Object\Exception

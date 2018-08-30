@@ -178,7 +178,7 @@ class App
 
     /**
      * @param $helperName
-     * @return object
+     * @return mixed
      * @throws Object\Exception
      */
     public function getHelper($helperName)

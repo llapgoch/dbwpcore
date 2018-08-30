@@ -85,9 +85,9 @@ class Query extends \DaveBaker\Core\Base
      * @return mixed
      * @throws \DaveBaker\Core\Object\Exception
      */
-    public function getTableName($tableName)
+    public function getTableName($tableName, $useNamespace = true)
     {
-        return $this->getHelper()->getTableName($tableName);
+        return $this->getHelper()->getTableName($tableName, $useNamespace);
     }
 
     /**
