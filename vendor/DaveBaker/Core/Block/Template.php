@@ -1,18 +1,19 @@
 <?php
 
 namespace DaveBaker\Core\Block;
-
+/**
+ * Class Template
+ * @package DaveBaker\Core\Block
+ */
 class Template
     extends \DaveBaker\Core\Block\Base
     implements \DaveBaker\Core\Block\BlockInterface
 {
-    /**
-     * @var string
-     */
+    /** @var string  */
     protected $template = '';
-
     /** @var array */
     protected $attributes = [];
+    /** @var array  */
     protected $classes = [];
 
     /**
@@ -92,6 +93,7 @@ class Template
     /**
      * @return string
      * @throws Exception
+     * @throws \DaveBaker\Core\Object\Exception
      */
     protected function _render()
     {
@@ -134,6 +136,7 @@ class Template
 
     /**
      * @return string
+     * @throws \DaveBaker\Core\Object\Exception
      */
     public function getTemplateFile()
     {

@@ -1,6 +1,8 @@
 <?php
 
 namespace DaveBaker\Form;
+
+use \DaveBaker\Core\Definitions\General as GeneralDefinition;
 /**
  * Class BlockApplicator
  * @package DaveBaker\Form
@@ -13,19 +15,37 @@ class BlockApplicator extends \DaveBaker\Core\Base
     protected $form;
     /** @var array */
     protected $values = [];
+    /** @var \DaveBaker\Form\Validation\Validator */
+    protected $validator;
+
+    /** @var string
+     * This can be overriden in config
+     */
+    protected $elementErrorClass = 'error';
 
     /**
      * @param Block\Form $form
      * @param $values
+     * @param Validation\Validator|null $validator
      * @return $this
      * @throws Exception
+     * @throws \DaveBaker\Core\Object\Exception
      */
     public function configure(
         Block\Form $form,
-        $values
+        $values,
+        \DaveBaker\Form\Validation\Validator $validator = null
     ) {
         $this->form = $form;
+        $this->validator = $validator;
         $this->setValues($values);
+
+        if($class = $this->getApp()->getGeneralConfig()->getConfigValue(
+            GeneralDefinition::CONFIG_ELEMENT_ERROR_CLASS_KEY)
+        ){
+            $this->elementErrorClass = $class;
+        }
+
         $this->apply();
 
         return $this;
@@ -101,15 +121,36 @@ class BlockApplicator extends \DaveBaker\Core\Base
             throw new Exception('Form and values must be set through configure before calling apply');
         }
 
+        $formErrors = $this->getValidatorInputErrors();
+        $formErrorKeys = array_keys($formErrors);
+
         /** @var Block\BaseInterface $element */
         foreach($this->getChildFormElements() as $element){
             if($this->getValue($element->getElementName()) !== null) {
                 $element->setElementValue(
                     $this->getValue($element->getElementName())
                 );
+
+
+
+                if(in_array($element->getElementName(), $formErrorKeys)){
+                    $element->addClass($this->elementErrorClass);
+                }
             }
         }
         
         return $this;
+    }
+
+    /**
+     * @return array
+     */
+    protected function getValidatorInputErrors()
+    {
+        if($this->validator){
+            return $this->validator->getErrorFields();
+        }
+
+        return [];
     }
 }

@@ -2,7 +2,8 @@
 
 namespace DaveBaker\Core\Block;
 
-interface BaseInterface extends \DaveBaker\Core\BaseInterface
+interface BaseInterface
+    extends \DaveBaker\Core\BaseInterface
 {
     /* When all blocks have been created */
     public function preDispatch();

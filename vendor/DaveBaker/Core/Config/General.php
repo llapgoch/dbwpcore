@@ -15,6 +15,7 @@ class General extends Base {
         'dateTimeLocalOutputFormat' => 'l, F jS Y, H:i A',
         'dateLocalShortOutputFormat' => 'd/m/Y',
         'dateTimeLocalShortOutputFormat' => 'd/m/Y H:i A',
-        'countryCodeDefault' => 'GB'
+        'countryCodeDefault' => 'GB',
+        'formElementErrorClass' => 'error'
     ];
 }

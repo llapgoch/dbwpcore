@@ -133,7 +133,7 @@ abstract class Base
     /**
      * @param $identifier
      * @param array $args
-     * @return object
+     * @return mixed
      * @throws Object\Exception
      *
      * Returns an object which typically extends Core/Base and automatically

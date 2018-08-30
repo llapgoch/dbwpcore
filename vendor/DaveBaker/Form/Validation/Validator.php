@@ -18,6 +18,8 @@ class Validator extends \DaveBaker\Core\Base
     protected $breakAtFirst = false;
     /** @var array */
     private $errors = [];
+    /** @var array  */
+    protected $errorFields = [];
 
     /**
      * @param array $values
@@ -133,6 +135,7 @@ class Validator extends \DaveBaker\Core\Base
                 continue;
             }
 
+            $this->errorFields[$rule->getName()] = $ruleResult->getInputError();
             $this->addError($ruleResult);
 
             if($this->breakAtFirst){
@@ -145,5 +148,13 @@ class Validator extends \DaveBaker\Core\Base
         }
 
         return true;
+    }
+
+    /**
+     * @return array
+     */
+    public function getErrorFields()
+    {
+        return $this->errorFields;
     }
 }
