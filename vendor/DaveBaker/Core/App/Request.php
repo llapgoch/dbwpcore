@@ -76,6 +76,15 @@ class Request extends \DaveBaker\Core\Base
     }
 
     /**
+     * @return \DaveBaker\Core\Session\General|object
+     * @throws \DaveBaker\Core\Object\Exception
+     */
+    public function unsetRemoveUrl()
+    {
+        return $this->getApp()->getGeneralSession()->clear(self::RETURN_URL_PARAM);
+    }
+
+    /**
      * @param $key
      * @param $value
      * @return $this

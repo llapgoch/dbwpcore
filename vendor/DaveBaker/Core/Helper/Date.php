@@ -97,6 +97,16 @@ class Date extends Base
     }
 
     /**
+     * @return false|string
+     * @throws Exception
+     * @throws \DaveBaker\Core\Object\Exception
+     */
+    public function currentDateShortLocalOutput()
+    {
+        return date($this->getDateShortLocalOutputFormat());
+    }
+
+    /**
      * @param string $utcTimestamp
      * @return mixed
      * @throws Exception

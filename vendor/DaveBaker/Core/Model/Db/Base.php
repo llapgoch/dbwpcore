@@ -252,12 +252,7 @@ abstract class Base
         return $this->autoUpdateTime;
     }
 
-    /**
-     * @param $column
-     * @return bool
-     * @throws \DaveBaker\Core\Object\Exception
-     */
-    protected function isDateTime($column)
+    protected function isColumnType($column, $types = [])
     {
         $schema = $this->getSchema();
 
@@ -265,7 +260,30 @@ abstract class Base
             return false;
         }
 
-        return $schema[$column]['type'] == 'datetime';
+        if(!is_array($types)){
+            $types = [$types];
+        }
+
+        return in_array($schema[$column]['type'], $types);
+    }
+
+    /**
+     * @param string $column
+     * @return bool
+     * @throws \DaveBaker\Core\Object\Exception
+     */
+    protected function isDateTime($column)
+    {
+        return $this->isColumnType($column, 'datetime');
+    }
+
+    /**
+     * @param string $column
+     * @return bool
+     */
+    protected function isNumeric($column)
+    {
+        return $this->isColumnType($column, ['int', 'decimal', 'float', 'double']);
     }
 
     /**
@@ -283,7 +301,15 @@ abstract class Base
      */
     protected function getTableSaveData()
     {
-        return array_intersect_key($this->getData(), $this->getSchema());
+        $dataItems = array_intersect_key($this->getData(), $this->getSchema());
+
+        foreach($dataItems as $k => $dataItem){
+            if($this->isNumeric($k) && !trim($dataItem)){
+                $dataItem[$k] = null;
+            }
+        }
+
+        return $dataItems;
     }
 
     /**

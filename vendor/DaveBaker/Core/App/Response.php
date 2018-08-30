@@ -59,6 +59,7 @@ class Response extends \DaveBaker\Core\Base
     public function redirectToReturnUrl()
     {
         if($url = $this->getApp()->getRequest()->getReturnUrl()){
+            $this->getApp()->getRequest()->unsetRemoveUrl();
             return $this->redirect($url);
         }
 
