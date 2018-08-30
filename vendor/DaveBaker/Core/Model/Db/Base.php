@@ -301,11 +301,12 @@ abstract class Base
      */
     protected function getTableSaveData()
     {
+
         $dataItems = array_intersect_key($this->getData(), $this->getSchema());
 
-        foreach($dataItems as $k => $dataItem){
-            if($this->isNumeric($k) && !trim($dataItem)){
-                $dataItem[$k] = null;
+        foreach($dataItems as $k => $value){
+            if($this->isNumeric($k) && !trim($value)){
+                unset($dataItems[$k]);
             }
         }
 

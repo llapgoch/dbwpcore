@@ -180,6 +180,44 @@ abstract class Base extends \DaveBaker\Core\Base
     }
 
     /**
+     * @return array
+     * @throws \DaveBaker\Core\Db\Exception
+     * @throws \DaveBaker\Core\Event\Exception
+     * @throws \DaveBaker\Core\Object\Exception
+     */
+    public function getAllIds()
+    {
+        $ids = [];
+        foreach($this->load() as $item){
+            $ids[] = $item->getId();
+        }
+
+        return $ids;
+    }
+
+    /**
+     * @param $valueKey
+     * @return array
+     * @throws \DaveBaker\Core\Db\Exception
+     * @throws \DaveBaker\Core\Event\Exception
+     * @throws \DaveBaker\Core\Object\Exception
+     *
+     * Returns all values from models with a particular key
+     */
+    public function getAllValuesFor($valueKey)
+    {
+        $values = [];
+
+        foreach($this->load() as $item){
+            if($data = $item->getData($valueKey)) {
+                $values[] = $data;
+            }
+        }
+
+        return $values;
+    }
+
+    /**
      * @return $this
      */
     protected function resetItems()

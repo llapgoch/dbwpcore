@@ -167,7 +167,9 @@ class Base extends \DaveBaker\Core\Base
     {
         $this->_hasDataChanges = true;
         if(is_array($key)) {
-            $this->_data = $key;
+            foreach($key as $k => $item){
+                $this->_data[$k] = $item;
+            }
             $this->_addFullNames();
         } else {
             $this->_data[$key] = $value;
