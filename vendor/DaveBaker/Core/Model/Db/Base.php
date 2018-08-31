@@ -13,19 +13,24 @@ abstract class Base
     const DEFAULT_CREATED_AT_COLUMN = 'created_at';
     const DEFAULT_UPDATED_AT_COLUMN = 'updated_at';
 
+    /** @var string */
     protected $tableName;
+    /** @var string */
     protected $idColumn;
+    /** @var array  */
     protected $schema = [];
+    /** @var bool  */
     protected $autoUpdateTime = true;
     /** @var  \DaveBaker\Core\Helper\Db */
     protected $helper;
     /** @var  \DaveBaker\Core\Db\Query */
     protected $query;
-
+    /** @var string  */
     protected $namespaceCode = "default";
-
     /** @var bool */
     protected $useTableNamespace = true;
+    /** @var array  */
+    protected $outputProcessors = [];
 
     // Set the table name and idColumn in an init
     protected abstract function init();
@@ -92,6 +97,53 @@ abstract class Base
         return $this->getData($this->idColumn);
     }
 
+    /**
+     * @param string $key
+     * @return array|mixed|null
+     */
+    public function getData($key = '')
+    {
+        if(isset($this->outputProcessors[$key])){
+            return $this->outputProcessors[$key]->process(parent::getData($key));
+        }
+
+        return parent::getData($key);
+    }
+
+    /**
+     * @param array $processors
+     * @return $this
+     */
+    public function addOutputProcessors($processors)
+    {
+        foreach($processors as $k => $processor){
+            $this->registerOutputProcessor($k, $processor);
+        }
+        return $this;
+    }
+
+    /**
+     * @param string $dataName
+     * @param \DaveBaker\Core\Helper\OutputProcessor\OutputProcessorInterface $outputProcessor
+     * @return $this
+     */
+    protected final function registerOutputProcessor(
+        $dataName,
+        \DaveBaker\Core\Helper\OutputProcessor\OutputProcessorInterface $outputProcessor
+    ) {
+        $outputProcessor = clone $outputProcessor;
+        $outputProcessor->setModel($this);
+        $this->outputProcessors[$dataName] = $outputProcessor;
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getOutputProcessors()
+    {
+        return $this->outputProcessors;
+    }
     /**
      * @return string
      * @throws \DaveBaker\Core\Object\Exception

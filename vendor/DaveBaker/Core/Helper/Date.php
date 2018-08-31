@@ -25,7 +25,7 @@ class Date extends Base
         /** @var string $format */
         $format = $this->getDbDateTimeFormat();
 
-        if(!$timestamp){
+        if (!$timestamp) {
             return date($format);
         }
         return date($format, $timestamp);
@@ -125,10 +125,11 @@ class Date extends Base
      * @throws Exception
      * @throws \DaveBaker\Core\Object\Exception
      */
-    public function localDateToDb($dateString){
+    public function localDateToDb($dateString)
+    {
         preg_match($this->getLocalDatePattern(), $dateString, $matches);
 
-        if(count($matches) < 4){
+        if (count($matches) < 4) {
             return null;
         }
 
@@ -193,5 +194,41 @@ class Date extends Base
     public function getDateTimeShortLocalOutputFormat()
     {
         return $this->getGeneralConfigValue(self::CONFIG_LOCAL_DATE_TIME_SHORT_OUTPUT_FORMAT);
+    }
+
+    /**
+     * @return \DaveBaker\Core\Helper\OutputProcessor\ShortDateTime
+     * @throws \DaveBaker\Core\Object\Exception
+     */
+    public function getOutputProcessorShortDateTime()
+    {
+        return $this->getApp()->getHelper('OutputProcessor\ShortDateTime');
+    }
+
+    /**
+     * @return \DaveBaker\Core\Helper\OutputProcessor\FullDateTime
+     * @throws \DaveBaker\Core\Object\Exception
+     */
+    public function getOutputProcessorFullDateTime()
+    {
+        return $this->getApp()->getHelper('OutputProcessor\FullDateTime');
+    }
+
+    /**
+     * @return \DaveBaker\Core\Helper\OutputProcessor\FullDate
+     * @throws \DaveBaker\Core\Object\Exception
+     */
+    public function getOutputProcessorFullDate()
+    {
+        return $this->getApp()->getHelper('OutputProcessor\FullDate');
+    }
+
+    /**
+     * @return \DaveBaker\Core\Helper\OutputProcessor\ShortDate
+     * @throws \DaveBaker\Core\Object\Exception
+     */
+    public function getOutputProcessorShortDate()
+    {
+        return $this->getApp()->getHelper('OutputProcessor\ShortDate');
     }
 }

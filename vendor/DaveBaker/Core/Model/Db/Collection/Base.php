@@ -22,6 +22,8 @@ abstract class Base extends \DaveBaker\Core\Base
     protected $helper;
     /** @var  \DaveBaker\Core\Db\Query */
     protected $query;
+    /** @var array */
+    protected $outputProcessors = [];
     
     public function _construct()
     {
@@ -169,6 +171,39 @@ abstract class Base extends \DaveBaker\Core\Base
     }
 
     /**
+     * @param array $processors
+     * @return $this
+     */
+    public function addOutputProcessors($processors)
+    {
+        foreach($processors as $k => $processor){
+            $this->registerOutputProcessor($k, $processor);
+        }
+        return $this;
+    }
+
+    /**
+     * @param string $dataName
+     * @param \DaveBaker\Core\Helper\OutputProcessor\OutputProcessorInterface $outputProcessor
+     * @return $this
+     */
+    protected final function registerOutputProcessor(
+        $dataName,
+        \DaveBaker\Core\Helper\OutputProcessor\OutputProcessorInterface $outputProcessor
+    ) {
+        $this->outputProcessors[$dataName] = $outputProcessor;
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getOutputProcessors()
+    {
+        return $this->outputProcessors;
+    }
+
+    /**
      * @param $tableName
      * @return mixed
      * @throws \DaveBaker\Core\Object\Exception
@@ -244,6 +279,8 @@ abstract class Base extends \DaveBaker\Core\Base
             /** @var \DaveBaker\Core\Model\Db\Base $item */
             $item = $this->createAppObject($this->dbClass);
             $item->setObjectData($result);
+            $item->addOutputProcessors($this->getOutputProcessors());
+
             $this->items[] = $item;
         }
 

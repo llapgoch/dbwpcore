@@ -5,8 +5,8 @@ namespace DaveBaker\Core\Helper\OutputProcessor;
  * Interface OutputProcessorInterface
  * @package DaveBaker\Core\Helper\OutputProcessor
  */
-interface OutputProcessorInterface
-    extends BaseInterface
+interface BaseInterface
 {
-    public function process($value);
+    public function setModel(\DaveBaker\Core\Model\Db\BaseInterface $model);
+    public function getModel();
 }

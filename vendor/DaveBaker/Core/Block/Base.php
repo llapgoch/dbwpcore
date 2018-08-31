@@ -534,6 +534,15 @@ abstract class Base extends \DaveBaker\Core\Object\Base
     }
 
     /**
+     * @return \DaveBaker\Core\Helper\OutputProcessor\Custom
+     * @throws \DaveBaker\Core\Object\Exception
+     */
+    protected function getCustomOutputProcessor()
+    {
+        return $this->getApp()->getHelper('OutputProcessor\Custom');
+    }
+
+    /**
      * @return string
      */
     protected function getAnonymousChildBlockName()
