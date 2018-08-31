@@ -90,20 +90,21 @@ class Manager extends \DaveBaker\Core\Base
      * @param array $args
      * @return object
      * @throws Exception
+     *
+     * New for 2018 - Always create helpers as singletons by default
      */
     public function get($identifier, $args = [])
     {
         try {
-            $isSingleton = $this->isSingleton($identifier);
 
-            if($isSingleton){
-                if(isset($this->singletonCache[$identifier])){
-                    return $this->singletonCache[$identifier];
-                }
+            if(isset($this->singletonCache[$identifier])){
+                return $this->singletonCache[$identifier];
             }
-            
+
             $reflector = new \ReflectionClass($this->getDefaultClassName($identifier));
             $object = $reflector->newInstanceArgs($args);
+
+            $isSingleton = $this->isSingleton($identifier, $object);
 
             if($isSingleton){
                 $this->singletonCache[$identifier] = $object;
@@ -156,10 +157,17 @@ class Manager extends \DaveBaker\Core\Base
 
     /**
      * @param $identifier string
+     * @param mixed $object
      * @return bool
+     *
+     * Always class helpers as singletons
      */
-    public function isSingleton($identifier)
+    public function isSingleton($identifier, $object)
     {
+        if($object instanceof \DaveBaker\Core\Helper\Base){
+            return true;
+        }
+
         if($definition = $this->getDefinition($identifier)){
             if(isset($definition[self::SINGLETON_KEY])) {
                 return (bool) $definition[self::SINGLETON_KEY];

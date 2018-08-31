@@ -31,4 +31,14 @@ class Base extends \DaveBaker\Core\Base
         return $configValue;
     }
 
+    /**
+     * @param $html
+     * @return string
+     * @throws \DaveBaker\Core\Object\Exception
+     */
+    public function escapeHtml($html)
+    {
+        return $this->getUtilHelper()->escapeHtml($html);
+    }
+
 }

@@ -28,20 +28,6 @@ class Object extends Base
             'singleton' => true
         ],
 
-        /* Helpers */
-        '\DaveBaker\Core\Helper\Util' => [
-            'singleton' => true
-        ],
-        '\DaveBaker\Core\Helper\Date' => [
-            'singleton' => true
-        ],
-        '\DaveBaker\Core\Helper\Db' => [
-            'singleton' => true
-        ],
-        '\DaveBaker\Core\Helper\Directory' => [
-            'singleton' => true
-        ],
-
         /* Session */
         '\DaveBaker\Core\Session\General' => [
             'singleton' => true

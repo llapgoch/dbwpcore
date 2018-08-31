@@ -89,7 +89,7 @@ abstract class Base extends \DaveBaker\Core\Object\Base
     }
 
     /**
-     * @param array $blocks
+     * @param array|BlockInterface $blocks
      * @return $this
      * @throws Exception
      */
