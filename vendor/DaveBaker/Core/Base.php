@@ -195,4 +195,49 @@ abstract class Base
 
         return $this->db;
     }
+
+    /**
+     * @return \DaveBaker\Core\Helper\Date
+     * @throws Object\Exception
+     */
+    protected function getDateHelper()
+    {
+        return $this->getApp()->getHelper('Date');
+    }
+
+    /**
+     * @return \DaveBaker\Core\Helper\Util
+     * @throws Object\Exception
+     */
+    protected function getUtilHelper()
+    {
+        return $this->getApp()->getHelper('Util');
+    }
+
+    /**
+     * @return \DaveBaker\Core\Helper\Db
+     * @throws Object\Exception
+     */
+    protected function getDbHelper()
+    {
+        return $this->getApp()->getHelper('Db');
+    }
+
+    /**
+     * @return \DaveBaker\Core\Helper\Url
+     * @throws Object\Exception
+     */
+    protected function getUrlHelper()
+    {
+        return $this->getApp()->getHelper('Url');
+    }
+
+    /**
+     * @return \DaveBaker\Core\Helper\Directory
+     * @throws Object\Exception
+     */
+    protected function getUserHelper()
+    {
+        return $this->getApp()->getHelper('Directory');
+    }
 }
