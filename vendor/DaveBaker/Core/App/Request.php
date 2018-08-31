@@ -60,10 +60,11 @@ class Request extends \DaveBaker\Core\Base
     /**
      * @param string $returnUrl
      * @return string
+     * @throws \DaveBaker\Core\Object\Exception
      */
-    public function createReturnUrlParam($returnUrl)
+    public function createReturnUrlParam($returnUrl = '')
     {
-        return base64_encode($returnUrl);
+        return base64_encode($returnUrl !== '' ? $returnUrl : $this->getUrlHelper()->getCurrentUrl());
     }
 
     /**
