@@ -53,7 +53,7 @@ abstract class Base extends \DaveBaker\Core\Block\Template
         $defaultAttributes = $this->getConfig()->getConfigValue('elementAttributes');
 
         foreach($this->tagIdentifiers as $tagIdentifier){
-            if(isset($defaultAttributes[$tagIdentifier])){
+            if(isset($defaultAttributes[$tagIdentifier]) && is_array($defaultAttributes[$tagIdentifier])){
                 $attributes = array_merge($attributes, $defaultAttributes[$tagIdentifier]);
             }
         }
