@@ -9,17 +9,11 @@ class Select
     extends Base
     implements \DaveBaker\Form\Block\ValueSetterInterface
 {
-    /** @var string  */
-    protected $mainTagName = 'select';
-    /** @var array  */
-    protected $selectOptions = [];
     /** @var array  */
     protected $firstOption = [
         'name' => '--- Please Select ---',
         'value' => ''
     ];
-
-    protected $showFirstOption = true;
 
     /**
      * @return Base|void
@@ -28,6 +22,8 @@ class Select
     {
         $this->setTemplate('form/select.phtml');
         $this->setElementType('select');
+        $this->setData('select_options', []);
+        $this->setData('show_first_option', true);
     }
 
     /**
@@ -37,7 +33,7 @@ class Select
     public function setSelectOptions($selectOptions)
     {
         if(is_array($selectOptions)){
-            $this->selectOptions = $selectOptions;
+            $this->setData('select_options', $selectOptions);
         }
 
         return $this;
@@ -49,7 +45,7 @@ class Select
      */
     public function setShowFirstOption($showFirstOption)
     {
-        $this->showFirstOption = (bool) $showFirstOption;
+        $this->setData('show_first_option', (bool) $showFirstOption);
         return $this;
     }
 
@@ -58,7 +54,7 @@ class Select
      */
     public function getShowFirstOption()
     {
-        return $this->showFirstOption;
+        return $this->getData('show_first_option');
     }
 
     /**
@@ -102,7 +98,7 @@ class Select
      */
     public function getSelectOptions()
     {
-        $selectOptions = $this->selectOptions;
+        $selectOptions = $this->getData('select_options');
 
         if($this->getShowFirstOption()){
             array_unshift($selectOptions, $this->getFirstOption());

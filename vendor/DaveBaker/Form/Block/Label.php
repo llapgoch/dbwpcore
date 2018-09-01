@@ -8,10 +8,6 @@ namespace DaveBaker\Form\Block;
  */
 class Label extends Base
 {
-    /** @var string  */
-    protected $forId = '';
-    /** @var string */
-    protected $labelName = '';
 
     protected function init()
     {
@@ -26,7 +22,7 @@ class Label extends Base
      */
     public function setForId($forId)
     {
-        $this->forId = $forId;
+        $this->setData('for_id', $forId);
         return $this;
     }
 
@@ -35,7 +31,7 @@ class Label extends Base
      */
     public function getForId()
     {
-        return $this->forId;
+        return $this->getData('for_id');
     }
 
     /**
@@ -43,7 +39,7 @@ class Label extends Base
      */
     public function getLabelName()
     {
-        return $this->labelName;
+        return $this->getData('label_name');
     }
 
     /**
@@ -52,7 +48,7 @@ class Label extends Base
      */
     public function setLabelName($labelName)
     {
-        $this->labelName = (string) $labelName;
+        $this->setData('label_name', $labelName);
         return $this;
     }
 }
