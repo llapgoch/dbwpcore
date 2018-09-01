@@ -224,6 +224,17 @@ abstract class Base extends \DaveBaker\Core\Object\Base
     }
 
     /**
+     * @param $asName
+     * @throws Exception
+     *
+     * Always set the block asName when the block's created for the parent's registry
+     */
+    public function setAsName($asName)
+    {
+       throw new Exception('As name cannot be set after block creation');
+    }
+
+    /**
      * @param string $event
      * @return array
      */

@@ -65,6 +65,7 @@ class Builder extends \DaveBaker\Core\Base
     {
         $blocks = [];
         $labelBlock = null;
+        $useFormGroup = isset($scheme['formGroup']) ? (bool) $scheme['formGroup'] : false;
 
         if(!isset($this->formName)){
             throw new Exception('formName must be set before creating form elements');
@@ -87,7 +88,8 @@ class Builder extends \DaveBaker\Core\Base
 
         $inputBlock = $this->getApp()->getBlockManager()->createBlock(
             $scheme['type'],
-            $namePrefix . 'element'
+            $namePrefix . 'element',
+            $useFormGroup ? 'element' : ''
         )->setElementName($scheme['name']);
 
 
@@ -96,7 +98,8 @@ class Builder extends \DaveBaker\Core\Base
 
             $labelBlock = $this->getApp()->getBlockManager()->createBlock(
                 self::BASE_ELEMENT_NAMESPACE . self::DEFAULT_LABEL_DEFINITION,
-                $namePrefix . 'label'
+                $namePrefix . 'label',
+                $useFormGroup ? 'label' : ''
             )->setLabelName($scheme['labelName'])->setForId($blockId);
 
             $inputBlock->addAttribute(['id' => $blockId]);
@@ -126,12 +129,10 @@ class Builder extends \DaveBaker\Core\Base
             );
 
             if($labelBlock){
-                $labelBlock->setAsName('label');
                 $blockGroup->addChildBlock($labelBlock);
             }
 
             if($inputBlock){
-                $inputBlock->setAsName('element');
                 $blockGroup->addChildBlock($inputBlock);
             }
 
