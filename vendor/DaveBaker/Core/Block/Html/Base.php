@@ -35,7 +35,6 @@ abstract class Base extends \DaveBaker\Core\Block\Template
 
         foreach($this->tagIdentifiers as $tagIdentifier){
             if(isset($defaultClasses[$tagIdentifier])){
-
                 $classes[] = $defaultClasses[$tagIdentifier];
             }
         }

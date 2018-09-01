@@ -33,14 +33,10 @@ class BlockList implements \IteratorAggregate, \Countable
     {
         $filtered = [];
 
-        /** @var \DaveBaker\Core\Block\BlockInterface $block */
-        foreach($this->blocks as $block){
-            if(!$this->getBlockManager()->isRemoved($block->getName())){
-                $filtered[$block->getName()] = $block;
-            }
-        }
+        $blocks = $this->blocks;
+        $this->blocks = [];
 
-        $this->blocks = $filtered;
+        array_map([$this, 'addBlock'], $blocks);
     }
 
     /**
@@ -148,7 +144,7 @@ class BlockList implements \IteratorAggregate, \Countable
         $name = $block->getName();
 
         if($this->useAsName && $block->getAsName()){
-            $name = $block->getAsName();
+             $name = $block->getAsName();
         }
 
         if(!$this->getBlockManager()->isRemoved($block->getName())) {

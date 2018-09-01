@@ -12,9 +12,10 @@ abstract class Base extends \DaveBaker\Core\Base
     protected $namespaceCode = 'layout_item';
     /** @var array */
     protected $blocks = [];
-    
+
     /**
-     * @return \DaveBaker\Core\Block\Manager
+     * @return \DaveBaker\Core\Block\Manager|object
+     * @throws \DaveBaker\Core\Object\Exception
      */
     public function getBlockManager()
     {
@@ -22,7 +23,8 @@ abstract class Base extends \DaveBaker\Core\Base
     }
 
     /**
-     * @return Manager
+     * @return Manager|object
+     * @throws \DaveBaker\Core\Object\Exception
      */
     public function getLayoutManager()
     {
@@ -30,7 +32,8 @@ abstract class Base extends \DaveBaker\Core\Base
     }
 
     /**
-     * @return \DaveBaker\Core\App\Request
+     * @return \DaveBaker\Core\App\Request|object
+     * @throws \DaveBaker\Core\Object\Exception
      */
     public function getRequest()
     {
@@ -48,17 +51,21 @@ abstract class Base extends \DaveBaker\Core\Base
     /**
      * @param $className
      * @param $name
+     * @param string $asName
      * @return \DaveBaker\Core\Block\BlockInterface
      * @throws \DaveBaker\Core\App\Exception
+     * @throws \DaveBaker\Core\Object\Exception
      */
-    public function createBlock($className, $name)
+    public function createBlock($className, $name, $asName = '')
     {
-        return $this->getBlockManager()->createBlock($className, $name);
+        return $this->getBlockManager()->createBlock($className, $name, $asName);
     }
 
     /**
      * @param \DaveBaker\Core\Block\BlockInterface $block
      * @return $this
+     * @throws \DaveBaker\Core\Event\Exception
+     * @throws \DaveBaker\Core\Object\Exception
      */
     public function addBlock(
         \DaveBaker\Core\Block\BlockInterface $block
