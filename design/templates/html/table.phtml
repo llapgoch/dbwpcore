@@ -1,27 +1,28 @@
 <?php
 /** @var $block \DaveBaker\Core\Block\Html\Table */
 ?>
-<table <?php echo $block->getAttrs();?>>
+<?php if($this->getRecords()): ?>
+<table <?php echo $block->getAttrs(); ?>>
 
-    <?php if($this->getHeaders()):?>
+    <?php if($this->getHeaders()): ?>
         <thead>
             <tr>
-                <?php foreach($block->getHeaders() as $header):?>
-                    <th><?php echo $block->escapeHtml($header);?></th>
+                <?php foreach($block->getHeaders() as $header): ?>
+                    <th><?php echo $block->escapeHtml($header); ?></th>
                 <?php endforeach;?>
             </tr>
         </thead>
 
 
         <tbody>
-            <?php foreach($block->getRecords() as $record):?>
+            <?php foreach($block->getRecords() as $record): ?>
             <tr>
-                <?php foreach($block->getHeaderKeys() as $k => $header):?>
+                <?php foreach($block->getHeaderKeys() as $k => $header): ?>
                     <td><?php echo $this->escapeHtml($record->getData($header), $header); ?></td>
                 <?php endforeach; ?>
             </tr>
             <?php endforeach; ?>
         </tbody>
     <?php endif; ?>
-
 </table>
+<?php endif; ?>

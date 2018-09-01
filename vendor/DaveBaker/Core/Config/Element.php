@@ -28,7 +28,7 @@ class Element
             'p' => ''
         ],
         'elementAttributes' => [
-            'textarea' => ['rows' => 8]
+            'textarea' => []
         ]
     ];
 }
