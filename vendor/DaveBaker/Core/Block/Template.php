@@ -27,7 +27,7 @@ class Template
         }, array_keys($this->attributes), $this->attributes));
 
         if($this->classes){
-            $attrString .= " class='" . implode(" ", array_map([$this, 'escAttr'], $this->getClasses())) . "'";
+            $attrString .= " class='" . trim(implode(" ", array_map([$this, 'escAttr'], $this->getClasses()))) . "'";
         }
 
         return $attrString;

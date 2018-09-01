@@ -19,4 +19,6 @@ class Input
         $this->setElementType('text');
         $this->addTagIdentifier('input');
     }
+
+
 }

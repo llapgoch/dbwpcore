@@ -31,10 +31,12 @@ abstract class Base extends \DaveBaker\Core\Block\Template
     public function getDefaultClassesForElement()
     {
         $classes = [];
+        $defaultClasses = $this->getConfig()->getConfigValue('elementClasses');
 
         foreach($this->tagIdentifiers as $tagIdentifier){
-            if($value = $this->getConfig()->getConfigValue($tagIdentifier)){
-                $classes[] = $value;
+            if(isset($defaultClasses[$tagIdentifier])){
+
+                $classes[] = $defaultClasses[$tagIdentifier];
             }
         }
 
@@ -49,7 +51,7 @@ abstract class Base extends \DaveBaker\Core\Block\Template
     protected function getConfig()
     {
         if(!$this->config){
-            $this->config = $this->createAppObject('\DaveBaker\Core\Config\Element');
+            $this->config = $this->createObject('\DaveBaker\Core\Config\Element');
         }
 
         return $this->config;
@@ -66,10 +68,11 @@ abstract class Base extends \DaveBaker\Core\Block\Template
         }
 
         foreach($identifier as $value){
-            if(!isset($value, $this->tagIdentifiers)) {
+            if(!in_array($value, $this->tagIdentifiers)) {
                 $this->tagIdentifiers[] = $value;
             }
         }
+
 
         return $this;
     }
@@ -80,8 +83,11 @@ abstract class Base extends \DaveBaker\Core\Block\Template
      */
     protected function removeTagIdentifier($identifier)
     {
-        if(($pos = array_search($identifier, $this->tagIdentifiers) !== false)){
-            unset($this->tagIdentifiers[$pos]);
+        // Don't put this as part of the conditional, the value comes out incorrect
+        $pos = array_search($identifier, $this->tagIdentifiers);
+
+        if($pos !== false){
+           unset($this->tagIdentifiers[$pos]);
         }
 
         return $this;
