@@ -17,20 +17,29 @@ class Template
     protected $classes = [];
 
     /**
+     * @param bool $includeClass
      * @return string
      * Output all registered attributes and classes in HTML
      */
-    public function getAttrs()
+    public function getAttrs($includeClass = false)
     {
         $attrString  = implode(' ', array_map(function($k, $v){
             return $this->escapeHtml($k) . "=" . $this->escAttr($v);
         }, array_keys($this->attributes), $this->attributes));
 
-        if($this->classes){
-            $attrString .= " class='" . trim(implode(" ", array_map([$this, 'escAttr'], $this->getClasses()))) . "'";
+        if($includeClass && $this->classes){
+            $attrString .= " class='" . $this->getClassValueString() . "'";
         }
 
         return $attrString;
+    }
+
+    /**
+     * @return string
+     */
+    public function getClassValueString()
+    {
+        return trim(implode(" ", array_map([$this, 'escAttr'], $this->getClasses())));
     }
 
     /**

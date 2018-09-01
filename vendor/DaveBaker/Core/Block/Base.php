@@ -38,6 +38,8 @@ abstract class Base extends \DaveBaker\Core\Object\Base
     protected $utilHelper;
     /** @var int */
     protected $anonymousCounter = 1;
+    /** @var string */
+    protected $asName = '';
 
     /**
      * @var array
@@ -50,6 +52,7 @@ abstract class Base extends \DaveBaker\Core\Object\Base
 
     public function __construct(
         $name = '',
+        $asName = '',
         \DaveBaker\Core\App $app
     ) {
         if(!$name){
@@ -57,8 +60,11 @@ abstract class Base extends \DaveBaker\Core\Object\Base
         }
 
         $this->blockName = $name;
+        $this->asName = $asName;
+
         $this->app = $app;
-        $this->childBlocks = $this->getBlockManager()->createBlockList();
+        $this->childBlocks = $this->getBlockManager()->createBlockList()->setUseAsName(true);
+
 
         $this->fireEvent('create');
         $this->init();
@@ -87,9 +93,10 @@ abstract class Base extends \DaveBaker\Core\Object\Base
     }
 
     /**
-     * @param array|BlockInterface $blocks
+     * @param $blocks
      * @return $this
      * @throws Exception
+     * @throws \DaveBaker\Core\Object\Exception
      */
     public function addChildBlock($blocks)
     {
@@ -206,6 +213,14 @@ abstract class Base extends \DaveBaker\Core\Object\Base
     public function getName()
     {
         return $this->blockName;
+    }
+
+    /**
+     * @return string
+     */
+    public function getAsName()
+    {
+        return $this->asName;
     }
 
     /**
@@ -408,13 +423,13 @@ abstract class Base extends \DaveBaker\Core\Object\Base
      * @throws \DaveBaker\Core\App\Exception
      * @throws \DaveBaker\Core\Object\Exception
      */
-    public function createBlock($className, $name = '')
+    public function createBlock($className, $name = '', $asName = '')
     {
         if(!$name){
             $name = $this->getAnonymousChildBlockName();
         }
 
-        return $this->getBlockManager()->createBlock($className, $name);
+        return $this->getBlockManager()->createBlock($className, $name, $asName);
     }
 
     /**

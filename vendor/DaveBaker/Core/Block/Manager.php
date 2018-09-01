@@ -20,20 +20,21 @@ class Manager
         \DaveBaker\Core\App $app
     ){
         $this->app = $app;
-        $this->blockList = $this->createBlockList();
+        $this->blockList = $this->createBlockList()->setUseAsName(false);
     }
 
     /**
-     * @param $class
-     * @param $name
+     * @param string $class
+     * @param string $name
+     * @param string $asName
      * @return \DaveBaker\Core\Block\BlockInterface
      * @throws Exception
      */
-    public function createBlock($class, $name)
+    public function createBlock($class, $name, $asName = '')
     {
         try{
             /** @var \DaveBaker\Core\Block\BlockInterface $block */
-            $block = $this->app->getObjectManager()->get($class, [$name, $this->app]);
+            $block = $this->app->getObjectManager()->get($class, [$name, $asName, $this->app]);
 
             if(!$block instanceof \DaveBaker\Core\Block\BlockInterface){
                 throw new Exception("Block {$name} does not implement BlockInterface");

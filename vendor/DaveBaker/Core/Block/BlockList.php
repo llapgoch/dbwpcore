@@ -11,6 +11,8 @@ class BlockList implements \IteratorAggregate, \Countable
     protected $pageManager;
     /** @var \DaveBaker\Core\App  */
     protected $app;
+    /** @var bool  */
+    protected $useAsName = false;
 
     public function __construct(
         \DaveBaker\Core\App $app
@@ -44,6 +46,7 @@ class BlockList implements \IteratorAggregate, \Countable
     /**
      * @param array $blocks
      * @return $this
+     * @throws \DaveBaker\Core\Object\Exception
      */
     public function add($blocks = [])
     {
@@ -116,7 +119,8 @@ class BlockList implements \IteratorAggregate, \Countable
     }
 
     /**
-     * @return Manager
+     * @return Manager|object
+     * @throws \DaveBaker\Core\Object\Exception
      */
     public function getBlockManager()
     {
@@ -124,14 +128,31 @@ class BlockList implements \IteratorAggregate, \Countable
     }
 
     /**
+     * @param $useAsName
+     * @return $this
+     */
+    public function setUseAsName($useAsName)
+    {
+        $this->useAsName = $useAsName;
+        return $this;
+    }
+
+    /**
      * @param BlockInterface $block
      * @return $this
+     * @throws \DaveBaker\Core\Object\Exception
      */
     protected function addBlock(
         \DaveBaker\Core\Block\BlockInterface $block
     ) {
+        $name = $block->getName();
+
+        if($this->useAsName && $block->getAsName()){
+            $name = $block->getAsName();
+        }
+
         if(!$this->getBlockManager()->isRemoved($block->getName())) {
-            $this->blocks[$block->getName()] = $block;
+            $this->blocks[$name] = $block;
         }
 
         return $this;
