@@ -21,6 +21,7 @@ abstract class Base extends \DaveBaker\Core\Block\Template
     public function _preRender()
     {
         $this->addClass($this->getDefaultClassesForElement());
+        $this->addAttribute($this->getDefaultAttributesForElement());
         return parent::_preRender();
     }
 
@@ -40,6 +41,24 @@ abstract class Base extends \DaveBaker\Core\Block\Template
         }
 
         return $classes;
+    }
+
+    /**
+     * @return mixed
+     * @throws \DaveBaker\Core\Object\Exception
+     */
+    public function getDefaultAttributesForElement()
+    {
+        $attributes = [];
+        $defaultAttributes = $this->getConfig()->getConfigValue('elementAttributes');
+
+        foreach($this->tagIdentifiers as $tagIdentifier){
+            if(isset($defaultAttributes[$tagIdentifier])){
+                $attributes = array_merge($attributes, $defaultAttributes[$tagIdentifier]);
+            }
+        }
+
+        return $attributes;
     }
 
 

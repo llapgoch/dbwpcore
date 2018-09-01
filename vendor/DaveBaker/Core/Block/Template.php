@@ -25,7 +25,7 @@ class Template
     {
         $attrString  = implode(' ', array_map(function($k, $v){
             return $this->escapeHtml($k) . "=" . $this->escAttr($v);
-        }, array_keys($this->attributes), $this->attributes));
+        }, array_keys($this->attributes), $this->getAttributes()));
 
         if($includeClass && $this->classes){
             $attrString .= " class='" . $this->getClassValueString() . "'";

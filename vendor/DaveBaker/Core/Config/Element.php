@@ -26,6 +26,9 @@ class Element
             'td' => '',
             'a' => '',
             'p' => ''
+        ],
+        'elementAttributes' => [
+            'textarea' => ['rows' => 8]
         ]
     ];
 }
