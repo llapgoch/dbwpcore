@@ -291,6 +291,8 @@ abstract class Base extends \DaveBaker\Core\Object\Base
         }
         
         $context = $this->fireEvent('getchildhtml', ['html' => $html]);
+        $context = $this->fireEvent('getchildhtml_' . $this->getName(), ['html' => $context->getHtml()]);
+
         return $context->getHtml();
     }
 
