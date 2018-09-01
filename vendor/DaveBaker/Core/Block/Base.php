@@ -39,8 +39,6 @@ abstract class Base extends \DaveBaker\Core\Object\Base
     /** @var int */
     protected $anonymousCounter = 1;
 
-    protected $messagesBlockName = 'core.message.list';
-
     /**
      * @var array
      * Allows the output of data array keys without escapeHtml being used
@@ -426,14 +424,7 @@ abstract class Base extends \DaveBaker\Core\Object\Base
      */
     public function getMessagesBlock()
     {
-        if(!$messagesBlock = $this->getBlockManager()->getBlock($this->messagesBlockName)) {
-            return $this->createBlock(
-                '\DaveBaker\Core\Block\Html\Messages',
-                $this->messagesBlockName
-            );
-        }
-
-        return $messagesBlock;
+        return $this->getApp()->getBlockManager()->getMessagesBlock();
     }
 
     /**
@@ -443,10 +434,8 @@ abstract class Base extends \DaveBaker\Core\Object\Base
      */
     public function getMessageBlockHtml()
     {
-        return $this->getMessagesBlock()->render();
+        return $this->getApp()->getBlockManager()->getMessagesBlockHtml();
     }
-
-
 
     /**
      * @return Manager|object

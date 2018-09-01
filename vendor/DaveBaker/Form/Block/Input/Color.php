@@ -10,6 +10,8 @@ class Color
     extends Input
     implements \DaveBaker\Form\Block\ValueSetterInterface
 {
+    protected $mainTagName = 'input-checkbox';
+
     public function init()
     {
         parent::init();

@@ -27,10 +27,18 @@ class Template
         }, array_keys($this->attributes), $this->attributes));
 
         if($this->classes){
-            $attrString .= " class='" . implode(" ", array_map([$this, 'escAttr'], $this->classes)) . "'";
+            $attrString .= " class='" . implode(" ", array_map([$this, 'escAttr'], $this->getClasses())) . "'";
         }
 
         return $attrString;
+    }
+
+    /**
+     * @return array
+     */
+    public function getClasses()
+    {
+        return $this->classes;
     }
 
     /**
@@ -44,7 +52,9 @@ class Template
         }
 
         foreach ($classes as $class){
-            $this->classes[] = (string) $class;
+            if(!in_array((string) $class, $this->classes)) {
+                $this->classes[] = (string)$class;
+            }
         }
 
         return $this;

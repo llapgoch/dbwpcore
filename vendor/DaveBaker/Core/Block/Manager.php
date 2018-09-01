@@ -9,8 +9,12 @@ class Manager
     protected $app;
     /** @var \DaveBaker\Core\Block\BlockList */
     protected $blockList;
+    /** @var array  */
     protected $removedBlocks = [];
+    /** @var int  */
     protected $anonymousCounter = 1;
+    /** @var string  */
+    protected $messagesBlockName = 'core.message.list';
 
     public function __construct(
         \DaveBaker\Core\App $app
@@ -99,7 +103,37 @@ class Manager
     }
 
     /**
+     * @return BlockInterface|null
+     * @throws Exception
+     */
+    public function getMessagesBlock()
+    {
+        if(!$messagesBlock = $this->getBlock($this->messagesBlockName)) {
+            return $this->createBlock(
+                '\DaveBaker\Core\Block\Html\Messages',
+                $this->messagesBlockName
+            );
+        }
+
+        return $messagesBlock;
+    }
+
+    /**
+     * @return mixed
+     * @throws Exception
+     */
+    public function getMessagesBlockHtml()
+    {
+        if(!$this->getMessagesBlock()){
+            return '';
+        }
+
+        return $this->getMessagesBlock()->render();
+    }
+
+    /**
      * @return BlockList
+     * @throws \DaveBaker\Core\Object\Exception
      */
     public function getAllRenderedBlocks()
     {

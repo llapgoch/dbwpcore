@@ -18,7 +18,9 @@ class Tag extends Base
      */
     public function setTag($tag)
     {
+        $this->removeTagIdentifier($this->getTag());
         $this->tag = $tag;
+        $this->addTagIdentifier($tag);
         return $this;
     }
 

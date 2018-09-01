@@ -9,6 +9,8 @@ class Select
     extends Base
     implements \DaveBaker\Form\Block\ValueSetterInterface
 {
+    /** @var string  */
+    protected $mainTagName = 'select';
     /** @var array  */
     protected $selectOptions = [];
     /** @var array  */
@@ -25,6 +27,7 @@ class Select
     protected function init()
     {
         $this->setTemplate('form/select.phtml');
+        $this->setElementType('select');
     }
 
     /**

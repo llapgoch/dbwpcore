@@ -15,6 +15,7 @@ class Form extends Base
     {
         parent::init();
         $this->setTemplate('form/form.phtml');
+        $this->addTagIdentifier('form');
     }
 
     /**

@@ -17,6 +17,7 @@ class Label extends Base
     {
         parent::init();
         $this->setTemplate('form/label.phtml');
+        $this->setElementType('label');
     }
 
     /**

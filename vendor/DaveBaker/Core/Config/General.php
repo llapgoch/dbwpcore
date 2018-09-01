@@ -7,7 +7,10 @@ namespace DaveBaker\Core\Config;
  *
  * class should be extended locally
  */
-class General extends Base {
+class General
+    extends Base
+    implements ConfigInterface
+{
     protected $config = [
         'dateTimeDbFormat' => 'Y-m-d H:i:s',
         'dateLocalPattern' => '/^(\d{2})\/(\d{2})\/(\d{4})$/',

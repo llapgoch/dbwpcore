@@ -56,11 +56,10 @@ class App
 
 
         $this->namespace = $namespace . "_";
-        $this->main = new $mainClassName($this);
         $this->objectManager = new $objectManagerClassName($this, new $objectManagerConfigClassName);
 
         $this->registerApp($this->namespace, $this);
-        $this->main->setApp($this);
+        $this->main = $this->getObjectManager()->createAppObject($mainClassName);
 
         // For any singleton objects, they'll be stored against the namespace, allowing for multiple
         // singletons across different app definitions

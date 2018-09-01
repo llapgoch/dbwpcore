@@ -14,6 +14,7 @@ class Table extends Base
     protected function init()
     {
         $this->setTemplate('html/table.phtml');
+        $this->addTagIdentifier('table');
     }
 
     /**

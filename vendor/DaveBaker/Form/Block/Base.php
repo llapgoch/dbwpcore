@@ -7,7 +7,7 @@ namespace DaveBaker\Form\Block;
  * @package DaveBaker\Form\Block
  */
 class Base
-    extends \DaveBaker\Core\Block\Template
+    extends \DaveBaker\Core\Block\Html\Base
     implements BaseInterface
 {
     /** @var string  */
@@ -41,7 +41,9 @@ class Base
      */
     public function setElementType($elementType)
     {
+        $this->removeTagIdentifier($this->elementType);
         $this->elementType = $elementType;
+        $this->addTagIdentifier($elementType);
         return $this;
     }
 

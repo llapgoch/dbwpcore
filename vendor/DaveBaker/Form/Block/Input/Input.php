@@ -6,7 +6,8 @@ namespace DaveBaker\Form\Block\Input;
  * Class Input
  * @package DaveBaker\Form\Block\Input
  */
-class Input extends \DaveBaker\Form\Block\Base
+class Input
+    extends \DaveBaker\Form\Block\Base
 {
     /** @var string  */
     public $inputValue = '';
@@ -16,5 +17,6 @@ class Input extends \DaveBaker\Form\Block\Base
         parent::init();
         $this->setTemplate('form/input.phtml');
         $this->setElementType('text');
+        $this->addTagIdentifier('input');
     }
 }

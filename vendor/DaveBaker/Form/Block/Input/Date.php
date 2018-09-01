@@ -10,6 +10,8 @@ class Date
     extends Input
     implements \DaveBaker\Form\Block\ValueSetterInterface
 {
+    protected $mainTagName = 'input-date';
+
     public function init()
     {
         parent::init();

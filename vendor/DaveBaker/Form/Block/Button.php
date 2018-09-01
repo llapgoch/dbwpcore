@@ -8,6 +8,8 @@ namespace DaveBaker\Form\Block;
  */
 class Button extends Base
 {
+    protected $mainTagName = 'button';
+
     public function init()
     {
         parent::init();
