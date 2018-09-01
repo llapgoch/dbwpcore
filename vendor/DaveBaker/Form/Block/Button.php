@@ -13,6 +13,7 @@ class Button extends Base
     public function init()
     {
         parent::init();
-        $this->setElementType('button');
+        $this->setTemplate('form/button.phtml');
+        $this->addTagIdentifier('button');
     }
 }

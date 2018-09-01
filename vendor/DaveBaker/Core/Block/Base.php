@@ -271,7 +271,6 @@ abstract class Base extends \DaveBaker\Core\Object\Base
      */
     public function getChildHtml($blockName = '', $exclude = [])
     {
-
         if($blockName){
             if($block = $this->childBlocks->get($blockName)){
                 return $block->render();

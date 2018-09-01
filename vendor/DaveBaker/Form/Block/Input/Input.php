@@ -20,5 +20,18 @@ class Input
         $this->addTagIdentifier('input');
     }
 
+    /**
+     * @param $elementType string
+     * @return $this
+     */
+    public function setElementType($elementType)
+    {
+        $this->removeTagIdentifier("input-" . $this->elementType);
+        $this->elementType = $elementType;
+        $this->addTagIdentifier('input-' . $elementType);
+        return $this;
+    }
+
+
 
 }

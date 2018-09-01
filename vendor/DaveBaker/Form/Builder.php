@@ -121,6 +121,10 @@ class Builder extends \DaveBaker\Core\Base
             $inputBlock->addAttribute($scheme['attributes']);
         }
 
+        if(isset($scheme['data'])){
+            $inputBlock->setData($scheme['data']);
+        }
+
         if(isset($scheme['formGroup']) && $scheme['formGroup'] == true){
             /** @var \DaveBaker\Form\Block\Group $blockRow */
             $blockGroup = $this->getApp()->getBlockManager()->createBlock(

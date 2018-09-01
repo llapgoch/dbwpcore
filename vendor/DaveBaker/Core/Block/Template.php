@@ -21,7 +21,7 @@ class Template
      * @return string
      * Output all registered attributes and classes in HTML
      */
-    public function getAttrs($includeClass = false)
+    public function getAttrs($includeClass = true)
     {
         $attrString  = implode(' ', array_map(function($k, $v){
             return $this->escapeHtml($k) . "=" . $this->escAttr($v);
