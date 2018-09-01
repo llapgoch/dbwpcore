@@ -1,0 +1,12 @@
+<?php
+/** @var \DaveBaker\Form\Block\Group $block */
+// Ideally, this should be overriden in a base module or theme to structure the HTML according to the style guide
+?>
+<div <?php echo $block->getAttrs();?>>
+    <div>
+        <?php echo $block->getChildHtml('label'); ?>
+    </div>
+    <div>
+        <?php echo $block->getChildHtml('element'); ?>
+    </div>
+</div>

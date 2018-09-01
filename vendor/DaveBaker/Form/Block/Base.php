@@ -6,7 +6,7 @@ namespace DaveBaker\Form\Block;
  * Class Base
  * @package DaveBaker\Form\Block
  */
-class Base
+abstract class Base
     extends \DaveBaker\Core\Block\Html\Base
     implements BaseInterface
 {

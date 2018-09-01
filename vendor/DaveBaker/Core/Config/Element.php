@@ -17,6 +17,7 @@ class Element
      */
     protected $config = [
         'elementClasses' => [
+            'form-group' => '',
             'heading' => '',
             'messages' => '',
             'table' => '',

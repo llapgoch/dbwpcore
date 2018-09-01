@@ -50,11 +50,7 @@ class BlockList implements \IteratorAggregate, \Countable
             $blocks = [$blocks];
         }
 
-        /** @var \DaveBaker\Core\Block\BlockInterface $block */
-        foreach($blocks as $block){
-            $this->addBlock($block);
-        }
-
+        array_map([$this, 'addBlock'], $blocks);
         return $this;
     }
 

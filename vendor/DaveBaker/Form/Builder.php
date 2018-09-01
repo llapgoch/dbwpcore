@@ -9,6 +9,7 @@ class Builder extends \DaveBaker\Core\Base
 {
     const BASE_ELEMENT_NAMESPACE = '\DaveBaker\Form\Block\\';
     const DEFAULT_LABEL_DEFINITION = 'Label';
+    const DEFAULT_GROUP_DEFINITION = 'Group';
     /** @var string  */
     protected $formName = '';
 
@@ -26,6 +27,7 @@ class Builder extends \DaveBaker\Core\Base
      *  - value
      *  - attributes
      *  - class
+     *  - useGroup - bool, whether a group element is created as a parent
      */
     public function build($schema = [])
     {
@@ -62,6 +64,7 @@ class Builder extends \DaveBaker\Core\Base
     public function createElements($scheme = [])
     {
         $blocks = [];
+        $labelBlock = null;
 
         if(!isset($this->formName)){
             throw new Exception('formName must be set before creating form elements');
@@ -80,9 +83,11 @@ class Builder extends \DaveBaker\Core\Base
             $scheme['type'] = self::BASE_ELEMENT_NAMESPACE . $scheme['type'];
         }
 
+        $namePrefix = $this->formName . "." . str_replace("_", ".", $scheme['name']) . "_";
+
         $inputBlock = $this->getApp()->getBlockManager()->createBlock(
             $scheme['type'],
-            $this->formName . "." . str_replace("_", ".", $scheme['name']) . 'element'
+            $namePrefix . 'element'
         )->setElementName($scheme['name']);
 
 
@@ -91,7 +96,7 @@ class Builder extends \DaveBaker\Core\Base
 
             $labelBlock = $this->getApp()->getBlockManager()->createBlock(
                 self::BASE_ELEMENT_NAMESPACE . self::DEFAULT_LABEL_DEFINITION,
-                $this->formName . "." . str_replace("_", ".", $scheme['name']) . 'label'
+                $namePrefix . 'label'
             )->setLabelName($scheme['labelName'])->setForId($blockId);
 
             $inputBlock->addAttribute(['id' => $blockId]);
@@ -111,6 +116,26 @@ class Builder extends \DaveBaker\Core\Base
 
         if(isset($scheme['attributes'])){
             $inputBlock->addAttribute($scheme['attributes']);
+        }
+
+        if(isset($scheme['formGroup']) && $scheme['formGroup'] == true){
+            /** @var \DaveBaker\Form\Block\Group $blockRow */
+            $blockGroup = $this->getApp()->getBlockManager()->createBlock(
+                self::BASE_ELEMENT_NAMESPACE . self::DEFAULT_GROUP_DEFINITION,
+                $namePrefix . 'form_group'
+            );
+
+            if($labelBlock){
+                $labelBlock->setAsName('label');
+                $blockGroup->addChildBlock($labelBlock);
+            }
+
+            if($inputBlock){
+                $inputBlock->setAsName('element');
+                $blockGroup->addChildBlock($inputBlock);
+            }
+
+            return [$scheme['name'] . "_row" => $blockGroup];
         }
 
         return $blocks;

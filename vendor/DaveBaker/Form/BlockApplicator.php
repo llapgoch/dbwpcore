@@ -100,15 +100,7 @@ class BlockApplicator extends \DaveBaker\Core\Base
      */
     public function getChildFormElements()
     {
-        $elements = [];
-
-        foreach($this->getForm()->getChildBlocks() as $childBlock){
-            if($childBlock instanceof Block\ValueSetterInterface){
-                $elements[] = $childBlock;
-            }
-        }
-
-        return $elements;
+        return $this->getForm()->getValueFormElements();
     }
 
     /**
