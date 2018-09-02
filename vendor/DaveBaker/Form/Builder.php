@@ -10,9 +10,16 @@ class Builder extends \DaveBaker\Core\Base
     const BASE_ELEMENT_NAMESPACE = '\DaveBaker\Form\Block\\';
     const DEFAULT_LABEL_DEFINITION = 'Label';
     const DEFAULT_GROUP_DEFINITION = 'Group';
+    const DEFAULT_ROW_DEFINITION = 'Row';
+
     /** @var string  */
     protected $formName = '';
-    protected $groupTemplate = '';
+    /** @var string  */
+    protected $groupTemplate = 'form/group.phtml';
+    /** @var string  */
+    protected $rowTemplate = 'form/row.phtml';
+    /** @var array  */
+    protected $formRows = [];
 
     /**
      * @param array $schema
@@ -28,6 +35,7 @@ class Builder extends \DaveBaker\Core\Base
      *  - value
      *  - attributes
      *  - class
+     *  - rowIdentifier - place multiple form elements in the same row
      *  - useGroup - bool, whether a group element is created as a parent,
      *  - formGroupSettings - array containing [attributes, class]
      */
@@ -170,7 +178,32 @@ class Builder extends \DaveBaker\Core\Base
                 $blockGroup->addChildBlock($inputBlock);
             }
 
-            return [$scheme['name'] . "_row" => $blockGroup];
+            $blocks = [
+                $scheme['name'] . "_group" => $blockGroup
+            ];
+        }
+
+        if(isset($scheme['rowIdentifier'])){
+            $alreadyAdded = true;
+
+            if(!isset($this->formRows[$scheme['rowIdentifier']])){
+                $alreadyAdded = false;
+
+                $this->formRows[$scheme['rowIdentifier']] = $this->getApp()->getBlockManager()->createBlock(
+                    self::BASE_ELEMENT_NAMESPACE . self::DEFAULT_ROW_DEFINITION,
+                    $namePrefix . 'form_row'
+                );
+            }
+
+            foreach($blocks as $block){
+                $this->formRows[$scheme['rowIdentifier']]->addChildBlock($block);
+            }
+
+            if($alreadyAdded){
+                return [];
+            }
+
+            $blocks = [$this->formRows[$scheme['rowIdentifier']]];
         }
 
         return $blocks;
