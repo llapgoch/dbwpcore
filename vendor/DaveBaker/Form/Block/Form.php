@@ -81,6 +81,10 @@ class Form extends Base
 
     public function getFormAction()
     {
-        return $this->formAction;
+        if($this->formAction) {
+            return $this->formAction;
+        }
+
+        return $this->getUrlHelper()->getCurrentUrl();
     }
 }
