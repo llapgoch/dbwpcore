@@ -8,7 +8,7 @@ namespace DaveBaker\Form\Block\Error;
  *
  * An error renderer, typically for at the top of a form. Displays all errors in a list
  */
-class Main extends \DaveBaker\Core\Block\Template
+class Main extends \DaveBaker\Core\Block\Html\Base
 {
     /**
      * @var array
@@ -18,6 +18,7 @@ class Main extends \DaveBaker\Core\Block\Template
     protected function init()
     {
         $this->setTemplate('form/errors/main.phtml');
+        $this->addTagIdentifier('form-error-message');
     }
 
     /**

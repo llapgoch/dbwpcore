@@ -22,6 +22,7 @@ abstract class Base extends \DaveBaker\Core\Block\Template
     {
         $this->addClass($this->getDefaultClassesForElement());
         $this->addAttribute($this->getDefaultAttributesForElement());
+
         return parent::_preRender();
     }
 

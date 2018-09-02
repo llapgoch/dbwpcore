@@ -25,7 +25,8 @@ class Element
             'tr' => '',
             'td' => '',
             'a' => '',
-            'p' => ''
+            'p' => '',
+            'button-anchor' => ''
         ],
         'elementAttributes' => [
             'textarea' => []

@@ -6,9 +6,10 @@ if(!$errors = $block->getErrors()){
     return;
 }
 ?>
-
-<ul <?php echo $block->getAttrs();?>>
-<?php foreach($errors as $error):?>
-    <li><?php echo $block->escapeHtml($error->getMainError());?></li>
-<?php endforeach; ?>
-</ul>
+<div <?php echo $block->getAttrs();?>>
+    <ul class="alert-list">
+    <?php foreach($errors as $error):?>
+        <li><?php echo $block->escapeHtml($error->getMainError());?></li>
+    <?php endforeach; ?>
+    </ul>
+</div>

@@ -12,6 +12,7 @@ class Builder extends \DaveBaker\Core\Base
     const DEFAULT_GROUP_DEFINITION = 'Group';
     /** @var string  */
     protected $formName = '';
+    protected $groupTemplate = '';
 
     /**
      * @param array $schema
@@ -27,7 +28,8 @@ class Builder extends \DaveBaker\Core\Base
      *  - value
      *  - attributes
      *  - class
-     *  - useGroup - bool, whether a group element is created as a parent
+     *  - useGroup - bool, whether a group element is created as a parent,
+     *  - formGroupSettings - array containing [attributes, class]
      */
     public function build($schema = [])
     {
@@ -52,6 +54,16 @@ class Builder extends \DaveBaker\Core\Base
     public function getFormName()
     {
         return $this->formName;
+    }
+
+    /**
+     * @param $template
+     * @return $this
+     */
+    public function setGroupTemplate($template)
+    {
+        $this->groupTemplate = $template;
+        return $this;
     }
 
     /**
@@ -131,6 +143,24 @@ class Builder extends \DaveBaker\Core\Base
                 self::BASE_ELEMENT_NAMESPACE . self::DEFAULT_GROUP_DEFINITION,
                 $namePrefix . 'form_group'
             );
+
+            if(isset($scheme['formGroupSettings'])){
+                if(isset($scheme['formGroupSettings']['class'])){
+                    $blockGroup->addClass($scheme['formGroupSettings']['class']);
+                }
+
+                if(isset($scheme['formGroupSettings']['attributes'])){
+                    $blockGroup->addAttribute($scheme['formGroupSettings']['attributes']);
+                }
+
+                if(isset($scheme['formGroupSettings']['data'])){
+                    $blockGroup->setData($scheme['formGroupSettings']['data']);
+                }
+            }
+
+            if($this->groupTemplate){
+                $blockGroup->setTemplate($this->groupTemplate);
+            }
 
             if($labelBlock){
                 $blockGroup->addChildBlock($labelBlock);

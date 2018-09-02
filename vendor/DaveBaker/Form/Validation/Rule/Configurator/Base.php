@@ -12,11 +12,11 @@ abstract class Base
     protected $values;
 
     /**
-     * @param $classSuffix
-     * @param $name
-     * @param null $niceName
-     * @param null $value
-     * @return object
+     * @param string $className
+     * @param string $name
+     * @param null|string $niceName
+     * @param null|string $value
+     * @return null|\DaveBaker\Form\Validation\Rule\RuleInterface
      * @throws Exception
      * @throws \DaveBaker\Core\Object\Exception
      */

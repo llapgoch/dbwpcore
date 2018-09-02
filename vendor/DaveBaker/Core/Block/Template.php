@@ -23,23 +23,48 @@ class Template
      */
     public function getAttrs($includeClass = true)
     {
-        $attrString  = implode(' ', array_map(function($k, $v){
-            return $this->escapeHtml($k) . "=" . $this->escAttr($v);
-        }, array_keys($this->attributes), $this->getAttributes()));
+        $attrString = $this->makeAttrs($this->getAttributes());
 
         if($includeClass && $this->classes){
-            $attrString .= " class='" . $this->getClassValueString() . "'";
+            $attrString .= $this->makeClassString($this->getClasses());
         }
 
         return $attrString;
     }
 
     /**
+     * @param array $attrs
      * @return string
      */
-    public function getClassValueString()
+    public function makeAttrs($attrs)
     {
-        return trim(implode(" ", array_map([$this, 'escAttr'], $this->getClasses())));
+        if(!is_array($attrs)){
+            $attrs = [$attrs];
+        }
+
+        $attrString  = implode(' ', array_map(function($k, $v){
+            return $this->escapeHtml($k) . "=" . $this->escAttr($v);
+        }, array_keys($attrs), $attrs));
+
+        return $attrString;
+    }
+
+    public function makeClassString($classes)
+    {
+        return " class='" . $this->makeClassValueString($classes) . "'";
+    }
+
+    /**
+     * @param $classes
+     * @return string
+     */
+    protected function makeClassValueString($classes)
+    {
+       if(!is_array($classes)){
+           $classes = [$classes];
+       }
+
+       return trim(implode(" ", array_map([$this, 'escAttr'], $classes)));
     }
 
     /**
