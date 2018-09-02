@@ -20,6 +20,8 @@ class Builder extends \DaveBaker\Core\Base
     protected $rowTemplate = 'form/row.phtml';
     /** @var array  */
     protected $formRows = [];
+    /** @var array  */
+    protected $rowSettings = [];
 
     /**
      * @param array $schema
@@ -75,6 +77,17 @@ class Builder extends \DaveBaker\Core\Base
     }
 
     /**
+     * @param string $rowIdentifier
+     * @param array $settings
+     *
+     * settings can contain keys data, attributes, class
+     */
+    public function setRowSettings($rowIdentifier, $settings)
+    {
+        $this->rowSettings[$rowIdentifier] = $settings;
+    }
+
+    /**
      * @param array $scheme
      * @return array
      * @throws Exception
@@ -104,7 +117,7 @@ class Builder extends \DaveBaker\Core\Base
             $scheme['type'] = self::BASE_ELEMENT_NAMESPACE . $scheme['type'];
         }
 
-        $namePrefix = $this->formName . "." . str_replace("_", ".", $scheme['name']) . "_";
+        $namePrefix =  str_replace("_", ".", $this->formName . "." . $scheme['name']) . ".";
 
         $inputBlock = $this->getApp()->getBlockManager()->createBlock(
             $scheme['type'],
@@ -149,7 +162,7 @@ class Builder extends \DaveBaker\Core\Base
             /** @var \DaveBaker\Form\Block\Group $blockRow */
             $blockGroup = $this->getApp()->getBlockManager()->createBlock(
                 self::BASE_ELEMENT_NAMESPACE . self::DEFAULT_GROUP_DEFINITION,
-                $namePrefix . 'form_group'
+                $namePrefix . 'form.group'
             );
 
             if(isset($scheme['formGroupSettings'])){
@@ -189,10 +202,26 @@ class Builder extends \DaveBaker\Core\Base
             if(!isset($this->formRows[$scheme['rowIdentifier']])){
                 $alreadyAdded = false;
 
-                $this->formRows[$scheme['rowIdentifier']] = $this->getApp()->getBlockManager()->createBlock(
+                $formRow = $this->formRows[$scheme['rowIdentifier']] = $this->getApp()->getBlockManager()->createBlock(
                     self::BASE_ELEMENT_NAMESPACE . self::DEFAULT_ROW_DEFINITION,
-                    $namePrefix . 'form_row'
+                    $namePrefix . 'form.row'
                 );
+
+                if(isset($this->rowSettings[$scheme['rowIdentifier']])){
+                    $settings = $this->rowSettings[$scheme['rowIdentifier']];
+
+                    if(isset($settings['data'])){
+                        $formRow->setData($settings['data']);
+                    }
+
+                    if(isset($settings['class'])){
+                        $formRow->addClass($settings['class']);
+                    }
+
+                    if(isset($settings['attributes'])){
+                        $formRow->addAttribute($settings['class']);
+                    }
+                }
             }
 
             foreach($blocks as $block){

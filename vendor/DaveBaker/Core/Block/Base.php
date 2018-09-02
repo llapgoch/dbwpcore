@@ -321,6 +321,7 @@ abstract class Base extends \DaveBaker\Core\Object\Base
      */
     public final function render()
     {
+        $this->preDispatch();
         $this->_preRender();
 
         $this->rendered = true;

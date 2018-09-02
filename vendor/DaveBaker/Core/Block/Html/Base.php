@@ -18,12 +18,12 @@ abstract class Base extends \DaveBaker\Core\Block\Template
      * @return \DaveBaker\Core\Block\Template
      * @throws \DaveBaker\Core\Object\Exception
      */
-    public function _preRender()
+    protected function _preDispatch()
     {
         $this->addClass($this->getDefaultClassesForElement());
         $this->addAttribute($this->getDefaultAttributesForElement());
 
-        return parent::_preRender();
+        return parent::_preDispatch();
     }
 
     /**
@@ -110,5 +110,10 @@ abstract class Base extends \DaveBaker\Core\Block\Template
         }
 
         return $this;
+    }
+
+    public function getTagIdentifiers()
+    {
+        return $this->tagIdentifiers;
     }
 }

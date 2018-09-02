@@ -101,13 +101,13 @@ abstract class Base
      * @param string $key
      * @return array|mixed|null
      */
-    public function getData($key = '')
+    public function getOutputData($key = '')
     {
         if(isset($this->outputProcessors[$key])){
-            return $this->outputProcessors[$key]->process(parent::getData($key));
+            return $this->outputProcessors[$key]->process($this->getData($key));
         }
 
-        return parent::getData($key);
+        return $this->getData($key);
     }
 
     /**

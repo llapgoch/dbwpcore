@@ -44,6 +44,25 @@ class Table extends Base
     }
 
     /**
+     * @param array|string $headers
+     * @return $this
+     */
+    public function removeHeader($headers)
+    {
+        if(!is_array($headers)){
+            $headers = [$headers];
+        }
+
+        foreach($headers as $header) {
+            if (isset($this->headers[$header])) {
+                unset($this->headers[$header]);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
      * @return array
      */
     public function getRecords()
