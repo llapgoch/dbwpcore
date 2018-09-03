@@ -142,9 +142,14 @@ class App
         $this->getHandleManager()->registerHandles();
         $this->getMain()->registerControllers();
         $this->getMain()->registerLayouts();
-        
+
         $this->getContollerManager()->preDispatch();
-        $this->getLayoutManager()->registerShortcodes()->registerActions()->preDispatch();
+        $this->getLayoutManager()
+            ->runLayouts()
+            ->registerShortcodes()
+            ->registerActions()
+            ->preDispatch();
+
         $this->getContollerManager()->execute();
 
         return $this;

@@ -116,7 +116,7 @@ class Manager extends \DaveBaker\Core\Base
                     throw new Exception('Layout is of incorrect type');
                 }
 
-                $this->registerLayout($layoutInstance);
+                $this->registerLayoutToHandles($layoutInstance);
             } catch (\Exception $e){
                 throw new Exception($e->getMessage(), $e->getCode());
             }
@@ -209,8 +209,10 @@ class Manager extends \DaveBaker\Core\Base
     }
 
     /**
-     * @param $blocks array
+     * @param $blocks
      * @return $this
+     * @throws \DaveBaker\Core\Event\Exception
+     * @throws \DaveBaker\Core\Object\Exception
      */
     protected function preDispatchBlocks($blocks)
     {
@@ -227,8 +229,10 @@ class Manager extends \DaveBaker\Core\Base
     }
 
     /**
-     * @param $blocks array
+     * @param $blocks
      * @return $this
+     * @throws \DaveBaker\Core\Event\Exception
+     * @throws \DaveBaker\Core\Object\Exception
      */
     protected function postDispatchBlocks($blocks)
     {
@@ -246,8 +250,9 @@ class Manager extends \DaveBaker\Core\Base
     /**
      * @param Base $layout
      * @throws Exception
+     * @throws \DaveBaker\Core\Object\Exception
      */
-    protected function registerLayout(
+    protected function registerLayoutToHandles(
         \DaveBaker\Core\Layout\Base $layout
     ) {
         /** @var \DaveBaker\Core\Helper\Util $util */
@@ -267,40 +272,51 @@ class Manager extends \DaveBaker\Core\Base
                     $this->registeredHandles[$handleTag] = [];
                 }
 
-                if(in_array($layout, $this->registeredHandles[$handleTag])){
-                    continue;
-                }
+                $this->registeredHandles[$handleTag][] = ['layout' => $layout, 'method' => $method];
+            }
+        }
+    }
 
-                $this->registeredHandles[$handleTag][] = $layout;
+    /**
+     * @return $this
+     * @throws Exception
+     */
+    public function runLayouts()
+    {
+        foreach($this->registeredHandles as $k => $layoutItems) {
+            foreach ($layoutItems as $layoutItem) {
+                $layout = $layoutItem['layout'];
+                $method = $layoutItem['method'];
 
-                // Run each of the action methods for registered handles, creating the blocks
                 $layout->{$method}();
+
+                // Get the blocks from the layout
+                if ($blocks = $layout->getBlocks()) {
+
+                    if (!is_array($blocks)) {
+                        $blocks = [$blocks];
+                    }
+
+                    /** @var \DaveBaker\Core\Block\BlockInterface $block */
+                    foreach ($blocks as $block) {
+                        if (!$block->getShortcode() && !$block->getAction()) {
+                            throw new Exception("Shortcode or action not set for layout block {$block->getName()}");
+                        }
+
+                        if ($block->getShortcode()) {
+                            $this->registerBlockForShortcode($block->getShortcode(), $block);
+                        }
+
+                        if ($block->getAction()) {
+                            $this->registerBlockForAction($block->getAction(), $block);
+                        }
+                    }
+                }
             }
         }
 
-        // Get the blocks from the layout
-        if($blocks = $layout->getBlocks()) {
 
-            if (!is_array($blocks)) {
-                $blocks = [$blocks];
-            }
-
-            /** @var \DaveBaker\Core\Block\BlockInterface $block */
-            foreach ($blocks as $block) {
-                if(!$block->getShortcode() && !$block->getAction()){
-                    throw new Exception("Shortcode or action not set for layout block {$block->getName()}");
-                }
-
-                if($block->getShortcode()) {
-                    $this->registerBlockForShortcode($block->getShortcode(), $block);
-                }
-
-                if($block->getAction()){
-                    $this->registerBlockForAction($block->getAction(), $block);
-                }
-            }
-        }
-
+        return $this;
     }
 
     /**
