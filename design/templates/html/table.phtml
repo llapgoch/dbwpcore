@@ -12,13 +12,11 @@
                 <?php endforeach;?>
             </tr>
         </thead>
-
-
         <tbody>
             <?php foreach($block->getRecords() as $record): ?>
             <tr>
                 <?php foreach($block->getHeaderKeys() as $k => $header): ?>
-                    <td><?php echo $this->escapeHtml($record->getData($header), $header); ?></td>
+                    <td><?php echo $this->escapeHtml($record->getOutputData($header), $header); ?></td>
                 <?php endforeach; ?>
             </tr>
             <?php endforeach; ?>
