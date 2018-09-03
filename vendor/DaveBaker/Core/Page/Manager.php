@@ -178,9 +178,13 @@ class Manager extends \DaveBaker\Core\Base
      * @throws \DaveBaker\Core\Model\Db\Exception
      * @throws \DaveBaker\Core\Object\Exception
      */
-    public function getUrl($pageIdentifier, $params = [], $returnUrl = '')
+    public function getUrl($pageIdentifier, $params = [], $returnUrl = null)
     {
         $pageRegistry = $this->getPageRegistryByPageIdentifier($pageIdentifier);
+
+        if($returnUrl === true){
+            $returnUrl = $this->getUrlHelper()->getCurrentUrl();
+        }
 
         if($returnUrl){
             $params[\DaveBaker\Core\App\Request::RETURN_URL_PARAM] = $this->getApp()->getRequest()->createReturnUrlParam($returnUrl);

@@ -14,12 +14,17 @@ class Url extends Base
      * @return string
      * @throws \DaveBaker\Core\Object\Exception
      */
-    public function getUrl($url, $params = [], $returnUrl = '')
+    public function getUrl($url, $params = [], $returnUrl = null)
     {
+        if($returnUrl === true){
+            $returnUrl = $this->getCurrentUrl();
+        }
+
         if($returnUrl) {
             $params[\DaveBaker\Core\App\Request::RETURN_URL_PARAM] =
                 $this->getApp()->getRequest()->createReturnUrlParam($returnUrl);
         }
+
         return add_query_arg($params, home_url($url));
     }
 
@@ -31,7 +36,7 @@ class Url extends Base
      * @throws \DaveBaker\Core\Model\Db\Exception
      * @throws \DaveBaker\Core\Object\Exception
      */
-    public function getPageUrl($pageIdentidier, $params = [], $returnUrl = '')
+    public function getPageUrl($pageIdentidier, $params = [], $returnUrl = null)
     {
         return $this->getApp()->getPageManager()->getUrl($pageIdentidier, $params, $returnUrl);
     }
@@ -53,7 +58,7 @@ class Url extends Base
      * @return string
      * @throws \DaveBaker\Core\Object\Exception
      */
-    public function getLoginUrl($params = [], $returnUrl = '')
+    public function getLoginUrl($params = [], $returnUrl = null)
     {
         return $this->getUrl(wp_login_url(), $params, $returnUrl);
     }
@@ -63,7 +68,7 @@ class Url extends Base
      * @return string
      * @throws \DaveBaker\Core\Object\Exception
      */
-    public function getRegistrationUrl($params = [], $returnUrl = '')
+    public function getRegistrationUrl($params = [], $returnUrl = null)
     {
         return $this->getUrl(wp_registration_url(), $params, $returnUrl);
     }
@@ -74,7 +79,7 @@ class Url extends Base
      * @return string
      * @throws \DaveBaker\Core\Object\Exception
      */
-    public function getForgotPasswordUrl($params = [], $returnUrl = '')
+    public function getForgotPasswordUrl($params = [], $returnUrl = null)
     {
         return $this->getUrl(wp_lostpassword_url(), $params, $returnUrl);
     }
