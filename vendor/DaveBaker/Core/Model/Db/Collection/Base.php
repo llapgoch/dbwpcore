@@ -91,11 +91,28 @@ abstract class Base extends \DaveBaker\Core\Base
     }
 
     /**
+     * @param $spec
+     * @return $this
+     * @throws \DaveBaker\Core\Object\Exception
+     */
+    public function order($spec)
+    {
+        $specReplaced = $this->replaceTablesIn($spec);
+
+        if($spec instanceof \Zend_Db_Expr){
+            $specReplaced = new \Zend_Db_Expr($specReplaced);
+        }
+
+        $this->getSelect()->order($specReplaced);
+        return $this;
+    }
+
+    /**
      * @param $name
      * @param $cond
      * @param string $cols
      * @param null $schema
-     * @return \Zend_Db_Select
+     * @return $this
      * @throws \DaveBaker\Core\Object\Exception
      */
     public function joinLeft($name, $cond, $cols = \Zend_Db_Select::SQL_WILDCARD, $schema = null)
@@ -103,7 +120,9 @@ abstract class Base extends \DaveBaker\Core\Base
         $name = $this->replaceTablesIn($name);
         $cond = $this->replaceTablesIn($cond);
 
-        return $this->getSelect()->join($name, $cond, $cols, $schema);
+        $this->getSelect()->join($name, $cond, $cols, $schema);
+
+        return $this;
     }
 
     /**
@@ -111,7 +130,7 @@ abstract class Base extends \DaveBaker\Core\Base
      * @param $cond
      * @param string $cols
      * @param null $schema
-     * @return \Zend_Db_Select
+     * @return $this
      * @throws \DaveBaker\Core\Object\Exception
      */
     public function joinRight($name, $cond, $cols = \Zend_Db_Select::SQL_WILDCARD, $schema = null)
@@ -119,7 +138,9 @@ abstract class Base extends \DaveBaker\Core\Base
         $name = $this->replaceTablesIn($name);
         $cond = $this->replaceTablesIn($cond);
 
-        return $this->getSelect()->joinRight($name, $cond, $cols, $schema);
+        $this->getSelect()->joinRight($name, $cond, $cols, $schema);
+
+        return $this;
     }
 
     /**
@@ -127,7 +148,7 @@ abstract class Base extends \DaveBaker\Core\Base
      * @param $cond
      * @param $cols
      * @param null $schema
-     * @return \Zend_Db_Select
+     * @return $this
      * @throws \DaveBaker\Core\Object\Exception
      */
     public function join($name, $cond, $cols = self::SQL_WILDCARD, $schema = null)
@@ -135,7 +156,9 @@ abstract class Base extends \DaveBaker\Core\Base
         $name = $this->replaceTablesIn($name);
         $cond = $this->replaceTablesIn($cond);
 
-        return $this->getSelect()->joinInner($name, $cond, $cols, $schema);
+        $this->getSelect()->joinInner($name, $cond, $cols, $schema);
+
+        return $this;
     }
 
     /**
