@@ -293,6 +293,10 @@ abstract class Base extends \DaveBaker\Core\Base
      */
     public function load()
     {
+        if($this->items){
+            return $this->items;
+        }
+
         $this->fireEvent('before_load');
         $this->initSelect();
 
