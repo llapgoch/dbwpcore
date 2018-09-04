@@ -11,6 +11,7 @@ class Registry
 
     /**
      * @return \Zend_Db_Adapter_Pdo_Mysql
+     * @throws \Zend_Db_Adapter_Exception
      */
     public static function getGlobalZendAdapter()
     {
@@ -20,7 +21,9 @@ class Registry
                     'driver' => 'pdo_mysql',
                     'dbname' => DB_NAME,
                     'username' => DB_USER,
-                    'password' => DB_PASSWORD
+                    'password' => DB_PASSWORD,
+                    'host' => DB_HOST,
+                    'charset' => DB_CHARSET
                 ])
             );
         }
