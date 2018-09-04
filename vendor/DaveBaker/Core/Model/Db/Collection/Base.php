@@ -108,6 +108,21 @@ abstract class Base extends \DaveBaker\Core\Base
     }
 
     /**
+     * @param $cond
+     * @param null $value
+     * @param null $type
+     * @return $this
+     * @throws \DaveBaker\Core\Object\Exception
+     */
+    public function where($cond, $value = null, $type = null)
+    {
+        $cond = $this->replaceTablesIn($cond);
+        $this->getSelect()->where($cond, $value, $type);
+        return $this;
+    }
+
+
+        /**
      * @param $name
      * @param $cond
      * @param string $cols
