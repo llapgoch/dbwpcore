@@ -233,11 +233,11 @@ abstract class Base
     }
 
     /**
-     * @return \DaveBaker\Core\Helper\Directory
+     * @return \DaveBaker\Core\Helper\User
      * @throws Object\Exception
      */
     protected function getUserHelper()
     {
-        return $this->getApp()->getHelper('Directory');
+        return $this->getApp()->getHelper('User');
     }
 }

@@ -92,14 +92,16 @@ class Base extends \DaveBaker\Core\Base
 
     /**
      * @param $pageIdentifier
+     * @param array $params
+     * @param null $returnUrl
      * @return \DaveBaker\Core\App\Response
      * @throws \DaveBaker\Core\Event\Exception
      * @throws \DaveBaker\Core\Model\Db\Exception
      * @throws \DaveBaker\Core\Object\Exception
      */
-    public function redirectToPage($pageIdentifier)
+    public function redirectToPage($pageIdentifier, $params = [], $returnUrl = null)
     {
-        return $this->getResponse()->redirectToPage($pageIdentifier);
+        return $this->getResponse()->redirectToPage($pageIdentifier, $params, $returnUrl);
     }
 
     /**
