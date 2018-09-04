@@ -80,6 +80,7 @@ abstract class Base extends \DaveBaker\Core\Base
 
     /**
      * @return \Zend_Db_Adapter_Pdo_Mysql
+     * @throws \Zend_Db_Adapter_Exception
      */
     public function getAdapter()
     {
@@ -135,7 +136,7 @@ abstract class Base extends \DaveBaker\Core\Base
         $name = $this->replaceTablesIn($name);
         $cond = $this->replaceTablesIn($cond);
 
-        $this->getSelect()->join($name, $cond, $cols, $schema);
+        $this->getSelect()->joinLeft($name, $cond, $cols, $schema);
 
         return $this;
     }
