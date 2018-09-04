@@ -19,6 +19,6 @@ class General
         'dateLocalShortOutputFormat' => 'd/m/Y',
         'dateTimeLocalShortOutputFormat' => 'd/m/Y H:i A',
         'countryCodeDefault' => 'GB',
-        'formElementErrorClass' => 'error'
+        'formElementErrorClass' => 'form-input-error'
     ];
 }
