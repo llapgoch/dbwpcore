@@ -50,7 +50,8 @@ class BlockList implements \IteratorAggregate, \Countable
             $blocks = [$blocks];
         }
 
-        array_map([$this, 'addBlock'], $blocks);
+        @array_map([$this, 'addBlock'], $blocks);
+
         return $this;
     }
 
@@ -132,6 +133,7 @@ class BlockList implements \IteratorAggregate, \Countable
     /**
      * @param BlockInterface $block
      * @return $this
+     * @throws Exception
      * @throws \DaveBaker\Core\Object\Exception
      */
     protected function addBlock(
@@ -141,6 +143,10 @@ class BlockList implements \IteratorAggregate, \Countable
 
         if($this->useAsName && $block->getAsName()){
              $name = $block->getAsName();
+        }
+
+        if(isset($this->blocks[$name])){
+            throw new Exception("Block with name {$name} already exists");
         }
 
         if(!$this->getBlockManager()->isRemoved($block->getName())) {

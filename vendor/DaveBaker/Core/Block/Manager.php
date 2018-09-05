@@ -44,7 +44,7 @@ class Manager
 
             return $block;
         } catch (\Exception $e) {
-            throw new Exception("Could not create block {$class}", $e->getCode());
+            throw new Exception("Could not create block {$class} - " . $e->getMessage(), $e->getCode());
         }
     }
 

@@ -37,9 +37,7 @@ class Manager extends \DaveBaker\Core\Base
         }
 
         foreach($eventIdentifiers as $eventIdentifier) {
-            if (!($events = $this->getEvents($eventIdentifier))) {
-                return $this->context;
-            }
+            $events = $this->getEvents($eventIdentifier);
 
             try {
                 foreach ($events as $event) {
