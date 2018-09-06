@@ -49,7 +49,7 @@ class Response extends \DaveBaker\Core\Base
             return true;
         }
 
-        return false;
+        exit;
     }
 
     /**
