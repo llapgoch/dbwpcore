@@ -47,6 +47,7 @@ class User extends Base
      * @param $role
      * @param $displayName
      * @param $capabilities
+     * @return $this
      */
     public function addRole($role, $displayName, $capabilities = [], $namespacedRole = true, $namespacedCap = true)
     {
@@ -60,19 +61,20 @@ class User extends Base
             $capabilities = [$capabilities];
         }
 
-        if($namespacedCap){
-            foreach($capabilities as $k => $capability){
-                $capabilities[$k] = $this->getNamespacedOption($capability);
-            }
+        $wp_roles->add_role($role, $displayName);
+
+        foreach($capabilities as $capability){
+            $this->addCapability($role, $capability, true, false);
         }
 
-        $wp_roles->add_role($role, $displayName, $capabilities);
+        return $this;
     }
 
     /**
      * @param $role
      * @param $cap
      * @param bool $grant
+     * @return $this
      */
     public function addCapability($role, $cap, $grant = true, $namespacedRole = true, $namespacedCap = true)
     {
@@ -87,6 +89,8 @@ class User extends Base
         }
 
         $wp_roles->add_cap($role, $cap, $grant);
+
+        return $this;
     }
 
     /**
@@ -101,21 +105,21 @@ class User extends Base
 
         if($namespacedCap){
             foreach($capability as $k => $cap) {
-                $capability[$k] = $this->getNamespacedOption($cap);
+                $cap = $this->getNamespacedOption($cap);
 
-                if(!current_user_can($cap)){
-                    return false;
+                if(current_user_can($cap)){
+                    return true;
                 }
             }
         }
 
         foreach($capability as $cap){
-            if(!current_user_can($cap)){
-                return false;
+            if(current_user_can($cap)){
+                return true;
             }
         }
 
-        return true;
+        return false;
     }
 
 
