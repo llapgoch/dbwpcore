@@ -9,7 +9,12 @@ class Base extends \DaveBaker\Core\Base
 {
     /** @var string */
     protected $namespaceCode = 'controller';
+    /** @var bool  */
     protected $requiresLogin = false;
+    /** @var array  */
+    protected $capabilities = [];
+    /** @var string  */
+    protected $capabilityFailUrl = '';
 
     /**
      * @return $this
@@ -115,6 +120,13 @@ class Base extends \DaveBaker\Core\Base
         if(!($pageManager->isOnRegisterPage() || $pageManager->isOnLoginPage())){
             if($this->requiresLogin && !($this->getApp()->getHelper('User')->isLoggedIn())){
                 $this->getResponse()->authRedirect();
+            }
+        }
+
+        // Check capabilities
+        if($this->capabilities){
+            if(!$this->getUserHelper()->hasCapability($this->capabilities)){
+                $this->redirect($this->getUrlHelper()->getUrl($this->capabilityFailUrl));
             }
         }
 
