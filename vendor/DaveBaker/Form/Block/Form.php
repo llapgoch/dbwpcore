@@ -50,7 +50,7 @@ class Form extends Base
         /** @var ValueSetterInterface $element */
         foreach($this->getValueFormElements() as $element){
             if($element->getIgnoreLock() == false) {
-                $element->addAttribute(['disabled' => 'disabled']);
+                $element->setLock(true);
             }
         }
 

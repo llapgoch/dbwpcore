@@ -11,6 +11,7 @@ abstract class Base
     implements BaseInterface
 {
     const IGNORE_LOCK_DATA_KEY = 'ignore_lock';
+    const LOCKED_DATA_KEY = 'locked';
 
     /** @var string  */
     protected $elementName = '';
@@ -22,6 +23,8 @@ abstract class Base
     protected function _construct()
     {
         $this->setIgnoreLock(false);
+        $this->setLock(false);
+
         return parent::_construct();
     }
 
@@ -33,6 +36,34 @@ abstract class Base
     {
         $this->elementName = $elementName;
         return $this;
+    }
+
+    /**
+     * @return $this
+     */
+    public function setLock($lock)
+    {
+        $this->setData(self::LOCKED_DATA_KEY, (bool) $lock);
+        $this->addAttribute([
+            'readonly' => 'readonly',
+            'data-is-locked' => 1,
+        ]);
+
+        $this->addClass('js-is-locked');
+
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isLocked()
+    {
+        if($this->getIgnoreLock()){
+            return false;
+        }
+
+        return (bool) $this->getData(self::LOCKED_DATA_KEY);
     }
 
     /**

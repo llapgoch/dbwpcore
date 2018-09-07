@@ -15,6 +15,8 @@ class Select
         'value' => ''
     ];
 
+    protected $hiddenInput;
+
     /**
      * @return Base|void
      */
@@ -24,6 +26,56 @@ class Select
         $this->setElementType('select');
         $this->setData('select_options', []);
         $this->setData('show_first_option', true);
+    }
+
+    public function setLock($lock)
+    {
+        parent::setLock($lock);
+
+    }
+
+    /**
+     * @return \DaveBaker\Core\Block\Template|void
+     * @throws \DaveBaker\Core\App\Exception
+     * @throws \DaveBaker\Core\Block\Exception
+     * @throws \DaveBaker\Core\Object\Exception
+     */
+    public function _preDispatch()
+    {
+        parent::_preDispatch();
+
+
+
+    }
+
+    /**
+     * @return Base|void
+     * @throws \DaveBaker\Core\App\Exception
+     * @throws \DaveBaker\Core\Block\Exception
+     * @throws \DaveBaker\Core\Object\Exception
+     */
+    public function _preRender()
+    {
+
+        // Set the template to input and create a hidden input for the element value
+        if($this->isLocked()){
+            $this->setTemplate('form/input.phtml');
+
+            $this->addChildBlock(
+                $this->hiddenInput = $this->createBlock('\DaveBaker\Form\Block\Input\Hidden')
+                    ->setElementName($this->getElementName())
+                    ->setElementValue($this->getElementValue())
+            );
+
+            $this->hiddenInput
+                ->setElementValue($this->getElementValue())
+                ->setElementName($this->getElementName());
+
+            $this->setElementValue($this->getSelectedOptionLabel());
+            $this->setElementName($this->getElementName() . "__locked");
+        }
+
+        parent::_preRender();
     }
 
     /**
@@ -38,6 +90,21 @@ class Select
 
         return $this;
     }
+
+    /**
+     * @return string
+     */
+    public function getSelectedOptionLabel()
+    {
+        foreach($this->getSelectOptions() as $option) {
+            if($this->getElementValue() == $option['value']){
+                return $option['name'];
+            }
+        }
+
+        return '';
+    }
+
 
     /**
      * @param $showFirstOption

@@ -1,5 +1,5 @@
 <?php
-/** @var \DaveBaker\Form\Block\Input $block */
+/** @var \DaveBaker\Form\Block\Input\Input $block */
 ?>
 <?php echo $this->getLabelHtml(); ?>
 <input
@@ -8,3 +8,4 @@
     value="<?php echo $block->escAttr($this->getElementValue());?>"
     <?php echo $block->getAttrs();?>
 >
+<?php echo $block->getChildHtml('');?>
