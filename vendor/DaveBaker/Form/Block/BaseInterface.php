@@ -13,4 +13,6 @@ interface BaseInterface extends \DaveBaker\Core\Block\TemplateInterface
     public function setElementType($elementType);
     public function setElementValue($elementValue);
     public function getElementValue();
+    public function setIgnoreLock($val);
+    public function getIgnoreLock();
 }

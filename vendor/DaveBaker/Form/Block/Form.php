@@ -26,20 +26,35 @@ class Form extends Base
      * @param \DaveBaker\Core\Block\BlockList $blockList
      * @return array
      */
-    protected function getFormElements(
+    protected function getFormElementsFromBlockList(
         \DaveBaker\Core\Block\BlockList $blockList
     ) {
         $valueBlocks = [];
 
         foreach($blockList as $block){
-            if($block instanceof \DaveBaker\Form\Block\ValueSetterInterface){
+            if($block instanceof ValueSetterInterface){
                 $valueBlocks[] = $block;
             }
 
-            $valueBlocks = array_merge($valueBlocks, $this->getFormElements(($block->getChildBlocks())));
+            $valueBlocks = array_merge($valueBlocks, $this->getFormElementsFromBlockList(($block->getChildBlocks())));
         }
 
         return $valueBlocks;
+    }
+
+    /**
+     * @return $this
+     */
+    public function lock()
+    {
+        /** @var ValueSetterInterface $element */
+        foreach($this->getValueFormElements() as $element){
+            if($element->getIgnoreLock() == false) {
+                $element->addAttribute(['disabled' => 'disabled']);
+            }
+        }
+
+        return $this;
     }
 
     /**
@@ -49,7 +64,7 @@ class Form extends Base
     public function getValueFormElements($useCache = true)
     {
         if(!$this->valueFormElementsCache || $useCache == false){
-           $this->valueFormElementsCache = $this->getFormElements($this->getChildBlocks());
+           $this->valueFormElementsCache = $this->getFormElementsFromBlockList($this->getChildBlocks());
         }
 
         return $this->valueFormElementsCache;

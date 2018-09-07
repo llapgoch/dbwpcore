@@ -5,6 +5,8 @@ namespace DaveBaker\Core\Block;
 abstract class Base extends \DaveBaker\Core\Object\Base
 {
     const ANON_SUFFIX = 'child.anon';
+    const CAPABILITY_DATA_KEY = 'capabilities';
+    const IGNORE_CAPABILITIES_DATA_KEY = 'ignore_capabilities';
 
     protected $namespaceCode = 'block';
     /** @var string  */
@@ -41,6 +43,8 @@ abstract class Base extends \DaveBaker\Core\Object\Base
     /** @var string */
     protected $asName = '';
 
+
+
     /**
      * @var array
      * Allows the output of data array keys without escapeHtml being used
@@ -58,6 +62,10 @@ abstract class Base extends \DaveBaker\Core\Object\Base
         if(!$name){
             throw new Exception("Block name not set");
         }
+
+        // Store this in the data array so that they can be set via form builders
+        $this->setData(self::CAPABILITY_DATA_KEY, []);
+        $this->setIgnoreCapabilities(false);
 
         $this->blockName = $name;
         $this->asName = $asName;
@@ -79,6 +87,54 @@ abstract class Base extends \DaveBaker\Core\Object\Base
     public function getUrl($url, $params = [], $returnUrl = null)
     {
         return $this->getApp()->getHelper('Url')->getUrl($url, $params, $returnUrl);
+    }
+
+    /**
+     * @param $val
+     * @return $this
+     */
+    public function setIgnoreCapabilities($val)
+    {
+        $this->setData(self::IGNORE_CAPABILITIES_DATA_KEY, (bool) $val);
+        return $this;
+    }
+
+    /**
+     * @return array|mixed|null
+     */
+    public function getIgnoreCapabilities()
+    {
+        return $this->getData(self::IGNORE_CAPABILITIES_DATA_KEY);
+    }
+
+    /**
+     * @param $capability
+     * @return $this
+     */
+    public function addCapability($capability)
+    {
+        $currentCaps = $this->getCapabilities();
+
+        if(!is_array($this->getData($capability))){
+            $capability = [$capability];
+        }
+
+        foreach($capability as $cap) {
+            if(!in_array($cap, $currentCaps)){
+                $currentCaps[] = $cap;
+            }
+        }
+
+        $this->setData(self::CAPABILITY_DATA_KEY, $currentCaps);
+        return $this;
+    }
+
+    /**
+     * @return array|mixed|null
+     */
+    public function getCapabilities()
+    {
+        return $this->getData(self::CAPABILITY_DATA_KEY);
     }
 
     /**
@@ -321,6 +377,10 @@ abstract class Base extends \DaveBaker\Core\Object\Base
      */
     public final function render()
     {
+        if(!$this->checkAllowed()){
+            return;
+        }
+
         $this->preDispatch();
         $this->_preRender();
 
@@ -341,6 +401,10 @@ abstract class Base extends \DaveBaker\Core\Object\Base
      */
     public final function preDispatch()
     {
+        if(!$this->checkAllowed()){
+            return;
+        }
+
         if($this->isPreDispatched){
            return;
         }
@@ -375,6 +439,10 @@ abstract class Base extends \DaveBaker\Core\Object\Base
      */
     public final function postDispatch()
     {
+        if(!$this->checkAllowed()){
+            return;
+        }
+
         if($this->isPostDispatched){
             return;
         }
@@ -491,6 +559,23 @@ abstract class Base extends \DaveBaker\Core\Object\Base
         }
 
         return $this;
+    }
+
+    /**
+     * @return bool
+     * @throws \DaveBaker\Core\Object\Exception
+     */
+    protected function checkAllowed()
+    {
+        if($this->getIgnoreCapabilities()){
+            return true;
+        }
+
+        if($caps = $this->getCapabilities()) {
+            return $this->getUserHelper()->hasCapability($caps);
+        }
+
+        return true;
     }
 
     /**
