@@ -75,7 +75,6 @@ class Manager extends \DaveBaker\Core\Base
                         $this->getNamespacedOption('') . "/" . self::ROUTE_VERSION,
                         trailingslashit($route) . trailingslashit($actionTag)  . $this->fullParamsRegex , [
                             'callback' => function(\WP_REST_Request $request) use ($controller, $method){
-
                                 $params = $request->get_params();
                                 $assocParams = [];
                                 $numParams = floor(count($params)/2);
@@ -86,7 +85,7 @@ class Manager extends \DaveBaker\Core\Base
                                     }
                                 }
 
-                                $controller->{$method}($assocParams);
+                                return $controller->{$method}($assocParams, $request);
                             }
                         ]
                     );

@@ -68,13 +68,6 @@ class App
         $this->objectManager->setNamespace($this->getNamespace());
         $this->getMain()->init();
         $this->addEvents();
-
-        $api = $this->getApiManager();
-
-        $api->addRoute(
-            'author',
-            '\DaveBaker\Core\Api\Test'
-        );
     }
 
     /**
@@ -122,7 +115,9 @@ class App
         });
 
         /*  We have to do initLayout in multiple actions because not all actions exist on every page.
-            This may need adding to */
+            This may need adding to
+            TODO: ADD THIS TO ACTION ON REST CALLS
+        */
         add_action('wp', function(){
             $this->initApplication();
         });
@@ -142,13 +137,16 @@ class App
 
     /**
      * @return $this
+     * @throws Controller\Exception
      * @throws Event\Exception
+     * @throws Layout\Exception
      * @throws Model\Db\Exception
      * @throws Object\Exception
      */
     protected function initApplication()
     {
         $this->getHandleManager()->registerHandles();
+        $this->getMain()->registerApiActions();
         $this->getMain()->registerControllers();
         $this->getMain()->registerLayouts();
 
