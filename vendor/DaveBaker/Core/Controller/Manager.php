@@ -1,6 +1,8 @@
 <?php
 
 namespace DaveBaker\Core\Controller;
+
+use DaveBaker\Core\Definitions\General as GeneralDefinition;
 /**
  * Class Manager
  * @package DaveBaker\Core\Controller
@@ -36,6 +38,7 @@ class Manager extends \DaveBaker\Core\Base
 
     /**
      * @return $this
+     * @throws Exception
      * @throws \DaveBaker\Core\Event\Exception
      * @throws \DaveBaker\Core\Object\Exception
      */

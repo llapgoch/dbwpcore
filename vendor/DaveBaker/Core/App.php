@@ -43,6 +43,8 @@ class App
     protected $registry;
     /** @var \DaveBaker\Core\Session\SessionInterface */
     protected $generalSession;
+    /** @var \DaveBaker\Core\Api\Manager */
+    protected $apiManager;
 
     public function __construct(
         $namespace,
@@ -66,6 +68,13 @@ class App
         $this->objectManager->setNamespace($this->getNamespace());
         $this->getMain()->init();
         $this->addEvents();
+
+        $api = $this->getApiManager();
+
+        $api->addRoute(
+            'author',
+            '\DaveBaker\Core\Api\Test'
+        );
     }
 
     /**
@@ -366,6 +375,19 @@ class App
         }
 
         return $this->controllerManager;
+    }
+
+    /**
+     * @return \DaveBaker\Core\Api\Manager
+     * @throws Object\Exception
+     */
+    public function getApiManager()
+    {
+        if(!$this->apiManager){
+            $this->apiManager = $this->getObjectManager()->getAppObject('\DaveBaker\Core\Api\Manager');
+        }
+
+        return $this->apiManager;
     }
 
     /**

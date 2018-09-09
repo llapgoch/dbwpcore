@@ -22,6 +22,10 @@ class Request extends \DaveBaker\Core\Base
     ];
 
 
+    /**
+     * @return \DaveBaker\Core\Base|void
+     * @throws \DaveBaker\Core\Object\Exception
+     */
     protected function _construct()
     {
         $this->compileParams();
@@ -55,6 +59,15 @@ class Request extends \DaveBaker\Core\Base
         }
 
         return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isAjax()
+    {
+        return !empty($_SERVER['HTTP_X_REQUESTED_WITH'])
+            && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest';
     }
 
     /**

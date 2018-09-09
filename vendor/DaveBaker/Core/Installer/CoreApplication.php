@@ -1,6 +1,8 @@
 <?php
 
 namespace DaveBaker\Core\Installer;
+
+use DaveBaker\Core\Definitions\General as GeneralDefinition;
 /**
  * Class Manager
  * @package DaveBaker\Core\Installer
@@ -15,6 +17,7 @@ class CoreApplication
     /**
      * @throws \DaveBaker\Core\Db\Exception
      * @throws \DaveBaker\Core\Object\Exception
+     * @throws \DaveBaker\Core\Page\Exception
      */
     public function install()
     {
@@ -28,6 +31,13 @@ class CoreApplication
               KEY `page_identifier` (`page_identifier`),
               KEY `page_id` (`page_id`)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8;"
+        );
+
+        $this->getApp()->getPageManager()->createPage(
+            GeneralDefinition::ROUTE_PAGE_ID,
+            [
+                "post_title" => "DBWP_CORE_ROUTER"
+            ]
         );
     }
 }
