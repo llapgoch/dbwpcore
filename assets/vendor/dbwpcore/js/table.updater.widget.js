@@ -12,6 +12,7 @@
 		},
 
 		updateUrl: '',
+		request: null,
 
 
 		_create: function () {
@@ -20,18 +21,37 @@
 			if(!this.element.data(this.options.tableUpdaterEndpointKey)){
 				throw 'Table must have an updater endpoint in its data array'
 			}
-			this.addEvents();
 
+			this.updateUrl = this.element.data(this.options.tableUpdaterEndpointKey);
+			this.addEvents();
 		},
 
 		addEvents: function() {
-			var events = {};
+			var events = {},
+				self = this;
 
 			events['click ' + this.options.sortableHeaderSelector] = function(ev){
-				alert("update");
+				self.update();
 			};
 
 			this._on(events);
+		},
+
+		update: function() {
+			if(this.request){
+				try {
+					this.request.abort();
+				} catch (e){
+					// For darling IE
+				}
+			}
+
+			this.request = $.ajax(
+				this.updateUrl, {
+					method: 'POST',
+					data: {'horse':'morse'}
+				}
+			)
 		}
 
 

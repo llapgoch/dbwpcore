@@ -17,6 +17,8 @@ class Table extends Base
     protected $records = [];
     /** @var bool  */
     protected $jsUpdater = true;
+    /** @var bool  */
+    protected $isReplacerBlock = true;
 
     protected function init()
     {

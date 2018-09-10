@@ -126,11 +126,17 @@ class Manager extends \DaveBaker\Core\Base
                                 $assocParams = [];
                                 $numParams = floor(count($params)/2);
 
+                                // Use our regex to separate the key value pairs in the URL to an assoc array
                                 for($i = 1; $i <= $numParams; $i++){
                                     if(isset($params["key{$i}"]) && isset($params["value{$i}"])) {
                                         $assocParams[$params["key{$i}"]] = $params["value{$i}"];
+                                        unset($params["key{$i}"]);
+                                        unset($params["value{$i}"]);
                                     }
                                 }
+
+                                // Merge in any params which may have come from post
+                                $assocParams = array_merge($assocParams, $params);
 
                                 if(($isAllowed = $controller->isAllowed()) !== true){
                                     return $isAllowed;

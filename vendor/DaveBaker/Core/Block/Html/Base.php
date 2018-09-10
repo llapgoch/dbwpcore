@@ -15,7 +15,7 @@ abstract class Base extends \DaveBaker\Core\Block\Template
     /** @var ConfigInterface */
     protected $config;
     /** @var bool  */
-    protected $isReplacerBlock = true;
+    protected $isReplacerBlock = false;
 
     /**
      * @return \DaveBaker\Core\Block\Template
