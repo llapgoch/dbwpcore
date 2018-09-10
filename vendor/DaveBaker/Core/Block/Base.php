@@ -44,7 +44,6 @@ abstract class Base extends \DaveBaker\Core\Object\Base
     protected $asName = '';
 
 
-
     /**
      * @var array
      * Allows the output of data array keys without escapeHtml being used

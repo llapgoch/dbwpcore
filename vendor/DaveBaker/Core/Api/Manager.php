@@ -12,8 +12,6 @@ class Manager extends \DaveBaker\Core\Base
     const NUM_PARAMETERS = 15;
     const ENDPOINT_NAMESPACE_SUFFIX = 'api';
     const WP_REST_NONCE_ID = 'wp_rest';
-    const AUTH_FAILED_STRING = 'You are not authorised to perform that action';
-    const AUTH_FAILED_CODE = 'authentication_fail';
 
     /** @var array  */
     protected $routes = [];
@@ -94,6 +92,7 @@ class Manager extends \DaveBaker\Core\Base
     public function registerRoutes()
     {
         foreach ($this->routes as $route => $controllerClass) {
+            /** @var ControllerInterface $controller */
             $controller = $this->createAppObject($controllerClass);
 
             if(!$controller instanceof ControllerInterface){
@@ -122,23 +121,18 @@ class Manager extends \DaveBaker\Core\Base
                                     }
                                 }
 
-                                if($controller->isAllowed()) {
-                                    $controller->preDispatch();
-                                    $res = $controller->{$method}($assocParams, $request);
-                                    $controller->postDispatch();
-
-                                    return array_merge(
-                                        ['data' => $res],
-                                        $controller->getBlockReplacerData()
-                                    );
+                                if(($isAllowed = $controller->isAllowed()) !== true){
+                                    return $isAllowed;
                                 }
 
-                                return new \WP_Error(
-                                    self::AUTH_FAILED_CODE,
-                                    __( self::AUTH_FAILED_STRING),
-                                    array( 'status' => 403 )
-                                );
+                                $controller->preDispatch();
+                                $res = $controller->{$method}($assocParams, $request);
+                                $controller->postDispatch();
 
+                                return array_merge(
+                                    ['data' => $res],
+                                    $controller->getBlockReplacerData()
+                                );
                             }
                         ]
                     );

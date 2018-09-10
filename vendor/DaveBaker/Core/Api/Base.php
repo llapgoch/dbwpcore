@@ -9,14 +9,29 @@ use DaveBaker\Core\Block\BlockInterface;
  *
  * Methods are defined with an Action suffix, E.g. addAction
  */
-class Controller
+abstract class Base
     extends \DaveBaker\Core\Controller\Base
     implements ControllerInterface
 {
-    const BLOCK_REPLACER_KEY = '__block__replacers__';
-
     /** @var \DaveBaker\Core\Block\BlockList */
     protected $replacerBlockList;
+
+    /**
+     * @return bool|\WP_Error
+     * @throws \DaveBaker\Core\Object\Exception
+     */
+    public function isAllowed()
+    {
+        if(!parent::isAllowed()){
+            return new \WP_Error(
+                ControllerInterface::AUTH_FAILED_CODE,
+                __( ControllerInterface::AUTH_FAILED_STRING),
+                ['status' => 403]
+            );
+        }
+
+        return true;
+    }
 
     /**
      * @return array
@@ -45,7 +60,7 @@ class Controller
      * @throws \DaveBaker\Core\Object\Exception
      * @return $this
      */
-    protected function registerBlockReplacer(
+    protected function addReplacerBlock(
         BlockInterface $block
     ){
         $this->getReplacerBlockList()->add($block);

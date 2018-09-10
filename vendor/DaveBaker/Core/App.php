@@ -45,6 +45,8 @@ class App
     protected $generalSession;
     /** @var \DaveBaker\Core\Api\Manager */
     protected $apiManager;
+    /** @var bool  */
+    protected $applicationInitialised = false;
 
     public function __construct(
         $namespace,
@@ -118,15 +120,16 @@ class App
             This may need adding to
             TODO: ADD THIS TO ACTION ON REST CALLS
         */
-        add_action('rest_api_init', function(){
-            $this->initApplication();
-        });
 
         add_action('wp', function(){
             $this->initApplication();
         });
 
         add_action('login_init', function(){
+            $this->initApplication();
+        });
+
+        add_action('rest_api_init', function(){
             $this->initApplication();
         });
 
@@ -140,6 +143,7 @@ class App
 
     /**
      * @return $this
+     * @throws Api\Exception
      * @throws Controller\Exception
      * @throws Event\Exception
      * @throws Layout\Exception
@@ -148,6 +152,12 @@ class App
      */
     protected function initApplication()
     {
+        if($this->applicationInitialised){
+            return $this;
+        }
+
+        $this->applicationInitialised = true;
+
         $this->getHandleManager()->registerHandles();
         $this->getMain()->registerApiActions();
         $this->getMain()->registerControllers();

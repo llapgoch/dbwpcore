@@ -1,6 +1,7 @@
 <?php
 
 namespace DaveBaker\Core\Block\Html;
+use DaveBaker\Core\Api\ControllerInterface;
 use DaveBaker\Core\Config\ConfigInterface;
 
 /**
@@ -13,6 +14,8 @@ abstract class Base extends \DaveBaker\Core\Block\Template
     protected $tagIdentifiers = [];
     /** @var ConfigInterface */
     protected $config;
+    /** @var bool  */
+    protected $isReplacerBlock = true;
 
     /**
      * @return \DaveBaker\Core\Block\Template
@@ -24,6 +27,24 @@ abstract class Base extends \DaveBaker\Core\Block\Template
         $this->addAttribute($this->getDefaultAttributesForElement());
 
         return parent::_preDispatch();
+    }
+
+    /**
+     * @return bool
+     */
+    public function getIsReplacerBlock()
+    {
+        return $this->isReplacerBlock;
+    }
+
+    /**
+     * @param $val
+     * @return $this
+     */
+    public function setIsReplacerBlock($val)
+    {
+        $this->isReplacerBlock = (bool) $val;
+        return $this;
     }
 
     /**
@@ -57,6 +78,10 @@ abstract class Base extends \DaveBaker\Core\Block\Template
             if(isset($defaultAttributes[$tagIdentifier]) && is_array($defaultAttributes[$tagIdentifier])){
                 $attributes = array_merge($attributes, $defaultAttributes[$tagIdentifier]);
             }
+        }
+
+        if($this->getIsReplacerBlock()){
+            $attributes["data-" . ControllerInterface::BLOCK_REPLACER_KEY] = $this->getName();
         }
 
         return $attributes;

@@ -21,7 +21,7 @@ class Base extends \DaveBaker\Core\Base
      * @throws \DaveBaker\Core\Event\Exception
      * @throws \DaveBaker\Core\Object\Exception
      */
-    public final function preDispatch()
+    public function preDispatch()
     {
         $this->checkAllowed();
         $this->fireEvent('predispatch_before');
@@ -35,7 +35,7 @@ class Base extends \DaveBaker\Core\Base
      * @throws \DaveBaker\Core\Event\Exception
      * @throws \DaveBaker\Core\Object\Exception
      */
-    public final function postDispatch()
+    public function postDispatch()
     {
         $this->fireEvent('postdispatch_before');
         $this->_postDispatch();
@@ -132,6 +132,7 @@ class Base extends \DaveBaker\Core\Base
      */
     public function isAllowed()
     {
+        var_dump($this->isAuthAllowed() );
         return $this->isAuthAllowed() && $this->isCapabilityAllowed();
     }
 
@@ -152,7 +153,7 @@ class Base extends \DaveBaker\Core\Base
      * @return $this
      * @throws \DaveBaker\Core\Object\Exception
      */
-    protected function checkAllowed()
+    public function checkAllowed()
     {
        if(!$this->isAuthAllowed()){
            return auth_redirect();

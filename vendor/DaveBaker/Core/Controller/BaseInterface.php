@@ -9,4 +9,5 @@ interface BaseInterface
 {
     public function preDispatch();
     public function postDispatch();
+    public function isAllowed();
 }
