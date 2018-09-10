@@ -43,15 +43,23 @@
 
 				this.sortColumn = header;
 
-				if($target.hasClass(this.options.sortableAscClass)){
-					self.sortDirection = SORT_DIR_DESC;
-					$target.removeClass(this.options.sortableAscClass).addClass(this.options.sortableDescClass);
-				} else {
+				var isAsc = $target.hasClass(this.options.sortableAscClass);
+				var isDesc = $target.hasClass(this.options.sortableDescClass);
+
+				if(!isAsc || !isDesc){
 					self.sortDirection = SORT_DIR_ASC;
-					$target.removeClass(this.options.sortableDescClass).addClass(this.options.sortableAscClass);
+					$target.addClass(this.options.sortableAscClass);
 				}
 
-				if(header){
+				if(isAsc){
+					self.sortDirection = SORT_DIR_DESC;
+					$target.addClass(this.options.sortableDescClass);
+				}
+
+				if(isDesc){
+					this.sortColumn = '';
+					this.sortDirection = '';
+				}else{
 					this.sortColumn = header;
 				}
 

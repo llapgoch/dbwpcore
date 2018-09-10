@@ -59,7 +59,8 @@ class Collection
         parent::setColumnOrder($column, $dir);
         $this->collection->resetItems();
 
-        if($this->collection){
+        if($this->collection && $this->orderColumn){
+            $this->collection->getSelect()->reset(\Zend_Db_Select::ORDER);
             $this->collection->order($this->orderColumn . " " . $this->orderDir);
         }
 

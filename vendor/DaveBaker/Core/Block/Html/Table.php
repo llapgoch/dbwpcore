@@ -42,7 +42,12 @@ class Table extends Base
      */
     public function setColumnOrder($column, $dir = 'ASC')
     {
-        if(!in_array($column, array_keys($this->headers))){
+        if(!$column){
+            $this->orderColumn = '';
+            return $this;
+        }
+
+        if(!in_array($column, $this->getHeaderKeys())){
             throw new Exception('Column does not exist');
         }
 
