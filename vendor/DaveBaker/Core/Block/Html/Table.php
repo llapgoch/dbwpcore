@@ -52,32 +52,53 @@ class Table extends Base
      * @return mixed
      * @throws \DaveBaker\Core\Object\Exception
      */
-    public function getThClass($header)
+    public function getThClasses($header)
     {
         $columns = $this->getSortableColumns();
-        $class = '';
+        $classes = [];
 
         if(isset($columns[$header])){
-            $class .= $this->getConfig()->getConfigValue(TableDefinition::CONFIG_SORTABLE_TH_CLASS);
+            $classes[] = $this->getConfig()->getConfigValue(TableDefinition::CONFIG_SORTABLE_TH_CLASS);
 
             if(in_array(TableDefinition::HEADER_SORTABLE_ALPHA, $columns[$header])){
-                $class .= " " . $this->getConfig()->getConfigValue(TableDefinition::CONFIG_SORTABLE_TH_ALPHA_CLASS);
+                $classes[] = $this->getConfig()->getConfigValue(TableDefinition::CONFIG_SORTABLE_TH_ALPHA_CLASS);
             }
 
             if($this->jsUpdater){
-                $class .= " " . $this->getConfig()->getConfigValue(TableDefinition::CONFIG_SORTABLE_TH_JS_CLASS);
+                $classes[] = $this->getConfig()->getConfigValue(TableDefinition::CONFIG_SORTABLE_TH_JS_CLASS);
             }
 
             if(in_array( TableDefinition::HEADER_SORTABLE_ASC, $columns[$header])){
-                $class .= " " . $this->getConfig()->getConfigValue(TableDefinition::CONFIG_SORTABLE_TH_ASC_CLASS);
+                $classes[] = $this->getConfig()->getConfigValue(TableDefinition::CONFIG_SORTABLE_TH_ASC_CLASS);
             } else {
                 if (in_array(TableDefinition::HEADER_SORTABLE_DESC, $columns[$header])) {
-                    $class .= " " . $this->getConfig()->getConfigValue(TableDefinition::CONFIG_SORTABLE_TH_DESC_CLASS);
+                    $classes[] = $this->getConfig()->getConfigValue(TableDefinition::CONFIG_SORTABLE_TH_DESC_CLASS);
                 }
             }
         }
 
-        return $class;
+        return $this->makeClassString($classes);
+    }
+
+    /**
+     * @param $header
+     * @param bool $includeClasses
+     * @return string
+     * @throws \DaveBaker\Core\Object\Exception
+     */
+    public function getThAttrs($header, $includeClasses = true)
+    {
+        $attributes = [
+            TableDefinition::ELEMENT_DATA_KEY_COLUMN_ID => $header
+        ];
+
+        $attrs = $this->makeAttrs($attributes);
+
+        if($includeClasses){
+            $attrs .= $this->getThClasses($header);
+        }
+
+        return $attrs;
     }
 
     /**

@@ -3,13 +3,18 @@
 
 	$(document).on('ajaxComplete', function(event, request){
 		var response = request.responseJSON;
-		var replacers = response[BLOCK_REPLACERS_DATA_KEY];
 
-		if(!replacers){
+		if(!response || !response[BLOCK_REPLACERS_DATA_KEY]){
 			return;
 		}
 
+		var replacers = response[BLOCK_REPLACERS_DATA_KEY];
+
 		for(var i in replacers){
+			if(!replacers.hasOwnProperty(i)){
+				continue;
+			}
+
 			$('[data-' + BLOCK_REPLACERS_DATA_KEY + '="' + i + '"]').replaceWith(replacers[i]);
 		}
 	});
