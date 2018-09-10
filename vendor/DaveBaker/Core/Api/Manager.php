@@ -2,8 +2,6 @@
 
 namespace DaveBaker\Core\Api;
 
-use DaveBaker\Core\Controller\ControllerInterface;
-
 /**
  * Class Manager
  * @package DaveBaker\Core\Page
@@ -90,6 +88,8 @@ class Manager extends \DaveBaker\Core\Base
     /**
      * @throws Exception
      * @throws \DaveBaker\Core\Object\Exception
+     *
+     * TODO: Add controller method caching at some point
      */
     public function registerRoutes()
     {
@@ -98,7 +98,7 @@ class Manager extends \DaveBaker\Core\Base
 
             if(!$controller instanceof ControllerInterface){
                 throw new Exception(
-                    'API Controller must implement ControllerInterface, preferably extend \DaveBaker\Core\Api\Controller'
+                    'API Controller must implement Api\ControllerInterface'
                 );
             }
 
@@ -127,7 +127,10 @@ class Manager extends \DaveBaker\Core\Base
                                     $res = $controller->{$method}($assocParams, $request);
                                     $controller->postDispatch();
 
-                                    return $res;
+                                    return array_merge(
+                                        ['data' => $res],
+                                        $controller->getBlockReplacerData()
+                                    );
                                 }
 
                                 return new \WP_Error(
