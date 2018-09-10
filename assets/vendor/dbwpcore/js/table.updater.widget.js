@@ -12,7 +12,8 @@
 			columnIdDataKey: 'columnId',
 			sortableHeaderSelector: '.js-is-sortable',
 			sortableAscClass: 'sort-asc',
-			sortableDescClass: 'sort-desc'
+			sortableDescClass: 'sort-desc',
+			updateErrorMessage: 'An error occurred in updating the table'
 		},
 
 		updateUrl: '',
@@ -70,6 +71,8 @@
 		},
 
 		update: function() {
+			var self = this;
+
 			if(this.request){
 				try {
 					this.request.abort();
@@ -81,13 +84,25 @@
 			this.request = $.ajax(
 				this.updateUrl, {
 					method: 'POST',
-					data: this.getUpdateData()
+					data: this.getUpdateData(),
+					complete: function(request){
+						if(request.status !== 200){
+							initialise();
+						}
+					},
+					error: function(){
+						alert(self.options.updateErrorMessage);
+					}
 				}
 			)
 		}
 	});
 
-	$(document).on('ready', function(){
+	function initialise(){
 		$(DEFAULT_INIT_SELECTOR).tableUpdater();
+	}
+
+	$(document).on('ready', function(){
+		initialise();
 	});
 }(jQuery));

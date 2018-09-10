@@ -142,9 +142,17 @@ class Manager extends \DaveBaker\Core\Base
                                     return $isAllowed;
                                 }
 
-                                $controller->preDispatch();
-                                $res = $controller->{$method}($assocParams, $request);
-                                $controller->postDispatch();
+                                try {
+                                    $controller->preDispatch();
+                                    $res = $controller->{$method}($assocParams, $request);
+                                    $controller->postDispatch();
+                                } catch (\Exception $e){
+                                    return new \WP_Error(
+                                        400,
+                                        $e->getMessage(),
+                                        ['status' => 400]
+                                    );
+                                }
 
                                 return array_merge(
                                     ['data' => $res],

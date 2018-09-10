@@ -1,7 +1,7 @@
 ;(function($){
 	var BLOCK_REPLACERS_DATA_KEY = '__block__replacers__';
 
-	$(document).on('ajaxComplete', function(event, request){
+	$(document).on('ajaxSuccess', function(event, request){
 		var response = request.responseJSON;
 
 		if(!response || !response[BLOCK_REPLACERS_DATA_KEY]){
@@ -17,5 +17,6 @@
 
 			$('[data-' + BLOCK_REPLACERS_DATA_KEY + '="' + i + '"]').replaceWith(replacers[i]);
 		}
+
 	});
 }(jQuery));

@@ -1,6 +1,7 @@
 <?php
 
 namespace DaveBaker\Core\Block\Html;
+use DaveBaker\Core\Block\Exception;
 use DaveBaker\Core\Definitions\General;
 use DaveBaker\Core\Definitions\Table as TableDefinition;
 
@@ -19,11 +20,34 @@ class Table extends Base
     protected $jsUpdater = true;
     /** @var bool  */
     protected $isReplacerBlock = true;
+    /** @var string  */
+    protected $orderColumn = '';
+    /** @var string  */
+    protected $orderDir = 'ASC';
 
     protected function init()
     {
         $this->setTemplate('html/table.phtml');
         $this->addTagIdentifier('table');
+    }
+
+    /**
+     * @param $column
+     * @param string $dir
+     * @return $this
+     * @throws Exception
+     */
+    public function setColumnOrder($column, $dir = 'ASC')
+    {
+        if(!in_array($column, $this->headers)){
+            throw new Exception('Column does not exist');
+        }
+
+        $this->orderColumn = $column;
+        $this->orderDir = $dir;
+
+        $this->getRecords()->order($this->orderColumn . " " . $this->orderDir);
+        return $this;
     }
 
     /**
@@ -46,6 +70,8 @@ class Table extends Base
 
         parent::_preRender();
     }
+
+
 
     /**
      * @param $header
