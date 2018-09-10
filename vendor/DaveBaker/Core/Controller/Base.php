@@ -110,24 +110,56 @@ class Base extends \DaveBaker\Core\Base
     }
 
     /**
+     * @return bool
+     * @throws \DaveBaker\Core\Object\Exception
+     */
+    public function isAuthAllowed()
+    {
+        $pageManager = $this->getApp()->getPageManager();
+
+        if(!($pageManager->isOnRegisterPage() || $pageManager->isOnLoginPage())){
+            if($this->requiresLogin && !($this->getUserHelper()->isLoggedIn())){
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * @return bool
+     * @throws \DaveBaker\Core\Object\Exception
+     */
+    public function isAllowed()
+    {
+        return $this->isAuthAllowed() && $this->isCapabilityAllowed();
+    }
+
+    /**
+     * @return bool
+     * @throws \DaveBaker\Core\Object\Exception
+     */
+    public function isCapabilityAllowed()
+    {
+        if($this->capabilities && !$this->getUserHelper()->hasCapability($this->capabilities)){
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
      * @return $this
      * @throws \DaveBaker\Core\Object\Exception
      */
     protected function checkAllowed()
     {
-        $pageManager = $this->getApp()->getPageManager();
+       if(!$this->isAuthAllowed()){
+           return auth_redirect();
+       }
 
-        if(!($pageManager->isOnRegisterPage() || $pageManager->isOnLoginPage())){
-            if($this->requiresLogin && !($this->getApp()->getHelper('User')->isLoggedIn())){
-                $this->getResponse()->authRedirect();
-            }
-        }
-
-        // Check capabilities
-        if($this->capabilities){
-            if(!$this->getUserHelper()->hasCapability($this->capabilities)){
-                $this->redirect($this->getUrlHelper()->getUrl($this->capabilityFailUrl));
-            }
+        if(!$this->isCapabilityAllowed()){
+            return $this->redirect($this->getUrlHelper()->getUrl($this->capabilityFailUrl));
         }
 
         return $this;

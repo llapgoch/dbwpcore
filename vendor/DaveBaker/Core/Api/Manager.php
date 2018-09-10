@@ -11,6 +11,8 @@ class Manager extends \DaveBaker\Core\Base
     const NUM_PARAMETERS = 15;
     const ENDPOINT_NAMESPACE_SUFFIX = 'api';
     const WP_REST_NONCE_ID = 'wp_rest';
+    const AUTH_FAILED_STRING = 'You are not authorised to perform that action';
+    const AUTH_FAILED_CODE = 'authentication_fail';
 
     /** @var array  */
     protected $routes = [];
@@ -110,7 +112,16 @@ class Manager extends \DaveBaker\Core\Base
                                     }
                                 }
 
-                                return $controller->{$method}($assocParams, $request);
+                                if($controller->isAllowed()) {
+                                    return $controller->{$method}($assocParams, $request);
+                                }
+
+                                return new \WP_Error(
+                                    self::AUTH_FAILED_CODE,
+                                    __( self::AUTH_FAILED_STRING),
+                                    array( 'status' => 403 )
+                                );
+
                             }
                         ]
                     );
