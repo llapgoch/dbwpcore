@@ -29,6 +29,23 @@ class Url extends Base
     }
 
     /**
+     * @param string $file
+     * @return string
+     */
+    public function getPluginUrl($file = '', $pluginBase = null)
+    {
+        if($pluginBase === null){
+            $parts = explode(DS, plugin_basename(__FILE__));
+
+            if(count($parts)){
+                $pluginBase = $parts[0];
+            }
+        }
+
+        return trailingslashit(plugins_url()) . $pluginBase . "/" . ltrim($file, "/");
+    }
+
+    /**
      * @param $endpoint
      * @param array $params
      * @param bool $includeNonce

@@ -41,9 +41,19 @@ class Manager extends \DaveBaker\Core\Base
      */
     public function addRoute(
         $route,
-        $controllerClass
+        $controllerClass,
+        $args = []
     ) {
-       $this->routes[$route] = $controllerClass;
+
+        if(!isset($args['method'])){
+            $args['methods'] = "GET,POST";
+        }
+
+        $this->routes[$route] = [
+           'controller' => $controllerClass,
+           'args' => $args
+       ];
+
        return $this;
     }
 
@@ -91,9 +101,9 @@ class Manager extends \DaveBaker\Core\Base
      */
     public function registerRoutes()
     {
-        foreach ($this->routes as $route => $controllerClass) {
+        foreach ($this->routes as $route => $routeData) {
             /** @var ControllerInterface $controller */
-            $controller = $this->createAppObject($controllerClass);
+            $controller = $this->createAppObject($routeData['controller']);
 
             if(!$controller instanceof ControllerInterface){
                 throw new Exception(
@@ -109,7 +119,8 @@ class Manager extends \DaveBaker\Core\Base
 
                     register_rest_route(
                         $this->getEndpointNamespace(),
-                        trailingslashit($route) . trailingslashit($actionTag)  . $this->fullParamsRegex , [
+                        trailingslashit($route) . trailingslashit($actionTag)  . $this->fullParamsRegex ,
+                        array_merge_recursive([
                             'callback' => function(\WP_REST_Request $request) use ($controller, $method){
                                 $params = $request->get_params();
                                 $assocParams = [];
@@ -134,7 +145,7 @@ class Manager extends \DaveBaker\Core\Base
                                     $controller->getBlockReplacerData()
                                 );
                             }
-                        ]
+                        ], $routeData['args'])
                     );
                 }
             }
