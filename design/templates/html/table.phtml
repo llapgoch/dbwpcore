@@ -7,8 +7,8 @@
     <?php if($this->getHeaders()): ?>
         <thead>
             <tr>
-                <?php foreach($block->getHeaders() as $header): ?>
-                    <th><?php echo $block->escapeHtml($header); ?></th>
+                <?php foreach($block->getHeaders() as $k => $header): ?>
+                    <th class="<?php echo $block->getThClass($k);?>"><?php echo $block->escapeHtml($header); ?></th>
                 <?php endforeach;?>
             </tr>
         </thead>
@@ -16,7 +16,7 @@
             <?php foreach($block->getRecords() as $record): ?>
             <tr>
                 <?php foreach($block->getHeaderKeys() as $k => $header): ?>
-                    <td><?php echo $this->escapeHtml($record->getOutputData($header), $header); ?></td>
+                    <td class="<?php echo $block->getTdClass($k);?>"><?php echo $this->escapeHtml($record->getOutputData($header), $header); ?></td>
                 <?php endforeach; ?>
             </tr>
             <?php endforeach; ?>

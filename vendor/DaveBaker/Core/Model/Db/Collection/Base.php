@@ -47,6 +47,7 @@ abstract class Base extends \DaveBaker\Core\Base
     /**
      * @return $this
      * @throws \DaveBaker\Core\Object\Exception
+     * @throws \Zend_Db_Adapter_Exception
      */
     protected function initSelect()
     {
@@ -61,6 +62,7 @@ abstract class Base extends \DaveBaker\Core\Base
     /**
      * @return \Zend_Db_Select
      * @throws \DaveBaker\Core\Object\Exception
+     * @throws \Zend_Db_Adapter_Exception
      */
     public function getSelect(){
         $this->initSelect();
@@ -95,6 +97,7 @@ abstract class Base extends \DaveBaker\Core\Base
      * @param $spec
      * @return $this
      * @throws \DaveBaker\Core\Object\Exception
+     * @throws \Zend_Db_Adapter_Exception
      */
     public function order($spec)
     {
@@ -114,6 +117,7 @@ abstract class Base extends \DaveBaker\Core\Base
      * @param null $type
      * @return $this
      * @throws \DaveBaker\Core\Object\Exception
+     * @throws \Zend_Db_Adapter_Exception
      */
     public function where($cond, $value = null, $type = null)
     {
@@ -123,13 +127,14 @@ abstract class Base extends \DaveBaker\Core\Base
     }
 
 
-        /**
+    /**
      * @param $name
      * @param $cond
      * @param string $cols
      * @param null $schema
      * @return $this
      * @throws \DaveBaker\Core\Object\Exception
+     * @throws \Zend_Db_Adapter_Exception
      */
     public function joinLeft($name, $cond, $cols = \Zend_Db_Select::SQL_WILDCARD, $schema = null)
     {
@@ -148,6 +153,7 @@ abstract class Base extends \DaveBaker\Core\Base
      * @param null $schema
      * @return $this
      * @throws \DaveBaker\Core\Object\Exception
+     * @throws \Zend_Db_Adapter_Exception
      */
     public function joinRight($name, $cond, $cols = \Zend_Db_Select::SQL_WILDCARD, $schema = null)
     {
@@ -166,6 +172,7 @@ abstract class Base extends \DaveBaker\Core\Base
      * @param null $schema
      * @return $this
      * @throws \DaveBaker\Core\Object\Exception
+     * @throws \Zend_Db_Adapter_Exception
      */
     public function join($name, $cond, $cols = self::SQL_WILDCARD, $schema = null)
     {
@@ -256,6 +263,7 @@ abstract class Base extends \DaveBaker\Core\Base
      * @return $this
      * @throws \DaveBaker\Core\Event\Exception
      * @throws \DaveBaker\Core\Object\Exception
+     * @throws \Zend_Db_Adapter_Exception
      */
     public function reset()
     {
@@ -270,9 +278,14 @@ abstract class Base extends \DaveBaker\Core\Base
 
     /**
      * @return array
+     * @throws \DaveBaker\Core\Db\Exception
+     * @throws \DaveBaker\Core\Event\Exception
+     * @throws \DaveBaker\Core\Object\Exception
+     * @throws \Zend_Db_Adapter_Exception
      */
     public function getItems()
     {
+        $this->load();
         return $this->items;
     }
 
@@ -306,6 +319,7 @@ abstract class Base extends \DaveBaker\Core\Base
      * @throws \DaveBaker\Core\Db\Exception
      * @throws \DaveBaker\Core\Event\Exception
      * @throws \DaveBaker\Core\Object\Exception
+     * @throws \Zend_Db_Adapter_Exception
      */
     public function load()
     {
@@ -337,6 +351,7 @@ abstract class Base extends \DaveBaker\Core\Base
      * @throws \DaveBaker\Core\Db\Exception
      * @throws \DaveBaker\Core\Event\Exception
      * @throws \DaveBaker\Core\Object\Exception
+     * @throws \Zend_Db_Adapter_Exception
      */
     public function firstItem()
     {
@@ -354,6 +369,7 @@ abstract class Base extends \DaveBaker\Core\Base
      * @throws \DaveBaker\Core\Db\Exception
      * @throws \DaveBaker\Core\Event\Exception
      * @throws \DaveBaker\Core\Object\Exception
+     * @throws \Zend_Db_Adapter_Exception
      */
     public function getAllIds()
     {
@@ -371,6 +387,7 @@ abstract class Base extends \DaveBaker\Core\Base
      * @throws \DaveBaker\Core\Db\Exception
      * @throws \DaveBaker\Core\Event\Exception
      * @throws \DaveBaker\Core\Object\Exception
+     * @throws \Zend_Db_Adapter_Exception
      *
      * Returns all values from models with a particular key
      */
