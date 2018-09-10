@@ -47,6 +47,8 @@ class App
     protected $apiManager;
     /** @var bool  */
     protected $applicationInitialised = false;
+    /** @var string  */
+    protected $scriptPrefix = 'dbwpcore_';
 
     public function __construct(
         $namespace,
@@ -97,6 +99,29 @@ class App
     public static function registerApp($namespace, App $app)
     {
         self::$apps[$namespace] = $app;
+    }
+
+    /**
+     * @throws Object\Exception
+     */
+    protected function addScripts()
+    {
+        $urlHelper = $this->getHelper('Url');
+
+        wp_enqueue_script(
+            "{$this->scriptPrefix}block_replacer",
+            $urlHelper->getPluginUrl('assets/vendor/dbwpcore/js/block-replacer.js'),
+            ['jquery']
+        );
+
+        wp_enqueue_script("{$this->scriptPrefix}block_replacer");
+
+        wp_register_script(
+            "{$this->scriptPrefix}table_updater",
+            $urlHelper->getPluginUrl('assets/vendor/dbwpcore/js/table.updater.widget.js'),
+            ['jquery', 'jquery-ui-widget']
+        );
+
     }
 
     /**
@@ -157,6 +182,8 @@ class App
         }
 
         $this->applicationInitialised = true;
+
+        $this->addScripts();
 
         $this->getHandleManager()->registerHandles();
         $this->getMain()->registerApiActions();

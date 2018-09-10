@@ -30,6 +30,13 @@ class Element
         ],
         'elementAttributes' => [
             'textarea' => []
-        ]
+        ],
+        'sortableThClass' => 'sortable',
+        'sortableThAscClass' => 'sort-asc',
+        'sortableThDescClass' => 'sort-desc',
+        'sortableTableClass' => 'table-sortable',
+        'sortableThAlphaClass' => 'sort-alpha',
+        'sortableTableJsClass' => 'js-table-updater',
+        'sortableThJsClass' => 'js-is-sortable'
     ];
 }

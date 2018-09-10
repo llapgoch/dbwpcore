@@ -26,8 +26,6 @@ class Base extends \DaveBaker\Core\Base
         $this->checkAllowed();
         $this->fireEvent('predispatch_before');
 
-        $this->addScripts();
-
         $this->_preDispatch();
         $this->fireEvent('predispatch_after');
         return $this;
@@ -166,12 +164,6 @@ class Base extends \DaveBaker\Core\Base
         }
 
         return $this;
-    }
-
-    protected function addScripts()
-    {
-        wp_enqueue_script("dbwpcore_block_replacer", $this->getUrlHelper()->getPluginUrl('assets/vendor/dbwpcore/js/block-replacer.js'), ['jquery']);
-        wp_enqueue_script('dbwpcore_block_replacer');
     }
 
     /**
