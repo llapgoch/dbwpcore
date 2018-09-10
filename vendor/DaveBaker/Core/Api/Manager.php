@@ -10,6 +10,7 @@ class Manager extends \DaveBaker\Core\Base
     const ROUTE_VERSION = 'v1';
     const NUM_PARAMETERS = 15;
     const ENDPOINT_NAMESPACE_SUFFIX = 'api';
+    const WP_REST_NONCE_ID = 'wp_rest';
 
     /** @var array  */
     protected $routes = [];
@@ -51,8 +52,9 @@ class Manager extends \DaveBaker\Core\Base
      * @return string
      * @throws \DaveBaker\Core\Object\Exception
      */
-    public function getUrl($endpoint, $params = [])
+    public function getUrl($endpoint, $params = [], $includeNonce = true)
     {
+        $restParams = [];
         $paramString = '';
         $helper = $this->getUtilHelper();
 
@@ -60,7 +62,16 @@ class Manager extends \DaveBaker\Core\Base
             $paramString .= $helper->escAttr($k) . "/" . $helper->escAttr($param);
         }
 
-        return $this->getEndpointNamespace() . "/" . trim($endpoint, '/') . "/" . $paramString;
+        $url = get_rest_url(
+            null,
+            $this->getEndpointNamespace() . "/" . trim($endpoint, '/') . "/" . $paramString
+        );
+
+        if($includeNonce){
+            $url = wp_nonce_url($url, self::WP_REST_NONCE_ID);
+        }
+
+        return $url;
     }
 
     /**

@@ -30,13 +30,14 @@ class Url extends Base
 
     /**
      * @param $endpoint
-     * @param $params
+     * @param array $params
+     * @param bool $includeNonce
      * @return string
      * @throws \DaveBaker\Core\Object\Exception
      */
-    public function getApiUrl($endpoint, $params)
+    public function getApiUrl($endpoint, $params = [], $includeNonce = true)
     {
-        return $this->getApp()->getApiManager()->getUrl($endpoint, $params);
+        return $this->getApp()->getApiManager()->getUrl($endpoint, $params, $includeNonce);
     }
 
     /**
