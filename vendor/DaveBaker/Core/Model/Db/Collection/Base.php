@@ -407,7 +407,7 @@ abstract class Base extends \DaveBaker\Core\Base
     /**
      * @return $this
      */
-    protected function resetItems()
+    public function resetItems()
     {
         $this->items = [];
         return $this;

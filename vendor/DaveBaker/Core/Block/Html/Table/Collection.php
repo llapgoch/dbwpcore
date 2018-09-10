@@ -29,7 +29,42 @@ class Collection
 
         $this->collection = $records;
 
-        parent::setRecords($records->getItems());
+        return $this;
+    }
+
+    /**
+     * @return array
+     * @throws \DaveBaker\Core\Db\Exception
+     * @throws \DaveBaker\Core\Event\Exception
+     * @throws \DaveBaker\Core\Object\Exception
+     * @throws \Zend_Db_Adapter_Exception
+     */
+    public function getRecords()
+    {
+        return $this->collection->getItems();
+    }
+
+    /**
+     * @param $column
+     * @param string $dir
+     * @return $this|\DaveBaker\Core\Block\Html\Table
+     * @throws Exception
+     * @throws \DaveBaker\Core\Db\Exception
+     * @throws \DaveBaker\Core\Event\Exception
+     * @throws \DaveBaker\Core\Object\Exception
+     * @throws \Zend_Db_Adapter_Exception
+     */
+    public function setColumnOrder($column, $dir = 'ASC')
+    {
+        parent::setColumnOrder($column, $dir);
+        $this->collection->resetItems();
+
+        if($this->collection){
+            $this->collection->order($this->orderColumn . " " . $this->orderDir);
+        }
+
+        $this->setRecords($this->collection);
+
         return $this;
     }
 }

@@ -12,6 +12,9 @@ use DaveBaker\Core\Definitions\Table as TableDefinition;
 class Table extends Base
 {
     const SORTABLE_COLUMNS_DATA_KEY = 'sortable_columns';
+    const ORDER_DESC = 'DESC';
+    const ORDER_ASC = 'ASC';
+
     /** @var array  */
     protected $headers = [];
     /** @var array  */
@@ -39,14 +42,13 @@ class Table extends Base
      */
     public function setColumnOrder($column, $dir = 'ASC')
     {
-        if(!in_array($column, $this->headers)){
+        if(!in_array($column, array_keys($this->headers))){
             throw new Exception('Column does not exist');
         }
 
         $this->orderColumn = $column;
-        $this->orderDir = $dir;
+        $this->orderDir = strtoupper($dir);
 
-        $this->getRecords()->order($this->orderColumn . " " . $this->orderDir);
         return $this;
     }
 
@@ -84,6 +86,8 @@ class Table extends Base
         $classes = [];
 
         if(isset($columns[$header])){
+            $ascClass = $this->getConfig()->getConfigValue(TableDefinition::CONFIG_SORTABLE_TH_ASC_CLASS);
+            $descClass = $this->getConfig()->getConfigValue(TableDefinition::CONFIG_SORTABLE_TH_DESC_CLASS);
             $classes[] = $this->getConfig()->getConfigValue(TableDefinition::CONFIG_SORTABLE_TH_CLASS);
 
             if(in_array(TableDefinition::HEADER_SORTABLE_ALPHA, $columns[$header])){
@@ -95,10 +99,18 @@ class Table extends Base
             }
 
             if(in_array( TableDefinition::HEADER_SORTABLE_ASC, $columns[$header])){
-                $classes[] = $this->getConfig()->getConfigValue(TableDefinition::CONFIG_SORTABLE_TH_ASC_CLASS);
+                $classes[] = $ascClass;
             } else {
                 if (in_array(TableDefinition::HEADER_SORTABLE_DESC, $columns[$header])) {
-                    $classes[] = $this->getConfig()->getConfigValue(TableDefinition::CONFIG_SORTABLE_TH_DESC_CLASS);
+                    $classes[] = $descClass;
+                }
+            }
+
+            if($this->orderColumn == $header){
+                if($this->orderDir == self::ORDER_ASC){
+                    $classes[] = $ascClass;
+                }else{
+                    $classes[] = $descClass;
                 }
             }
         }

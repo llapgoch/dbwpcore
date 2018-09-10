@@ -86,7 +86,7 @@
 					method: 'POST',
 					data: this.getUpdateData(),
 					complete: function(request){
-						if(request.status !== 200){
+						if(request.status == 200){
 							initialise();
 						}
 					},
