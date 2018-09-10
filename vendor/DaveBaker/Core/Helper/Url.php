@@ -29,6 +29,17 @@ class Url extends Base
     }
 
     /**
+     * @param $endpoint
+     * @param $params
+     * @return string
+     * @throws \DaveBaker\Core\Object\Exception
+     */
+    public function getApiUrl($endpoint, $params)
+    {
+        return $this->getApp()->getApiManager()->getUrl($endpoint, $params);
+    }
+
+    /**
      * @param string $pageIdentidier
      * @param array $params
      * @return false|string

@@ -118,10 +118,13 @@ class App
             This may need adding to
             TODO: ADD THIS TO ACTION ON REST CALLS
         */
-        add_action('wp', function(){
+        add_action('rest_api_init', function(){
             $this->initApplication();
         });
 
+        add_action('wp', function(){
+            $this->initApplication();
+        });
 
         add_action('login_init', function(){
             $this->initApplication();
@@ -150,6 +153,7 @@ class App
         $this->getMain()->registerControllers();
         $this->getMain()->registerLayouts();
 
+        $this->getApiManager()->registerRoutes();
         $this->getContollerManager()->preDispatch();
         $this->getLayoutManager()
             ->runLayouts()

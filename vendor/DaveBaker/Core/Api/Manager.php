@@ -8,7 +8,8 @@ namespace DaveBaker\Core\Api;
 class Manager extends \DaveBaker\Core\Base
 {
     const ROUTE_VERSION = 'v1';
-    const NUM_PARAMETERS = 10;
+    const NUM_PARAMETERS = 15;
+    const ENDPOINT_NAMESPACE_SUFFIX = 'api';
 
     /** @var array  */
     protected $routes = [];
@@ -16,7 +17,8 @@ class Manager extends \DaveBaker\Core\Base
     protected $paramsRegex = "?(?P<key{{key}}>[^/]+)?/?(?P<value{{value}}>[^/]+)?/";
     /** @var string  */
     protected $fullParamsRegex = '';
-    protected $namespaceCode = 'api';
+    /** @var string  */
+    protected $namespaceCode = 'rest';
 
     /**
      * @return \DaveBaker\Core\Base|void
@@ -28,40 +30,51 @@ class Manager extends \DaveBaker\Core\Base
         for($i = 1; $i <= self::NUM_PARAMETERS; $i++){
             $this->fullParamsRegex .= str_replace(['{{key}}', '{{value}}'], [$i, $i], $this->paramsRegex);
         }
-
-        $this->addEvents();
     }
 
     /**
+     * @param $route
+     * @param $controllerClass
      * @return $this
-     */
-    protected function addEvents()
-    {
-        add_action( 'rest_api_init', function () {
-            $this->registerRoutes();
-        });
-
-        return $this;
-    }
-    /**
-     * @param string $route
-     * @param string $controller
-     * @return $this
-     * @throws \DaveBaker\Core\Object\Exception
      */
     public function addRoute(
         $route,
         $controllerClass
     ) {
-
        $this->routes[$route] = $controllerClass;
        return $this;
     }
 
     /**
+     * @param $endpoint
+     * @param array $params
+     * @return string
      * @throws \DaveBaker\Core\Object\Exception
      */
-    protected function registerRoutes()
+    public function getUrl($endpoint, $params = [])
+    {
+        $paramString = '';
+        $helper = $this->getUtilHelper();
+
+        foreach($params as $k => $param){
+            $paramString .= $helper->escAttr($k) . "/" . $helper->escAttr($param);
+        }
+
+        return $this->getEndpointNamespace() . "/" . trim($endpoint, '/') . "/" . $paramString;
+    }
+
+    /**
+     * @return string
+     */
+    public function getEndpointNamespace()
+    {
+        return $this->getNamespacedOption(self::ENDPOINT_NAMESPACE_SUFFIX) . "/" . self::ROUTE_VERSION;
+    }
+
+    /**
+     * @throws \DaveBaker\Core\Object\Exception
+     */
+    public function registerRoutes()
     {
         foreach ($this->routes as $route => $controllerClass) {
             $controller = $this->createAppObject($controllerClass);
@@ -71,8 +84,9 @@ class Manager extends \DaveBaker\Core\Base
                     $actionTag = $this->getUtilHelper()->camelToUnderscore($method);
                     $actionTag = preg_replace("/_action/", "", $actionTag);
 
+
                     register_rest_route(
-                        $this->getNamespacedOption('') . "/" . self::ROUTE_VERSION,
+                        $this->getEndpointNamespace(),
                         trailingslashit($route) . trailingslashit($actionTag)  . $this->fullParamsRegex , [
                             'callback' => function(\WP_REST_Request $request) use ($controller, $method){
                                 $params = $request->get_params();
