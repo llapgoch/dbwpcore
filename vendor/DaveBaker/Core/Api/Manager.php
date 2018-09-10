@@ -1,6 +1,9 @@
 <?php
 
 namespace DaveBaker\Core\Api;
+
+use DaveBaker\Core\Controller\ControllerInterface;
+
 /**
  * Class Manager
  * @package DaveBaker\Core\Page
@@ -85,12 +88,19 @@ class Manager extends \DaveBaker\Core\Base
     }
 
     /**
+     * @throws Exception
      * @throws \DaveBaker\Core\Object\Exception
      */
     public function registerRoutes()
     {
         foreach ($this->routes as $route => $controllerClass) {
             $controller = $this->createAppObject($controllerClass);
+
+            if(!$controller instanceof ControllerInterface){
+                throw new Exception(
+                    'API Controller must implement ControllerInterface, preferably extend \DaveBaker\Core\Api\Controller'
+                );
+            }
 
             foreach(get_class_methods($controller) as $method) {
                 if (preg_match("/Action/", $method)) {
@@ -113,7 +123,11 @@ class Manager extends \DaveBaker\Core\Base
                                 }
 
                                 if($controller->isAllowed()) {
-                                    return $controller->{$method}($assocParams, $request);
+                                    $controller->preDispatch();
+                                    $res = $controller->{$method}($assocParams, $request);
+                                    $controller->postDispatch();
+
+                                    return $res;
                                 }
 
                                 return new \WP_Error(

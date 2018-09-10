@@ -1,9 +1,9 @@
 <?php
 
-namespace DaveBaker\Core\Route;
+namespace DaveBaker\Core\Api;
 /**
  * Class Exception
- * @package DaveBaker\Core\Route
+ * @package DaveBaker\Core\Api
  */
 class Exception extends \Exception
 {
