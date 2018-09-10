@@ -26,7 +26,8 @@ class Element
             'td' => '',
             'a' => '',
             'p' => '',
-            'button-anchor' => ''
+            'button-anchor' => '',
+            'paginator' => 'pagination pagination-xl nomargin pagination-custom'
         ],
         'elementAttributes' => [
             'textarea' => []

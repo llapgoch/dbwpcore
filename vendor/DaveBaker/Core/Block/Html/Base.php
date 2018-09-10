@@ -53,10 +53,20 @@ abstract class Base extends \DaveBaker\Core\Block\Template
      */
     public function getDefaultClassesForElement()
     {
+        return $this->getDefaultClassesForIdentifiers($this->getTagIdentifiers());
+    }
+
+    /**
+     * @param $identifiers
+     * @return array
+     * @throws \DaveBaker\Core\Object\Exception
+     */
+    public function getDefaultClassesForIdentifiers($identifiers)
+    {
         $classes = [];
         $defaultClasses = $this->getConfig()->getConfigValue('elementClasses');
 
-        foreach($this->tagIdentifiers as $tagIdentifier){
+        foreach($identifiers as $tagIdentifier){
             if(isset($defaultClasses[$tagIdentifier])){
                 $classes[] = $defaultClasses[$tagIdentifier];
             }
@@ -66,19 +76,32 @@ abstract class Base extends \DaveBaker\Core\Block\Template
     }
 
     /**
+     * @param $identifiers
+     * @return array
+     * @throws \DaveBaker\Core\Object\Exception
+     */
+    public function getDefaultAttributesForIdentifiers($identifiers)
+    {
+        $attributes = [];
+        $identifiers = (array)$identifiers;
+        $defaultAttributes = $this->getConfig()->getConfigValue('elementAttributes');
+
+        foreach($identifiers as $identifier){
+            if(isset($defaultAttributes[$identifier]) && is_array($defaultAttributes[$identifier])){
+                $attributes = array_merge($attributes, $defaultAttributes[$identifier]);
+            }
+        }
+
+        return $attributes;
+    }
+
+    /**
      * @return mixed
      * @throws \DaveBaker\Core\Object\Exception
      */
     public function getDefaultAttributesForElement()
     {
-        $attributes = [];
-        $defaultAttributes = $this->getConfig()->getConfigValue('elementAttributes');
-
-        foreach($this->tagIdentifiers as $tagIdentifier){
-            if(isset($defaultAttributes[$tagIdentifier]) && is_array($defaultAttributes[$tagIdentifier])){
-                $attributes = array_merge($attributes, $defaultAttributes[$tagIdentifier]);
-            }
-        }
+        $attributes = $this->getDefaultAttributesForIdentifiers($this->getTagIdentifiers());
 
         if($this->getIsReplacerBlock()){
             $attributes["data-" . ControllerInterface::BLOCK_REPLACER_KEY] = $this->getName();
@@ -86,7 +109,6 @@ abstract class Base extends \DaveBaker\Core\Block\Template
 
         return $attributes;
     }
-
 
     /**
      * @return ConfigInterface|mixed

@@ -269,9 +269,7 @@ class Manager extends \DaveBaker\Core\Base
     {
         global $GLOBALS;
 
-        if(!is_array($pages)){
-            $pages = [$pages];
-        }
+        $pages = (array)$pages;
 
         if(!isset($GLOBALS['pagenow'])){
             return false;
