@@ -56,14 +56,17 @@ abstract class Base
     }
 
     /**
-     * @param BlockInterface $block
-     * @throws \DaveBaker\Core\Object\Exception
+     * @param $blocks
      * @return $this
+     * @throws \DaveBaker\Core\Object\Exception
      */
-    protected function addReplacerBlock(
-        BlockInterface $block
-    ){
-        $this->getReplacerBlockList()->add($block);
+    protected function addReplacerBlock($blocks)
+    {
+        if(!is_array($blocks)){
+            $blocks = [$blocks];
+        }
+
+        $this->getReplacerBlockList()->add($blocks);
         return $this;
     }
 

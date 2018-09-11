@@ -36,8 +36,16 @@ class Paginator
      */
     public function setPage($page)
     {
-        $this->page = $page;
+        $this->page = max(1, min((int)$page, $this->getTotalPages()));
         return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getOffset()
+    {
+        return ($this->getPage() - 1) * $this->getRecordsPerPage();
     }
 
     /**
@@ -82,6 +90,21 @@ class Paginator
     public function getTotalPages()
     {
         return ceil($this->getTotalRecords() / $this->getRecordsPerPage());
+    }
+
+    public function getItemHref($i)
+    {
+        return "#";
+    }
+
+    public function getNextButtonHref()
+    {
+        return "#";
+    }
+
+    public function getPreviousButtonHref()
+    {
+        return "#";
     }
 
 }

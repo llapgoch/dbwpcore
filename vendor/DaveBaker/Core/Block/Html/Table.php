@@ -27,11 +27,34 @@ class Table extends Base
     protected $orderColumn = '';
     /** @var string  */
     protected $orderDir = 'ASC';
+    /** @var \DaveBaker\Core\Block\Components\Paginator */
+    protected $paginator;
 
+    /**
+     * @return Base|void
+     */
     protected function init()
     {
         $this->setTemplate('html/table.phtml');
         $this->addTagIdentifier('table');
+    }
+
+    /**
+     * @param $paginator
+     * @return $this
+     */
+    public function setPaginator($paginator)
+    {
+        $this->paginator = $paginator;
+        return $this;
+    }
+
+    /**
+     * @return \DaveBaker\Core\Block\Components\Paginator
+     */
+    public function getPaginator()
+    {
+        return $this->paginator;
     }
 
     /**
@@ -77,8 +100,6 @@ class Table extends Base
 
         parent::_preRender();
     }
-
-
 
     /**
      * @param $header
@@ -150,9 +171,7 @@ class Table extends Base
      */
     public function addSortableColumns($columns)
     {
-        if(!is_array($columns)){
-            $columns = [$columns];
-        }
+        $columns = (array)$columns;
 
         $this->setData(self::SORTABLE_COLUMNS_DATA_KEY,
             array_merge_recursive($columns, $this->getSortableColumns())
@@ -205,9 +224,7 @@ class Table extends Base
      */
     public function removeHeader($headers)
     {
-        if(!is_array($headers)){
-            $headers = [$headers];
-        }
+        $headers = (array)$headers;
 
         foreach($headers as $header) {
             if (isset($this->headers[$header])) {

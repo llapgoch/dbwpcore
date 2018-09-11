@@ -16,17 +16,33 @@ abstract class Base extends \DaveBaker\Core\Block\Template
     protected $config;
     /** @var bool  */
     protected $isReplacerBlock = false;
+    /** @var array  */
+    protected $jsDataItems = [];
+    /** @var string  */
+    protected $jsDataKey = 'data-js-data';
 
     /**
      * @return \DaveBaker\Core\Block\Template
      * @throws \DaveBaker\Core\Object\Exception
      */
-    protected function _preDispatch()
+    protected function _preRender()
     {
+        parent::_preRender();
+
         $this->addClass($this->getDefaultClassesForElement());
         $this->addAttribute($this->getDefaultAttributesForElement());
+    }
 
-        return parent::_preDispatch();
+    /**
+     * @param $items
+     * @return $this
+     *
+     * Add items to be output as attribute defined in jsDataKey
+     */
+    public function addJsDataItems($items)
+    {
+        $this->jsDataItems = array_merge_recursive($this->jsDataItems, $items);
+        return $this;
     }
 
     /**
@@ -105,6 +121,10 @@ abstract class Base extends \DaveBaker\Core\Block\Template
 
         if($this->getIsReplacerBlock()){
             $attributes["data-" . ControllerInterface::BLOCK_REPLACER_KEY] = $this->getName();
+        }
+
+        if($this->jsDataItems){
+            $attributes[$this->jsDataKey] = json_encode($this->jsDataItems);
         }
 
         return $attributes;

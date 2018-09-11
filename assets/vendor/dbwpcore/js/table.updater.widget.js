@@ -6,38 +6,88 @@
 	$.widget('dbwpcore.tableUpdater', {
 		// TODO: Make options available from Table Definitions file so we're not duplicating
 		options: {
-			tableUpdaterEndpointDataKey: 'tableUpdaterEndpoint',
+			namespace: 'dbwpcoretableupdater',
+			jsDataKey: 'jsData',
+			endpointDataKey: 'endpoint',
 			elementColumnIdDataKey: 'columnId',
 			sortableColumnDataKey: 'sortableColumn',
+			paginatorSelectorDataKey: 'paginatorSelector',
 			columnIdDataKey: 'columnId',
 			sortableHeaderSelector: '.js-is-sortable',
+			paginatorPreviousSelector: 'js-paginator-previous-button',
+			paginatorNextSelector: '.js-paginator-next-button',
+			paginatorPageButtonSelector: '.js-paginator-page-button',
+			paginatorPageDataKey: 'pageId',
 			sortableAscClass: 'sort-asc',
 			sortableDescClass: 'sort-desc',
 			updateErrorMessage: 'An error occurred in updating the table'
 		},
 
-		updateUrl: '',
+		jsData: null,
+		endpoint: '',
 		request: null,
+		$paginator: null,
 
 		sortColumn: '',
 		sortDirection: '',
+		pageNumber: 1,
 
 		_create: function () {
 			this._super();
 
-			if(!this.element.data(this.options.tableUpdaterEndpointDataKey)){
+			this.jsData = this.element.data(this.options.jsDataKey);
+
+			if(!this.jsData){
+				throw 'No js-data params have been set';
+			}
+
+			if(!this.jsData[this.options.endpointDataKey]){
 				throw 'Table must have an updater endpoint in its data array'
 			}
 
-			this.updateUrl = this.element.data(this.options.tableUpdaterEndpointDataKey);
+			if(this.jsData[this.options.jsDataKey]){
+				this.pageNumber = parseInt(this.jsData(this.options.jsDataKey));
+			}
+
+			var orderSettings = this.jsData['order'];
+
+			if(orderSettings['dir']){
+				this.sortDirection = orderSettings['dir'];
+			}
+
+			if(orderSettings['column']){
+				this.sortColumn = orderSettings['column'];
+			}
+
+			this.endpoint = this.jsData[this.options.endpointDataKey];
+			this.$paginator = $(this.jsData[this.options.paginatorSelectorDataKey]);
+
+			if(!this.$paginator.size()){
+				this.$paginator = null;
+			}
+
 			this.addEvents();
 		},
 
+		/**
+		 * @param event
+		 * @returns {string}
+		 */
+		namespaceEvent: function(event)
+		{
+			return event + "." + event;
+		},
+
+		/**
+		 * @returns {dbwpcore.tableUpdater}
+		 */
 		addEvents: function() {
 			var events = {},
 				self = this;
 
 			events['click ' + this.options.sortableHeaderSelector] = function(ev){
+				ev.preventDefault();
+
 				var $target = $(ev.target),
 					header = $target.data(self.options.elementColumnIdDataKey);
 
@@ -66,18 +116,39 @@
 				self.update();
 			};
 
+			if(this.$paginator){
+				console.log(this.options.paginatorPageButtonSelector);
+				$(this.options.paginatorPageButtonSelector, this.$paginator).on(
+					this.namespaceEvent('click'), function(ev){
+						ev.preventDefault();
+						var $this = $(ev.target);
+						self.pageNumber = $this.data(self.options.paginatorPageDataKey);
+						self.update();
+					}
+				)
+			}
+
 			this._on(events);
+			return this;
 		},
 
+		/**
+		 *
+		 * @returns {{order: {dir: (string|*), column: string, pageNumber: *}}}
+		 */
 		getUpdateData: function(){
 			return {
 				'order': {
 					'dir' : this.sortDirection,
 					'column': this.sortColumn
-				}
+				},
+				'pageNumber': this.pageNumber
 			}
 		},
 
+		/**
+		 * @returns {dbwpcore.tableUpdater}
+		 */
 		update: function() {
 			var self = this;
 
@@ -90,7 +161,7 @@
 			}
 
 			this.request = $.ajax(
-				this.updateUrl, {
+				this.endpoint, {
 					method: 'POST',
 					data: this.getUpdateData(),
 					complete: function(request){
@@ -103,6 +174,8 @@
 					}
 				}
 			)
+
+			return this;
 		}
 	});
 

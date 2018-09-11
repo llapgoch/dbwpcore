@@ -15,7 +15,7 @@ class Table
     const CONFIG_TABLE_UPDATER_JS_CLASS = 'sortableTableJsClass';
     const CONFIG_SORTABLE_TH_JS_CLASS = 'sortableThJsClass';
 
-    const ELEMENT_DATA_KEY_TABLE_UPDATER_ENDPOINT = 'data-table-updater-endpoint';
+    const ELEMENT_JS_DATA_KEY_TABLE_UPDATER_ENDPOINT = 'endpoint';
     const ELEMENT_DATA_KEY_COLUMN_ID = 'data-column-id';
 
     const HEADER_SORTABLE_ALPHA = 'alpha';

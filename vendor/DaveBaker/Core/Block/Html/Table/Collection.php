@@ -12,14 +12,36 @@ class Collection
     /** @var \DaveBaker\Core\Model\Db\Collection\Base */
     protected $collection;
 
+    protected function _preRender()
+    {
+        if($this->paginator && $this->collection){
+            $this->paginator->setTotalRecords(count($this->collection->getItems()));
+            $this->collection->resetItems();
+            $this->collection->getSelect()->limit(
+                $this->paginator->getRecordsPerPage(),
+                $this->paginator->getOffset()
+            );
+
+            $paginatorClass = $this->getUtilHelper()->createUrlKeyFromText($this->getName() . "__paginator");
+
+            $this->paginator->addClass($paginatorClass);
+            $this->addJsDataItems([
+                "paginatorSelector" => ".{$paginatorClass}",
+                "pageNumber" => $this->paginator->getPage(),
+                "order" => [
+                    "column" => $this->orderColumn,
+                    "dir" => $this->orderDir
+                ]
+            ]);
+        }
+
+        parent::_preRender();
+    }
+
     /**
      * @param $records
      * @return $this|\DaveBaker\Core\Block\Html\Table
      * @throws Exception
-     * @throws \DaveBaker\Core\Db\Exception
-     * @throws \DaveBaker\Core\Event\Exception
-     * @throws \DaveBaker\Core\Object\Exception
-     * @throws \Zend_Db_Adapter_Exception
      */
     public function setRecords($records)
     {
@@ -49,8 +71,6 @@ class Collection
      * @param string $dir
      * @return $this|\DaveBaker\Core\Block\Html\Table
      * @throws Exception
-     * @throws \DaveBaker\Core\Db\Exception
-     * @throws \DaveBaker\Core\Event\Exception
      * @throws \DaveBaker\Core\Object\Exception
      * @throws \Zend_Db_Adapter_Exception
      */

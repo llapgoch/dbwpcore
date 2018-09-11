@@ -1,13 +1,18 @@
 <?php /** @var \DaveBaker\Core\Block\Components\Paginator $block */ ?>
 <ul <?php echo $block->getAttrs();?>>
-    <li <?php echo $block->getPreviousButtonAttrs();?> class="page-item">
-        <a href="<?php echo $block->getPreviousButtonHref();?>" class="page-link"><?php echo __("Previous");?></a></li>
-        <?php for($i = 1; $i <= $this->getTotalPages(); $i++):?>
-            <li <?php echo $this->getItemAttrs($i);?> class="page-item">
-                <a href="<? echo $block->getItemHref($i);?>" class="page-link"><?php echo $i;?></a>
-            </li>
-        <?php endfor; ?>
-    <li <?php echo $block->getNextButtonAttrs();?> class="page-item">
-        <a href="<?php echo $block->getNextButtonHref();?>" class="page-link"><?php echo __("Next");?></a></li>
+    <li>
+        <a href="<?php echo $block->getPreviousButtonHref();?>" class="js-paginator-previous-button">
+            <?php echo __("Previous");?>
+        </a>
+    </li>
+    <?php for($i = 1; $i <= $this->getTotalPages(); $i++):?>
+        <li>
+            <a href="<?php echo $block->getItemHref($i);?>" data-page-id="<?php echo $i;?>" class="js-paginator-page-button"><?php echo $i;?></a>
+        </li>
+    <?php endfor; ?>
+    <li>
+        <a href="<?php echo $block->getNextButtonHref();?>" class="js-paginator-next-button">
+            <?php echo __("Next");?>
+        </a>
     </li>
 </ul>
