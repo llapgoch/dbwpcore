@@ -14,7 +14,7 @@
 			paginatorSelectorDataKey: 'paginatorSelector',
 			columnIdDataKey: 'columnId',
 			sortableHeaderSelector: '.js-is-sortable',
-			paginatorPreviousSelector: 'js-paginator-previous-button',
+			paginatorPreviousSelector: '.js-paginator-previous-button',
 			paginatorNextSelector: '.js-paginator-next-button',
 			paginatorPageButtonSelector: '.js-paginator-page-button',
 			paginatorPageDataKey: 'pageId',
@@ -45,8 +45,8 @@
 				throw 'Table must have an updater endpoint in its data array'
 			}
 
-			if(this.jsData[this.options.jsDataKey]){
-				this.pageNumber = parseInt(this.jsData(this.options.jsDataKey));
+			if(this.jsData['pageNumber']){
+				this.pageNumber = parseInt(this.jsData['pageNumber'], 10);
 			}
 
 			var orderSettings = this.jsData['order'];
@@ -117,18 +117,63 @@
 			};
 
 			if(this.$paginator){
-				console.log(this.options.paginatorPageButtonSelector);
 				$(this.options.paginatorPageButtonSelector, this.$paginator).on(
 					this.namespaceEvent('click'), function(ev){
 						ev.preventDefault();
 						var $this = $(ev.target);
-						self.pageNumber = $this.data(self.options.paginatorPageDataKey);
-						self.update();
+						self.gotoPage($this.data(self.options.paginatorPageDataKey));
 					}
-				)
+				);
+
+				$(this.options.paginatorPreviousSelector, this.$paginator).on(
+					this.namespaceEvent('click'), function(ev){
+						ev.preventDefault();
+						self.gotoPreviousPage();
+					}
+				);
+
+				$(this.options.paginatorNextSelector, this.$paginator).on(
+					this.namespaceEvent('click'), function(ev){
+						ev.preventDefault();
+						self.gotoNextPage();
+					}
+				);
 			}
 
 			this._on(events);
+			return this;
+		},
+
+		/**
+		 * @param page
+		 * @returns {dbwpcore.tableUpdater}
+		 */
+		gotoPage: function(page) {
+			var pageNumber = Math.max(1, page);
+
+			if(pageNumber !== this.pageNumber){
+				this.pageNumber = pageNumber;
+				this.update();
+			}
+
+			return this;
+		},
+
+		/**
+		 * @returns {dbwpcore.tableUpdater}
+		 */
+		gotoPreviousPage: function()
+		{
+			this.gotoPage(this.pageNumber - 1);
+			return this;
+		},
+
+		/**
+		 * @returns {dbwpcore.tableUpdater}
+		 */
+		gotoNextPage: function ()
+		{
+			this.gotoPage(this.pageNumber + 1);
 			return this;
 		},
 

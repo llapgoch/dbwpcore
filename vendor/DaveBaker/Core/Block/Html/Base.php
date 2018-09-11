@@ -14,7 +14,10 @@ abstract class Base extends \DaveBaker\Core\Block\Template
     protected $tagIdentifiers = [];
     /** @var ConfigInterface */
     protected $config;
-    /** @var bool  */
+    /**
+     * @var bool
+     * Replacer blocks are automatically picked up and replaced when performing JS requests
+     */
     protected $isReplacerBlock = false;
     /** @var array  */
     protected $jsDataItems = [];

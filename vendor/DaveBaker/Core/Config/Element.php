@@ -32,6 +32,8 @@ class Element
         'elementAttributes' => [
             'textarea' => []
         ],
+        'generalDisabledClass' => 'disabled',
+        'generalActiveClass' => 'active',
         'sortableThClass' => 'sortable',
         'sortableThAscClass' => 'sort-asc',
         'sortableThDescClass' => 'sort-desc',

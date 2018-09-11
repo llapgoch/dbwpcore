@@ -31,6 +31,34 @@ class Paginator
     }
 
     /**
+     * @return string
+     * @throws \DaveBaker\Core\Object\Exception
+     */
+    public function getPreviousButtonClass()
+    {
+        return $this->getPage() == 1 ? $this->getConfig()->getConfigValue('generalDisabledClass') : "";
+    }
+
+    /**
+     * @return string
+     * @throws \DaveBaker\Core\Object\Exception
+     */
+    public function getNextButtonClass()
+    {
+        return $this->getPage() == $this->getTotalPages() ? $this->getConfig()->getConfigValue('generalDisabledClass') : "";
+    }
+
+    /**
+     * @param $pageNumber
+     * @return string
+     * @throws \DaveBaker\Core\Object\Exception
+     */
+    public function getLiItemClass($pageNumber)
+    {
+        return $this->getPage() == $pageNumber ? $this->getConfig()->getConfigValue('generalActiveClass') : "";
+    }
+
+    /**
      * @param int $page
      * @return $this
      */
