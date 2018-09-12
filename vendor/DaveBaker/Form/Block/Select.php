@@ -17,13 +17,18 @@ class Select
 
     protected $hiddenInput;
 
+    protected function _construct()
+    {
+        $this->setElementType('select');
+        return parent::_construct();
+    }
+
     /**
      * @return Base|void
      */
     protected function init()
     {
         $this->setTemplate('form/select.phtml');
-        $this->setElementType('select');
         $this->setData('select_options', []);
         $this->setData('show_first_option', true);
     }

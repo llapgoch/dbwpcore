@@ -33,7 +33,7 @@ class Table extends Base
     /**
      * @return Base|void
      */
-    protected function init()
+    protected function _construct()
     {
         $this->setTemplate('html/table.phtml');
         $this->addTagIdentifier('table');

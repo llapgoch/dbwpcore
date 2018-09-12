@@ -15,10 +15,22 @@ class Main extends \DaveBaker\Core\Block\Html\Base
      */
     protected $errors = [];
 
+    /**
+     * @return \DaveBaker\Core\Block\Template|void
+     * @throws \DaveBaker\Core\Object\Exception
+     */
+    protected function _construct()
+    {
+        $this->addTagIdentifier('form-error-message');
+        parent::_construct();
+    }
+
+    /**
+     * @return \DaveBaker\Core\Block\Html\Base|void
+     */
     protected function init()
     {
         $this->setTemplate('form/errors/main.phtml');
-        $this->addTagIdentifier('form-error-message');
     }
 
     /**

@@ -12,12 +12,24 @@ class Input
     /** @var string  */
     public $inputValue = '';
 
+    /**
+     * @return \DaveBaker\Core\Block\Template|void
+     * @throws \DaveBaker\Core\Object\Exception
+     */
+    public function _construct()
+    {
+        $this->setElementType('text');
+        $this->addTagIdentifier('input');
+        parent::_construct();
+    }
+
+    /**
+     * @return \DaveBaker\Form\Block\Base|void
+     */
     protected function init()
     {
         parent::init();
         $this->setTemplate('form/input.phtml');
-        $this->setElementType('text');
-        $this->addTagIdentifier('input');
     }
 
     /**

@@ -8,7 +8,7 @@ namespace DaveBaker\Core\Block\Html;
 class Messages extends Base
 {
 
-    protected function init()
+    protected function _construct()
     {
         $this->setTemplate('html/messages.phtml');
         $this->addTagIdentifier('messages');

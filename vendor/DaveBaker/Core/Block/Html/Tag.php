@@ -7,7 +7,7 @@ class Tag extends Base
     /** @var  */
     protected $tag = 'div';
 
-    protected function init()
+    protected function _construct()
     {
         $this->setTemplate('html/tag.phtml');
     }

@@ -10,9 +10,13 @@ namespace DaveBaker\Form\Block\Input;
  */
 class Submit extends Input
 {
-    public function init()
+    /**
+     * @return \DaveBaker\Core\Block\Template|void
+     * @throws \DaveBaker\Core\Object\Exception
+     */
+    public function _construct()
     {
-        parent::init();
         $this->setElementType('submit');
+        parent::_construct();
     }
 }

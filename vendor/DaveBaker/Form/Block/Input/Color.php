@@ -10,11 +10,13 @@ class Color
     extends Input
     implements \DaveBaker\Form\Block\ValueSetterInterface
 {
-    protected $mainTagName = 'input-checkbox';
-
-    public function init()
+    /**
+     * @return \DaveBaker\Core\Block\Template|void
+     * @throws \DaveBaker\Core\Object\Exception
+     */
+    public function _construct()
     {
-        parent::init();
         $this->setElementType('color');
+        parent::_construct();
     }
 }

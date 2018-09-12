@@ -62,7 +62,6 @@ abstract class Base extends \DaveBaker\Core\Object\Base
             throw new Exception("Block name not set");
         }
 
-        $this->_construct();
 
         // Store this in the data array so that they can be set via form builders
         $this->setData(self::CAPABILITY_DATA_KEY, []);
@@ -75,6 +74,7 @@ abstract class Base extends \DaveBaker\Core\Object\Base
         $this->childBlocks = $this->getBlockManager()->createBlockList()->setUseAsName(true);
 
 
+        $this->_construct();
         $this->fireEvent('create');
         $this->init();
     }

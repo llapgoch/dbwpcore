@@ -15,11 +15,16 @@ class Form extends Base
     /** @var array  */
     protected $valueFormElementsCache = [];
 
+    public function _construct()
+    {
+        $this->addTagIdentifier('form');
+        return parent::_construct();
+    }
+
     protected function init()
     {
         parent::init();
         $this->setTemplate('form/form.phtml');
-        $this->addTagIdentifier('form');
     }
 
     /**

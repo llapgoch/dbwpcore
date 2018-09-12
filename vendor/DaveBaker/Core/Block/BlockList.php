@@ -2,7 +2,9 @@
 
 namespace DaveBaker\Core\Block;
 
-class BlockList implements \IteratorAggregate, \Countable
+class BlockList
+    extends \DaveBaker\Core\Base
+    implements \IteratorAggregate, \Countable
 {
     protected $blocks = [];
     protected $orderedBlocks = [];
@@ -13,12 +15,6 @@ class BlockList implements \IteratorAggregate, \Countable
     protected $app;
     /** @var bool  */
     protected $useAsName = false;
-
-    public function __construct(
-        \DaveBaker\Core\App $app
-    ) {
-        $this->app = $app;
-    }
 
     /**
      * @return \ArrayIterator

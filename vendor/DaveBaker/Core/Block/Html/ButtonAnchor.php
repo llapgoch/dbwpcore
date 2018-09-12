@@ -7,7 +7,7 @@ namespace DaveBaker\Core\Block\Html;
  */
 class ButtonAnchor extends Tag
 {
-    protected function init()
+    protected function _construct()
     {
         $this->setTemplate('html/tag.phtml');
         $this->setTag('a');

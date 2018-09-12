@@ -8,9 +8,13 @@ namespace DaveBaker\Form\Block\Input;
  */
 class Reset extends Input
 {
-    public function init()
+    /**
+     * @return \DaveBaker\Core\Block\Template|void
+     * @throws \DaveBaker\Core\Object\Exception
+     */
+    public function _construct()
     {
-        parent::init();
         $this->setElementType('reset');
+        parent::_construct();
     }
 }

@@ -147,7 +147,7 @@ class Template
     public function addClass($classes)
     {
         if(!is_array($classes)){
-            $classes = [$classes];
+            $classes = explode(" ", $classes);
         }
 
         foreach ($classes as $class){

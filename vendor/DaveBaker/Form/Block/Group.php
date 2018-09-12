@@ -13,10 +13,15 @@ class Group extends Base
     /** @var \DaveBaker\Core\Block\BlockInterface */
     protected $element;
 
+    public function _construct()
+    {
+        $this->addTagIdentifier('form-group');
+        return parent::_construct();
+    }
+
     public function init()
     {
         $this->setTemplate('form/group.phtml');
-        $this->addTagIdentifier('form-group');
         return parent::init();
     }
 

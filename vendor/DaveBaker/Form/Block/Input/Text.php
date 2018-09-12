@@ -10,9 +10,13 @@ class Text
     extends Input
     implements \DaveBaker\Form\Block\ValueSetterInterface
 {
-    public function init()
+    /**
+     * @return \DaveBaker\Core\Block\Template|void
+     * @throws \DaveBaker\Core\Object\Exception
+     */
+    public function _construct()
     {
-        parent::init();
         $this->setElementType('text');
+        parent::_construct();
     }
 }

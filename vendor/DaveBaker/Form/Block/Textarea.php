@@ -10,13 +10,22 @@ class Textarea
     extends Base
     implements ValueSetterInterface
 {
-    /** @var string  */
-    protected $mainTagName = 'textarea';
+    /**
+     * @return \DaveBaker\Core\Block\Template
+     * @throws \DaveBaker\Core\Object\Exception
+     */
+    protected function _construct()
+    {
+        $this->setElementType('textarea');
+        return parent::_construct();
+    }
 
+    /**
+     * @return Base|void
+     */
     protected function init()
     {
         parent::init();
         $this->setTemplate('form/textarea.phtml');
-        $this->setElementType('textarea');
     }
 }

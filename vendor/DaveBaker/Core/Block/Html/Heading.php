@@ -7,7 +7,7 @@ namespace DaveBaker\Core\Block\Html;
  */
 class Heading extends Tag
 {
-    protected function init()
+    protected function _construct()
     {
         $this->setTemplate('html/heading.phtml');
         $this->setTag('h2');

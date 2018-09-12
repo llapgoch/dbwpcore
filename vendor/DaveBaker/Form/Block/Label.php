@@ -9,11 +9,23 @@ namespace DaveBaker\Form\Block;
 class Label extends Base
 {
 
+    /**
+     * @return \DaveBaker\Core\Block\Template
+     * @throws \DaveBaker\Core\Object\Exception
+     */
+    protected function _construct()
+    {
+        $this->setElementType('label');
+        return parent::_construct();
+    }
+
+    /**
+     * @return Base|void
+     */
     protected function init()
     {
         parent::init();
         $this->setTemplate('form/label.phtml');
-        $this->setElementType('label');
     }
 
     /**

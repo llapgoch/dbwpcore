@@ -20,12 +20,11 @@ abstract class Base extends \DaveBaker\Core\Block\Template
      * @return \DaveBaker\Core\Block\Template
      * @throws \DaveBaker\Core\Object\Exception
      */
-    protected function _preRender()
+    protected function _construct()
     {
-        parent::_preRender();
-
         $this->addClass($this->getDefaultClassesForElement());
         $this->addAttribute($this->getDefaultAttributesForElement());
+        parent::_construct();
     }
 
 

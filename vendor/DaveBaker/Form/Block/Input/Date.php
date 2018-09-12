@@ -10,11 +10,14 @@ class Date
     extends Input
     implements \DaveBaker\Form\Block\ValueSetterInterface
 {
-    protected $mainTagName = 'input-date';
 
-    public function init()
+    /**
+     * @return \DaveBaker\Core\Block\Template|void
+     * @throws \DaveBaker\Core\Object\Exception
+     */
+    public function _construct()
     {
-        parent::init();
         $this->setElementType('date');
+        parent::_construct();
     }
 }
