@@ -146,6 +146,11 @@ class App
             TODO: ADD THIS TO ACTION ON REST CALLS
         */
 
+        add_action('init', function(){
+            // Init API Manager to add events
+            $this->initManagers();
+        });
+
         add_action('wp', function(){
             $this->initApplication();
         });
@@ -155,6 +160,11 @@ class App
         });
 
         add_action('rest_api_init', function(){
+            $this->getMain()->registerApiActions();
+            $this->getApiManager()->registerRoutes();
+        });
+
+        add_action('rest_request_before_callbacks', function(){
             $this->initApplication();
         });
 
@@ -186,11 +196,9 @@ class App
         $this->addScripts();
 
         $this->getHandleManager()->registerHandles();
-        $this->getMain()->registerApiActions();
         $this->getMain()->registerControllers();
         $this->getMain()->registerLayouts();
 
-        $this->getApiManager()->registerRoutes();
         $this->getContollerManager()->preDispatch();
         $this->getLayoutManager()
             ->runLayouts()
@@ -249,6 +257,28 @@ class App
         }
 
         return $this->generalConfig;
+    }
+
+    /**
+     * @throws App\Exception
+     * @throws Object\Exception
+     * @return $this
+     */
+    public function initManagers()
+    {
+        $this->getInstallerManager();
+        $this->getEventManager();
+        $this->getHandleManager();
+        $this->getContollerManager();
+        $this->getApiManager();
+        $this->getLayoutManager();
+        $this->getPageManager();
+        $this->getBlockManager();
+        $this->getRequest();
+        $this->getResponse();
+        $this->getOptionManager();
+
+        return $this;
     }
 
     /**

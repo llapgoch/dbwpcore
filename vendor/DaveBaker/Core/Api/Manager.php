@@ -1,6 +1,7 @@
 <?php
 
 namespace DaveBaker\Core\Api;
+use DaveBaker\Core\Event\Context;
 
 /**
  * Class Manager
@@ -21,9 +22,14 @@ class Manager extends \DaveBaker\Core\Base
     protected $fullParamsRegex = '';
     /** @var string  */
     protected $namespaceCode = 'rest';
+    /** @var \WP_REST_Request */
+    protected $restRequest;
+    /** @var array  */
+    protected $fullRoutes = [];
 
     /**
      * @return \DaveBaker\Core\Base|void
+     * @throws \DaveBaker\Core\Object\Exception
      */
     protected function _construct()
     {
@@ -32,6 +38,103 @@ class Manager extends \DaveBaker\Core\Base
         for($i = 1; $i <= self::NUM_PARAMETERS; $i++){
             $this->fullParamsRegex .= str_replace(['{{key}}', '{{value}}'], [$i, $i], $this->paramsRegex);
         }
+
+        $this->addEvents();
+    }
+
+    /**
+     * @throws \DaveBaker\Core\Object\Exception
+     */
+    public function addEvents()
+    {
+
+        $this->addEvent('rest_request_before_callbacks', function(
+            $response,
+            $handler,
+            \WP_REST_Request $request){
+                $this->restRequest = $request;
+                $this->addHandles();
+        });
+    }
+
+    /**
+     * @param $route
+     * @return null|string
+     * @throws \DaveBaker\Core\Object\Exception
+     */
+    public function getRouteHandle($route)
+    {
+        return $this->getUtilHelper()->createUrlKeyFromText(
+            $this->getNamespacedEvent(untrailingslashit($this->getEndpointNamespace()) . '/' . trim($route, '/')),
+            '_'
+        );
+    }
+
+    /**
+     * @param $route
+     * @return null|string
+     * @throws \DaveBaker\Core\Object\Exception
+     */
+    public function getRouteEvent($route)
+    {
+        return $this->getRouteHandle($route);
+    }
+
+    /**
+     * @param $fullRoute
+     * @return mixed|string
+     */
+    public function getBaseRoute($fullRoute)
+    {
+        $fullRoute = trim($fullRoute, '/');
+
+        foreach($this->fullRoutes as $route){
+            $route = trim($route, '/');
+
+            if(strpos($fullRoute, $route) === 0){
+                return $route;
+            }
+        }
+
+        return '';
+    }
+
+    /**
+     * @return $this
+     * @throws \DaveBaker\Core\Event\Exception
+     * @throws \DaveBaker\Core\Object\Exception
+     */
+    public function addHandles()
+    {
+        $handles = [];
+        if($this->restRequest) {
+            if ($baseRoute = $this->getBaseRoute($this->restRequest->get_route())) {
+                $key =  $this->getUtilHelper()->createUrlKeyFromText(
+                        $baseRoute,
+                        '_'
+                );
+
+                $handles[] = $this->getNamespacedEvent($key);
+                $this->fireEvent($key);
+            }
+
+            $key = $this->getUtilHelper()->createUrlKeyFromText(
+                $this->restRequest->get_route(),
+                '_'
+            );
+
+            $handles[] = $this->getNamespacedEvent($key);
+            $this->fireEvent($key);
+        }
+
+        $this->addEvent('handle_register_handles', function(Context $context) use($handles){
+            $currentHandles = $context->getHandles();
+            $context->setHandles(array_merge($currentHandles, $handles));
+
+            return $context;
+        });
+
+        return $this;
     }
 
     /**
@@ -44,7 +147,6 @@ class Manager extends \DaveBaker\Core\Base
         $controllerClass,
         $args = []
     ) {
-
         if(!isset($args['method'])){
             $args['methods'] = "GET,POST";
         }
@@ -116,10 +218,12 @@ class Manager extends \DaveBaker\Core\Base
                     $actionTag = $this->getUtilHelper()->camelToUnderscore($method);
                     $actionTag = preg_replace("/_action/", "", $actionTag);
 
+                    $routePath = trailingslashit($route) . untrailingslashit($actionTag);
+                    $this->fullRoutes[] = trailingslashit($this->getEndpointNamespace()) . $routePath;
 
                     register_rest_route(
                         $this->getEndpointNamespace(),
-                        trailingslashit($route) . trailingslashit($actionTag)  . $this->fullParamsRegex ,
+                        $routePath . $this->fullParamsRegex ,
                         array_merge_recursive([
                             'callback' => function(\WP_REST_Request $request) use ($controller, $method){
                                 $params = $request->get_params();

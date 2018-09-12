@@ -78,7 +78,7 @@ class Manager extends \DaveBaker\Core\Base
         ];
 
         // Also add to Wordpress' filter system
-        add_filter($eventIdentifier, $callback);
+        add_filter($eventIdentifier, $callback, 1, 100);
     }
 
     /**

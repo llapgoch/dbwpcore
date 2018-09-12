@@ -12,6 +12,7 @@ class Manager extends \DaveBaker\Core\Base
     const HANDLE_LOGIN = 'login';
     const HANDLE_REGISTER = 'register';
     const HANDLE_AJAX = 'ajax';
+    const HANDLE_REST = 'rest';
 
     /** @var string */
     protected $namespaceCode = "handle";
@@ -28,7 +29,7 @@ class Manager extends \DaveBaker\Core\Base
      */
     public function registerHandles()
     {
-        $this->handles = $this->defaultHandles;
+        $handles = [];
 
         $pageManager = $this->getApp()->getPageManager();
 
@@ -38,49 +39,57 @@ class Manager extends \DaveBaker\Core\Base
 
             if($pageRegistry->getId()){
                 $pageSuffix = str_replace("-", "_", $pageRegistry->getPageIdentifier());
-                $this->addHandle($pageSuffix);
+                $handles[] = $pageSuffix;
 
                 if($this->getRequest()->isAjax()){
-                    $this->addHandle($pageSuffix . "_" . self::HANDLE_AJAX);
+                    $handles[] = $pageSuffix . "_" . self::HANDLE_AJAX;
                 }
             }
 
             $pageSuffix = str_replace("-", "_", $post->post_name);
-            $this->addHandle($pageSuffix);
+            $handles[] = $pageSuffix;
 
             if($this->getRequest()->isAjax()){
-                $this->addHandle($pageSuffix . "_" . self::HANDLE_AJAX);
+                $handles[] = $pageSuffix . "_" . self::HANDLE_AJAX;
             }
         }
 
         if($pageManager->isOnHomepage()){
-            $this->addHandle(self::HANDLE_HOMEPAGE);
+            $handles[] = self::HANDLE_HOMEPAGE;
         }
 
         if($pageManager->isOnLoginPage()){
-            $this->addHandle(self::HANDLE_LOGIN);
+            $handles[] = self::HANDLE_LOGIN;
         }
 
         if($pageManager->isOnRegisterPage()){
-            $this->addHandle(self::HANDLE_REGISTER);
+            $handles[] = self::HANDLE_REGISTER;
         }
 
         if($this->getRequest()->isAjax()){
-            $this->addHandle(self::HANDLE_AJAX);
+            $handles[] = self::HANDLE_AJAX;
         }
 
-        $context = $this->fireEvent('register_handles', ['handles' => $this->handles]);
+        if($this->getRequest()->isRest()){
+            $handles[] = self::HANDLE_REST;
+        }
+
+        $handles = array_merge($this->defaultHandles, $handles, $this->handles);
+
+        $context = $this->fireEvent('register_handles', ['handles' => $handles]);
         $this->handles = $context->getHandles();
 
         return $this;
     }
 
     /**
-     * @param string $handle
+     * @param $handle
      * @return $this
+     * @throws \DaveBaker\Core\Object\Exception
      */
-    protected function addHandle($handle)
+    public function addHandle($handle)
     {
+        $handle = $this->getUtilHelper()->createUrlKeyFromText($handle, '_');
         if(!in_array($handle, $this->handles)){
             $this->handles[] = $handle;
         }

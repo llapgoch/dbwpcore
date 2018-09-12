@@ -24,10 +24,10 @@ class Util extends Base
      * @param $text
      * @return null|string
      */
-    public function createUrlKeyFromText($text)
+    public function createUrlKeyFromText($text, $replaceCharacter = '-')
     {
         // replace non letter or digits by -
-        $text = preg_replace('~[^\pL\d]+~u', '-', $text);
+        $text = preg_replace('~[^\pL\d]+~u', $replaceCharacter, $text);
 
         // transliterate
         $text = iconv('utf-8', 'us-ascii//TRANSLIT', $text);
@@ -36,10 +36,10 @@ class Util extends Base
         $text = preg_replace('~[^-\w]+~', '', $text);
 
         // trim
-        $text = trim($text, '-');
+        $text = trim($text, $replaceCharacter);
 
         // remove duplicate -
-        $text = preg_replace('~-+~', '-', $text);
+        $text = preg_replace('~-+~', $replaceCharacter, $text);
 
         // lowercase
         return strtolower($text);

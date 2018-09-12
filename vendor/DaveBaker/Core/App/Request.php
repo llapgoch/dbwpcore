@@ -64,6 +64,14 @@ class Request extends \DaveBaker\Core\Base
     /**
      * @return bool
      */
+    public function isRest()
+    {
+        return ( defined( 'REST_REQUEST' ) && REST_REQUEST );
+    }
+
+    /**
+     * @return bool
+     */
     public function isAjax()
     {
         return !empty($_SERVER['HTTP_X_REQUESTED_WITH'])

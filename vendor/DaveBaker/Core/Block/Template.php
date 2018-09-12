@@ -135,6 +135,19 @@ class Template
     }
 
     /**
+     * @param $key
+     * @return $this
+     */
+    public function removeAttribute($key)
+    {
+        if(isset($this->attributes[$key])){
+            unset($this->attributes[$key]);
+        }
+
+        return $this;
+    }
+
+    /**
      * @return string
      * @throws Exception
      * @throws \DaveBaker\Core\Object\Exception
