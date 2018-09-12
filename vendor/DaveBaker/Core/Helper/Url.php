@@ -122,10 +122,14 @@ class Url extends Base
     public function getCurrentUrl($params = [], $withQueryString = true)
     {
         global $wp;
-        $url = $wp->request;
+        $url = '';
 
-        if($withQueryString && isset($_SERVER['QUERY_STRING'])){
-            $url = add_query_arg($_SERVER['QUERY_STRING'], '', $url);
+        if($this->getRefererUrl() && $this->getRequest()->isRest() || $this->getRequest()->isAjax()){
+            $url = $this->getRefererUrl();
+        }else{
+            if($withQueryString && isset($_SERVER['QUERY_STRING'])) {
+                $url = add_query_arg($_SERVER['QUERY_STRING'], '', $wp->request);
+            }
         }
 
         return $this->getUrl($url, $params);

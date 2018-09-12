@@ -27,7 +27,7 @@ class Element
             'a' => '',
             'p' => '',
             'button-anchor' => '',
-            'paginator' => 'pagination pagination-xl nomargin pagination-custom'
+            'paginator' => ''
         ],
         'elementAttributes' => [
             'textarea' => []
