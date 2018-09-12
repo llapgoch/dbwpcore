@@ -50,11 +50,11 @@ abstract class Base
                 'readonly' => 'readonly',
                 'data-is-locked' => 1,
             ]);
+            $this->addClass('js-is-locked');
         }else{
             $this->removeAttribute(['data-is-locked', 'readonly']);
+            $this->removeClass('js-is-locked');
         }
-
-        $this->addClass('js-is-locked');
 
         return $this;
     }

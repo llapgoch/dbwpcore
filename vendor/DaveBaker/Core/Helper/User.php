@@ -10,11 +10,54 @@ class User extends Base
     /**
      * @return object
      * @throws \DaveBaker\Core\Object\Exception
-     * TODO: Querying using roles, meta
      */
     public function getUserCollection()
     {
+        /** @var \DaveBaker\Core\Model\Db\Core\User\Collection $users */
         return $this->createAppObject('\DaveBaker\Core\Model\Db\Core\User\Collection');
+    }
+
+    /**
+     * @param $role
+     * @return mixed
+     * @throws \DaveBaker\Core\Object\Exception
+     */
+    public function getUsersForRole($role)
+    {
+        $users = get_users([
+            'role__in' => $this->getNamespacedOption($role)
+        ]);
+
+        $userIds = [];
+
+        if(!count($users)){
+            return [];
+        }
+
+        /** @var \WP_User $user */
+        foreach($users as $user){
+            $userIds[] = $user->ID;
+        }
+
+        return $this->getUserCollection()->where('ID IN(?)', $userIds);
+    }
+
+    /**
+     * @return string
+     * @throws \DaveBaker\Core\Object\Exception
+     */
+    public function getUserTableName()
+    {
+        return $userTable = $this->getDbHelper()->getTableName('users', false);
+    }
+
+    /**
+     * @return string
+     * @throws \DaveBaker\Core\Object\Exception
+     */
+    public function getUserMetaTableName()
+    {
+        return $userTable = $this->getDbHelper()->getTableName('usermeta', false);
     }
 
     /**
@@ -49,8 +92,13 @@ class User extends Base
      * @param $capabilities
      * @return $this
      */
-    public function addRole($role, $displayName, $capabilities = [], $namespacedRole = true, $namespacedCap = true)
-    {
+    public function addRole(
+        $role,
+        $displayName,
+        $capabilities = [],
+        $namespacedRole = true,
+        $namespacedCap = true
+    ) {
         global $wp_roles;
 
         if($namespacedRole){
@@ -76,8 +124,13 @@ class User extends Base
      * @param bool $grant
      * @return $this
      */
-    public function addCapability($role, $cap, $grant = true, $namespacedRole = true, $namespacedCap = true)
-    {
+    public function addCapability(
+        $role,
+        $cap,
+        $grant = true,
+        $namespacedRole = true,
+        $namespacedCap = true
+    ) {
         global $wp_roles;
 
         if($namespacedCap){
