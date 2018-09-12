@@ -88,6 +88,10 @@ class Template
             $this->removeAttribute("data-" . ControllerInterface::BLOCK_REPLACER_KEY);
         }
 
+        if($this->jsDataItems){
+            $this->addAttribute([$this->jsDataKey => json_encode($this->jsDataItems)]);
+        }
+
         $attrString = $this->makeAttrs($this->getAttributes());
 
         if($includeClass && $this->classes){

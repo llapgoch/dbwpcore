@@ -27,10 +27,6 @@ abstract class Base extends \DaveBaker\Core\Block\Template
         parent::_construct();
     }
 
-
-
-
-
     /**
      * @return mixed
      * @throws \DaveBaker\Core\Object\Exception
@@ -87,10 +83,6 @@ abstract class Base extends \DaveBaker\Core\Block\Template
     {
         $attributes = $this->getDefaultAttributesForIdentifiers($this->getTagIdentifiers());
         $attributes = array_merge($this->getReplacerAttribute(), $attributes);
-
-        if($this->jsDataItems){
-            $attributes[$this->jsDataKey] = json_encode($this->jsDataItems);
-        }
 
         return $attributes;
     }
