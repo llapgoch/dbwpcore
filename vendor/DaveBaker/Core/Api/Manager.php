@@ -223,7 +223,7 @@ class Manager extends \DaveBaker\Core\Base
 
                     register_rest_route(
                         $this->getEndpointNamespace(),
-                        $routePath . $this->fullParamsRegex ,
+                        trailingslashit($routePath) . $this->fullParamsRegex ,
                         array_merge_recursive([
                             'callback' => function(\WP_REST_Request $request) use ($controller, $method){
                                 $params = $request->get_params();
