@@ -67,6 +67,14 @@ class Collection
     }
 
     /**
+     * @return \DaveBaker\Core\Model\Db\Collection\Base
+     */
+    public function getCollection()
+    {
+        return $this->collection;
+    }
+
+    /**
      * @param $column
      * @param string $dir
      * @return $this|\DaveBaker\Core\Block\Html\Table
