@@ -12,6 +12,7 @@ class Messages extends Base
     {
         $this->setTemplate('html/messages.phtml');
         $this->addTagIdentifier('messages');
+        parent::_construct();
     }
 
     /**

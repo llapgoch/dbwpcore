@@ -6,7 +6,7 @@ namespace DaveBaker\Form\Block\Input;
  * Class Input
  * @package DaveBaker\Form\Block\Input
  */
-class Input
+abstract class Input
     extends \DaveBaker\Form\Block\Base
 {
     /** @var string  */
@@ -18,7 +18,6 @@ class Input
      */
     public function _construct()
     {
-        $this->setElementType('text');
         $this->addTagIdentifier('input');
         parent::_construct();
     }

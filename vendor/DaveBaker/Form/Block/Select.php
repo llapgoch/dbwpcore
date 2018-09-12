@@ -17,10 +17,14 @@ class Select
 
     protected $hiddenInput;
 
+    /**
+     * @return \DaveBaker\Core\Block\Template|void
+     * @throws \DaveBaker\Core\Object\Exception
+     */
     protected function _construct()
     {
         $this->setElementType('select');
-        return parent::_construct();
+        parent::_construct();
     }
 
     /**

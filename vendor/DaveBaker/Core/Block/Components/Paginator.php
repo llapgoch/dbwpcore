@@ -15,11 +15,19 @@ class Paginator
     /** @var int  */
     protected $totalRecords = 0;
 
+    protected function _construct()
+    {
+        $this->addTagIdentifier('paginator');
+        parent::_construct();
+    }
+
+    /**
+     * @return \DaveBaker\Core\Block\Html\Base|void
+     */
     protected function init()
     {
         parent::init();
         $this->setTemplate('components/paginator.phtml');
-        $this->addTagIdentifier('paginator');
     }
 
     /**

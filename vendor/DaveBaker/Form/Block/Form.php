@@ -18,7 +18,7 @@ class Form extends Base
     public function _construct()
     {
         $this->addTagIdentifier('form');
-        return parent::_construct();
+        parent::_construct();
     }
 
     protected function init()

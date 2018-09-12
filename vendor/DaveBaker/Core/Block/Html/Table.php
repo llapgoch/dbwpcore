@@ -31,12 +31,14 @@ class Table extends Base
     protected $paginator;
 
     /**
-     * @return Base|void
+     * @return \DaveBaker\Core\Block\Template|void
+     * @throws \DaveBaker\Core\Object\Exception
      */
     protected function _construct()
     {
         $this->setTemplate('html/table.phtml');
         $this->addTagIdentifier('table');
+        parent::_construct();
     }
 
     /**

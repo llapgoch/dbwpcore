@@ -30,6 +30,7 @@ class Main extends \DaveBaker\Core\Block\Html\Base
      */
     protected function init()
     {
+        parent::init();
         $this->setTemplate('form/errors/main.phtml');
     }
 
