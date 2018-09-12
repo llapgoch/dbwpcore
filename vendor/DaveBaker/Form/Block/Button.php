@@ -23,14 +23,4 @@ class Button extends Base
         return parent::_preDispatch();
     }
 
-    public function getAttrs($includeClass = true)
-    {
-        $attrString = $this->makeAttrs($this->getAttributes());
-
-        if($includeClass && $this->classes){
-            $attrString .= $this->makeClassString($this->getClasses());
-        }
-
-        return $attrString;
-    }
 }
