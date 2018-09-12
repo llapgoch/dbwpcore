@@ -94,7 +94,7 @@ class Table extends Base
             );
         }
 
-        if($this->jsUpdater){
+        if($this->jsUpdater && $this->jsDataItems){
             $this->addClass(
                 $this->getConfig()->getConfigValue(TableDefinition::CONFIG_TABLE_UPDATER_JS_CLASS)
             );

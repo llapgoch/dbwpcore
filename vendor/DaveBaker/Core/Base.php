@@ -240,4 +240,13 @@ abstract class Base
     {
         return $this->getApp()->getHelper('User');
     }
+
+    /**
+     * @return \DaveBaker\Core\Helper\Locale
+     * @throws Object\Exception
+     */
+    protected function getLocaleHelper()
+    {
+        return $this->getApp()->getHelper('Locale');
+    }
 }

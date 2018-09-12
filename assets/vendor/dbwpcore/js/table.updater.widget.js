@@ -162,8 +162,7 @@
 		/**
 		 * @returns {dbwpcore.tableUpdater}
 		 */
-		gotoPreviousPage: function()
-		{
+		gotoPreviousPage: function() {
 			this.gotoPage(this.pageNumber - 1);
 			return this;
 		},
@@ -171,8 +170,7 @@
 		/**
 		 * @returns {dbwpcore.tableUpdater}
 		 */
-		gotoNextPage: function ()
-		{
+		gotoNextPage: function () {
 			this.gotoPage(this.pageNumber + 1);
 			return this;
 		},
