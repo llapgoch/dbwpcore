@@ -172,12 +172,12 @@ class Manager extends \DaveBaker\Core\Base
         $helper = $this->getUtilHelper();
 
         foreach($params as $k => $param){
-            $paramString .= $helper->escAttr($k) . "/" . $helper->escAttr($param);
+            $paramString .= trailingslashit($helper->escAttr($k) . "/" . $helper->escAttr($param));
         }
 
         $url = get_rest_url(
             null,
-            $this->getEndpointNamespace() . "/" . trim($endpoint, '/') . "/" . $paramString
+            $this->getEndpointNamespace() . "/" . trim($endpoint, '/') . "/" . untrailingslashit($paramString)
         );
 
         if($includeNonce){
