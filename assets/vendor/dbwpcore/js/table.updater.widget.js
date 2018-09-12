@@ -214,8 +214,10 @@
 							initialise();
 						}
 					},
-					error: function(){
-						alert(self.options.updateErrorMessage);
+					error: function(request){
+						if(request.status !== 0) {
+							alert(self.options.updateErrorMessage);
+						}
 					}
 				}
 			)
