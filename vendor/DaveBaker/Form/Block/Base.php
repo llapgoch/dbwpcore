@@ -44,10 +44,15 @@ abstract class Base
     public function setLock($lock)
     {
         $this->setData(self::LOCKED_DATA_KEY, (bool) $lock);
-        $this->addAttribute([
-            'readonly' => 'readonly',
-            'data-is-locked' => 1,
-        ]);
+
+        if($lock && !$this->getIgnoreLock()) {
+            $this->addAttribute([
+                'readonly' => 'readonly',
+                'data-is-locked' => 1,
+            ]);
+        }else{
+            $this->removeAttribute(['data-is-locked', 'readonly']);
+        }
 
         $this->addClass('js-is-locked');
 

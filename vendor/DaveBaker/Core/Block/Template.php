@@ -140,8 +140,14 @@ class Template
      */
     public function removeAttribute($key)
     {
-        if(isset($this->attributes[$key])){
-            unset($this->attributes[$key]);
+        if(!is_array($key)){
+            $key = [$key];
+        }
+
+        foreach($key as $k) {
+            if (isset($this->attributes[$k])) {
+                unset($this->attributes[$k]);
+            }
         }
 
         return $this;
