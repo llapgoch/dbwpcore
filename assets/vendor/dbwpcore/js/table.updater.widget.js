@@ -228,7 +228,7 @@
 		$(DEFAULT_INIT_SELECTOR).tableUpdater();
 	}
 
-	$(document).on('ready', function(){
+	$(document).on('ready.dbwpcoretableupdater', function(){
 		initialise();
 	});
 }(jQuery));

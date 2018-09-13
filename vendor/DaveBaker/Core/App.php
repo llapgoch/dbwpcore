@@ -123,6 +123,12 @@ class App
             ['jquery', 'jquery-ui-widget']
         );
 
+        wp_register_script(
+            "{$this->scriptPrefix}file_uploader",
+            $urlHelper->getPluginUrl('assets/vendor/dbwpcore/js/file.uploader.widget.js'),
+            ['jquery', 'jquery-ui-widget']
+        );
+
     }
 
     /**

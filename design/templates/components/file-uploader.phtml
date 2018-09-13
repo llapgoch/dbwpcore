@@ -1,0 +1,9 @@
+<?php /** @var \DaveBaker\Core\Block\Components\FileUploader $block */ ?>
+<div <?php echo $this->getAttrs();?>>
+    <div class="js-file-uploader-element">
+        <?php echo $this->getChildHtml('fileuploader'); ?>
+    </div>
+    <div class="js-progress-bar">
+        <?php echo $this->getChildHtml('progressbar'); ?>
+    </div>
+</div>
