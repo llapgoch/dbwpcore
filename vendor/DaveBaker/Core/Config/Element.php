@@ -27,7 +27,8 @@ class Element
             'a' => '',
             'p' => '',
             'button-anchor' => '',
-            'paginator' => ''
+            'paginator' => '',
+            'file-uploader-component' => 'js-file-uploader-component'
         ],
         'elementAttributes' => [
             'textarea' => []

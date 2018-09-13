@@ -14,7 +14,7 @@ class FileUploader
      */
     protected function _construct()
     {
-        $this->addTagIdentifier('file-uploader');
+        $this->addTagIdentifier('file-uploader-component');
         parent::_construct();
     }
 
@@ -41,8 +41,16 @@ class FileUploader
         $this->addChildBlock([
             $this->createBlock(
                 '\DaveBaker\Form\Block\Input\File',
+                null,
                 'fileuploader'
-            ),
+            )->addClass('js-file-input'),
+
+            $this->createBlock(
+                '\DaveBaker\Form\Block\Button',
+                null,
+                'uploadbutton'
+            )->setButtonName('Upload')
+                ->addClass('js-upload-button'),
 
             $this->createBlock(
                 '\DaveBaker\Core\Block\Components\ProgressBar',

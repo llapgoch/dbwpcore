@@ -17,7 +17,6 @@ class ProgressBar
     protected function _construct()
     {
         $this->addTagIdentifier('progress-bar');
-        $this->setPercentage(50);
         parent::_construct();
     }
 
