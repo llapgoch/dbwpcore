@@ -58,14 +58,6 @@ class Template
     }
 
     /**
-     * @return string
-     */
-    public function getReplacerAttributeString()
-    {
-        return $this->makeAttrs($this->getReplacerAttribute());
-    }
-
-    /**
      * @return array|string
      */
     public function getReplacerAttribute()
@@ -91,6 +83,8 @@ class Template
         if($this->jsDataItems){
             $this->addAttribute([$this->jsDataKey => json_encode($this->jsDataItems)]);
         }
+
+        $this->addAttribute($this->getReplacerAttribute());
 
         $attrString = $this->makeAttrs($this->getAttributes());
 

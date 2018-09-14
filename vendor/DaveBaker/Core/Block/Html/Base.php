@@ -82,7 +82,6 @@ abstract class Base extends \DaveBaker\Core\Block\Template
     public function getDefaultAttributesForElement()
     {
         $attributes = $this->getDefaultAttributesForIdentifiers($this->getTagIdentifiers());
-        $attributes = array_merge($this->getReplacerAttribute(), $attributes);
 
         return $attributes;
     }
