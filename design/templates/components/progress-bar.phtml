@@ -1,5 +1,5 @@
 <?php /** @var \DaveBaker\Core\Block\Components\ProgressBar $block **/ ?>
-<div class="progress">
+<div <?php echo $this->getAttrs();?>>
     <div class="progress-bar" role="progressbar" style="width: <?php echo $this->getPercentageText();?>" aria-valuenow="<?php echo $this->getPercentage();?>" aria-valuemin="0" aria-valuemax="100">
     <?php echo $block->escapeHtml($block->getPercentageText());?>
     </div>

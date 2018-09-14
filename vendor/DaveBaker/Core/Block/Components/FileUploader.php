@@ -1,6 +1,8 @@
 <?php
 
 namespace DaveBaker\Core\Block\Components;
+use DaveBaker\Core\Definitions\Api;
+
 /**
  * Class FileUploader
  * @package DaveBaker\Core\Block\Components
@@ -15,6 +17,9 @@ class FileUploader
     protected function _construct()
     {
         $this->addTagIdentifier('file-uploader-component');
+        $this->addJsDataItems(
+            ['endpoint' => $this->getUrlHelper()->getApiUrl(Api::ENDPOINT_FILE_UPLOAD)]
+        );
         parent::_construct();
     }
 

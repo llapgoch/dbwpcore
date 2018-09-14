@@ -167,6 +167,7 @@ class App
         });
 
         add_action('rest_api_init', function(){
+            $this->registerApiActions();
             $this->getMain()->registerApiActions();
             $this->getApiManager()->registerRoutes();
         });
@@ -179,6 +180,20 @@ class App
             $this->getLayoutManager()->postDispatch();
             $this->getContollerManager()->postDispatch();
         });
+
+        return $this;
+    }
+
+    /**
+     * @throws Object\Exception
+     * @return $this
+     */
+    protected function registerApiActions()
+    {
+        $this->getApiManager()->addRoute(
+            'core/file',
+            '\DaveBaker\Core\Api\Core\File'
+        );
 
         return $this;
     }
