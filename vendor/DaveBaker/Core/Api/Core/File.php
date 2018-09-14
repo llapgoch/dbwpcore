@@ -59,16 +59,15 @@ class File
     }
 
     /**
-     * @param $file
+     * @param array $file
      * @return array
-     * @throws Exception
      * @throws \DaveBaker\Core\Db\Exception
      * @throws \DaveBaker\Core\Event\Exception
      * @throws \DaveBaker\Core\Helper\Exception
      * @throws \DaveBaker\Core\Object\Exception
      * @throws \Zend_Db_Adapter_Exception
      */
-    protected function performUpload($file)
+    protected function performUpload($file = [])
     {
         $this->getUploadHelper()->createUploadDir();
         $fileInfo = new \finfo(FILEINFO_MIME_TYPE);
@@ -116,10 +115,7 @@ class File
     /**
      * @param $file
      * @throws Exception
-     * @throws \DaveBaker\Core\Db\Exception
-     * @throws \DaveBaker\Core\Event\Exception
      * @throws \DaveBaker\Core\Object\Exception
-     * @throws \Zend_Db_Adapter_Exception
      */
     protected function validateFile($file)
     {

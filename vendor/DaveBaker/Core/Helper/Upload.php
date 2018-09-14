@@ -32,7 +32,7 @@ class Upload extends Base
      */
     public function getUploadDir()
     {
-        return trailingslashit(untrailingslashit($this->getBaseDir()) . DS . UploadDefinition::UPLOAD_TYPE_GENERAL);
+        return trailingslashit(untrailingslashit($this->getBaseDir()) . DS . UploadDefinition::UPLOAD_DIRECTORY);
     }
 
     /**
@@ -40,7 +40,7 @@ class Upload extends Base
      */
     public function getUploadUrl()
     {
-        return trailingslashit(untrailingslashit($this->getBaseUrl()) . DS . self::UPLOAD_DIRECTORY);
+        return trailingslashit(untrailingslashit($this->getBaseUrl()) . DS . UploadDefinition::UPLOAD_DIRECTORY);
     }
 
     /**
@@ -58,7 +58,27 @@ class Upload extends Base
         return $this;
     }
 
-    public function getUploadCollection($type = Upload, $parentId)
+    /**
+     * @param string $type
+     * @param null|int $parentId
+     * @return mixed
+     * @throws \DaveBaker\Core\Object\Exception
+     */
+    public function getUploadCollection(
+        $type = UploadDefinition::UPLOAD_TYPE_GENERAL,
+        $parentId = null
+    ) {
+        $collection = $this->createAppObject(
+            '\DaveBaker\Core\Model\Db\Core\File\Collection'
+        )->where('is_deleted=?', 0)
+            ->where('upload_type', $type);
+
+        if($parentId){
+            $collection->where('parent_id', $parentId);
+        }
+
+        return $collection;
+    }
 
     /**
      * @param \DaveBaker\Core\Model\Db\Core\Upload $upload
