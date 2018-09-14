@@ -1,8 +1,8 @@
 <?php
 
-namespace DaveBaker\Core\Model\Db\Core\User;
+namespace DaveBaker\Core\Model\Db\Core\File;
 /**
- * Class User
+ * Class File
  * @package DaveBaker\Core\Model\Db
  */
 class Collection
@@ -10,6 +10,6 @@ class Collection
 {
     protected function init()
     {
-        $this->dbClass = '\DaveBaker\Core\Model\Db\Core\User';
+        $this->dbClass = '\DaveBaker\Core\Model\Db\Core\File';
     }
 }

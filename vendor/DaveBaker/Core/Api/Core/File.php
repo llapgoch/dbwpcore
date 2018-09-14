@@ -29,22 +29,24 @@ class File
     }
 
     /**
-     * @param $file
+     * @param array $file
      * @throws Exception
      * @throws \DaveBaker\Core\Object\Exception
      */
     protected function validateFile($file)
     {
-        switch ($file['error']) {
-            case UPLOAD_ERR_OK:
-                break;
-            case UPLOAD_ERR_NO_FILE:
-                throw new Exception('No file sent');
-            case UPLOAD_ERR_INI_SIZE:
-            case UPLOAD_ERR_FORM_SIZE:
-                throw new Exception('The file was too large');
-            default:
-                throw new Exception('An error occurred');
+        if(isset($file['error'])) {
+            switch ($file['error']) {
+                case UPLOAD_ERR_OK:
+                    break;
+                case UPLOAD_ERR_NO_FILE:
+                    throw new Exception('No file sent');
+                case UPLOAD_ERR_INI_SIZE:
+                case UPLOAD_ERR_FORM_SIZE:
+                    throw new Exception('The file was too large');
+                default:
+                    throw new Exception('An error occurred');
+            }
         }
 
 
@@ -57,6 +59,10 @@ class File
         if(!in_array($fileInfo->file($file['tmp_name']), $mimeTypes)){
             throw new Exception('Filetype not allowed');
         }
+
+        $hashedFile = hash_file('md5', $file['tmp_name']);
+
+        var_dump($hashedFile);
 
     }
 
