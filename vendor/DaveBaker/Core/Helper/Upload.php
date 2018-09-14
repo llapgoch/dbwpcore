@@ -68,10 +68,19 @@ class Upload extends Base
         $type = UploadDefinition::UPLOAD_TYPE_GENERAL,
         $parentId = null
     ) {
+
+        $userTable = $this->getApp()->getHelper('Db')->getTableName('users', false);
         $collection = $this->createAppObject(
-            '\DaveBaker\Core\Model\Db\Core\File\Collection'
+            '\DaveBaker\Core\Model\Db\Core\Upload\Collection'
         )->where('is_deleted=?', 0)
-            ->where('upload_type', $type);
+            ->where('upload_type=?', $type)
+            ->order('created_at DESC');
+
+        $collection->joinLeft(
+            ['created_by_user' => $userTable],
+            "created_by_user.ID={{file_upload}}.created_by_id",
+            ['created_by_name' => 'user_login']
+        );
 
         if($parentId){
             $collection->where('parent_id', $parentId);
@@ -87,8 +96,9 @@ class Upload extends Base
      * Use the db model's getUrl rather than this method, this simply builds a url path
      * The getUrl method in the model will check whether the file has a parent, and return the correct path
      */
-    public function makeUploadUrl(\DaveBaker\Core\Model\Db\Core\Upload $upload)
-    {
+    public function makeUploadUrl(
+        \DaveBaker\Core\Model\Db\Core\Upload $upload
+    ) {
         return $this->getUploadUrl() . $upload->getId() . "." . $upload->getExtension();
     }
 }
