@@ -1,8 +1,8 @@
 <?php
 
-namespace DaveBaker\Core\Model\Db\Core\File;
+namespace DaveBaker\Core\Model\Db\Core\Upload;
 /**
- * Class File
+ * Class Collection
  * @package DaveBaker\Core\Model\Db
  */
 class Collection
@@ -10,6 +10,6 @@ class Collection
 {
     protected function init()
     {
-        $this->dbClass = '\DaveBaker\Core\Model\Db\Core\File';
+        $this->dbClass = '\DaveBaker\Core\Model\Db\Core\Upload';
     }
 }

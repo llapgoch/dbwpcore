@@ -43,6 +43,8 @@ class CoreApplication
               `extension` varchar(20) DEFAULT NULL,
               `upload_type` varchar(20) DEFAULT NULL,
               `parent_id` INT(11) DEFAULT NULL,
+              `mime_type` VARCHAR(255) DEFAULT NULL,
+              `file_parent_id` INT(11) DEFAULT NULL,
               `file_hash` VARCHAR(255) DEFAULT NULL,
               `created_by_id` INT(11) DEFAULT NULL,
               `last_updated_by_id` INT(11) DEFAULT NULL,

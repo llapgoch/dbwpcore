@@ -3,7 +3,7 @@ namespace DaveBaker\Core\Api\Core;
 use DaveBaker\Core\Api\Exception;
 
 /**
- * Class Core
+ * Class File
  * @package DaveBaker\Core\Api
  */
 class File
@@ -11,11 +11,16 @@ class File
     implements \DaveBaker\Core\Api\ControllerInterface
 {
     const ALLOWED_MIME_TYPES_CONFIG_KEY = 'uploadAllowedMimeTypes';
-    /** @var array  */
+    const UPLOAD_TYPE_GENERAL = 'general';
+
+    /** @var array */
     protected $allowedMimeTypes = [];
+    /** @var string */
+    protected $uploadType;
 
     /**
      * @param $params
+     * @return array
      * @throws Exception
      */
     public function uploadAction($params)
@@ -24,14 +29,87 @@ class File
             throw new Exception('No files provided');
         }
 
-        array_map([$this, 'validateFile'], $_FILES);
+        $this->uploadType = isset($params['upload_type']) ? $params['upload_type'] : self::UPLOAD_TYPE_GENERAL;
 
+        $results = [];
+        $results[] = @array_map([$this, 'performUpload'], $_FILES);
+
+        return $results;
     }
 
     /**
-     * @param array $file
-     * @throws Exception
+     * @return \DaveBaker\Core\Model\Db\Core\Upload\Collection
      * @throws \DaveBaker\Core\Object\Exception
+     */
+    protected function getFileCollection()
+    {
+        return $this->createAppObject('\DaveBaker\Core\Model\Db\Core\Upload\Collection');
+    }
+
+    /**
+     * @param $file
+     * @return array
+     * @throws Exception
+     * @throws \DaveBaker\Core\Db\Exception
+     * @throws \DaveBaker\Core\Event\Exception
+     * @throws \DaveBaker\Core\Helper\Exception
+     * @throws \DaveBaker\Core\Object\Exception
+     * @throws \Zend_Db_Adapter_Exception
+     */
+    protected function performUpload($file)
+    {
+        $this->validateFile($file);
+
+        $this->getUploadHelper()->createUploadDir();
+        $fileInfo = new \finfo(FILEINFO_MIME_TYPE);
+        $mimeType = $fileInfo->file($file['tmp_name']);
+
+        $hashedFile = hash_file('md5', $file['tmp_name']);
+        $existingCollection = $this->getFileCollection()
+            ->where('file_hash=?', $hashedFile)
+            ->where('file_parent_id IS NULL');
+
+        $existingFile = $existingCollection->firstItem();
+
+        $pathInfo = pathinfo($file['name']);
+        // Use the already uploaded file
+        $fileInstance = $this->createAppObject('\DaveBaker\Core\Model\Db\Core\Upload')
+            ->setFileHash($hashedFile)
+            ->setFilename($pathInfo['basename'])
+            ->setExtension($pathInfo['extension'])
+            ->setMimeType($mimeType)
+            ->setUploadType($this->uploadType);
+
+        if($this->getUserHelper()->isLoggedIn()){
+            $fileInstance->setLastUpdatedBy($this->getUserHelper()->getCurrentUserId());
+            $fileInstance->setCreatedById($this->getUserHelper()->getCurrentUserId());
+        }
+
+
+        if($existingFile){
+            $fileInstance->setFileParentId($existingFile->getId())->save();
+        } else {
+            $fileInstance->save();
+
+            move_uploaded_file(
+                $file['tmp_name'],
+                $this->getUploadHelper()->getUploadDir() . $fileInstance->getId() . "." . $pathInfo['extension']
+            );
+        }
+
+        return [
+            'file_id' => $fileInstance->getId(),
+            'url' => $fileInstance->getUrl()
+        ];
+    }
+
+    /**
+     * @param $file
+     * @throws Exception
+     * @throws \DaveBaker\Core\Db\Exception
+     * @throws \DaveBaker\Core\Event\Exception
+     * @throws \DaveBaker\Core\Object\Exception
+     * @throws \Zend_Db_Adapter_Exception
      */
     protected function validateFile($file)
     {
@@ -49,21 +127,17 @@ class File
             }
         }
 
-
         // Check mime types
         if(!($mimeTypes = $this->getAllowedMimeTypes())){
             throw new Exception('Allowed mime types not set');
         }
 
         $fileInfo = new \finfo(FILEINFO_MIME_TYPE);
-        if(!in_array($fileInfo->file($file['tmp_name']), $mimeTypes)){
+        $mimeType = $fileInfo->file($file['tmp_name']);
+
+        if(!in_array($mimeType, $mimeTypes)){
             throw new Exception('Filetype not allowed');
         }
-
-        $hashedFile = hash_file('md5', $file['tmp_name']);
-
-        var_dump($hashedFile);
-
     }
 
     /**

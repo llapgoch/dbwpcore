@@ -249,4 +249,13 @@ abstract class Base
     {
         return $this->getApp()->getHelper('Locale');
     }
+
+    /**
+     * @return \DaveBaker\Core\Helper\Upload
+     * @throws Object\Exception
+     */
+    protected function getUploadHelper()
+    {
+        return $this->getApp()->getHelper('Upload');
+    }
 }
