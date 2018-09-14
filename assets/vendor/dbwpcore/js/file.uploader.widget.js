@@ -45,7 +45,7 @@
 
 			events['change ' + this.options.fileUploadSelector] = function(ev) {
 				ev.preventDefault();
-				this.checkEnable();
+				this.upload();
 			};
 
 			this._on(events);
