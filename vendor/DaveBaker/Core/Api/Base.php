@@ -60,7 +60,7 @@ abstract class Base
      * @return $this
      * @throws \DaveBaker\Core\Object\Exception
      */
-    protected function addReplacerBlock($blocks)
+    public function addReplacerBlock($blocks)
     {
         if(!is_array($blocks)){
             $blocks = [$blocks];
@@ -75,7 +75,7 @@ abstract class Base
      * @return \DaveBaker\Core\Block\BlockList
      * @throws \DaveBaker\Core\Object\Exception
      */
-    protected function getReplacerBlockList()
+    public function getReplacerBlockList()
     {
         if(!$this->replacerBlockList) {
             $this->replacerBlockList = $this->getApp()->getBlockManager()->createBlockList();

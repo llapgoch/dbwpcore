@@ -17,8 +17,46 @@ class File
     protected $allowedMimeTypes = [];
     /** @var string */
     protected $uploadType;
+    /** @var int */
+    protected $parentId;
     /** @var string  */
     protected $namespaceCode = 'file_upload_api';
+
+    /**
+     * @return string
+     */
+    public function getUploadType()
+    {
+        return $this->uploadType;
+    }
+
+    /**
+     * @param string $uploadType
+     * @return $this
+     */
+    public function setUploadType($uploadType)
+    {
+        $this->uploadType = $uploadType;
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getParentId()
+    {
+        return $this->parentId;
+    }
+
+    /**
+     * @param int $parentId
+     * @return $this
+     */
+    public function setParentId($parentId)
+    {
+        $this->parentId = $parentId;
+        return $this;
+    }
 
     /**
      * @param $params
@@ -34,6 +72,7 @@ class File
         }
 
         $this->uploadType = isset($params['upload_type']) ? $params['upload_type'] : UploadDefinition::UPLOAD_TYPE_GENERAL;
+        $this->parentId = isset($params['parent_id']) ? $params['parent_id'] : null;
 
         $results = [];
         // Do all validation before performing uploads (deny all if any fail)
@@ -87,7 +126,8 @@ class File
             ->setFilename($pathInfo['basename'])
             ->setExtension($pathInfo['extension'])
             ->setMimeType($mimeType)
-            ->setUploadType($this->uploadType);
+            ->setUploadType($this->uploadType)
+            ->setParentId($this->parentId);
 
         if($this->getUserHelper()->isLoggedIn()){
             $fileInstance->setLastUpdatedById($this->getUserHelper()->getCurrentUserId());

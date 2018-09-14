@@ -83,7 +83,7 @@ class Upload extends Base
         );
 
         if($parentId){
-            $collection->where('parent_id', $parentId);
+            $collection->where('parent_id=?', $parentId);
         }
 
         return $collection;
