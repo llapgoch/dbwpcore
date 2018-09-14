@@ -154,7 +154,6 @@
 
 			for(var i = 0; i < uploader.files.length; i++){
 				formData.append('file_' + i, uploader.files[i]);
-				console.log("append");
 			}
 
 			this.request = new XMLHttpRequest();
@@ -163,6 +162,11 @@
 				this.request.upload.onprogress = function (data) {
 					self.updatePercentage(self.getPercentage(data.loaded, data.total));
 				};
+
+				this.request.addEventListener('load', function(){
+					self.getFileUpload().val('');
+					self.showFileUpload().hideProgressBar();
+				});
 			}
 
 			this.request.open('POST', this.endpoint, true);
@@ -170,7 +174,6 @@
 
 			this.hideFileUpload();
 			this.showProgressBar();
-
 		}
 	});
 

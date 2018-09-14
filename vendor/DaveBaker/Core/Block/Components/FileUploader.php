@@ -48,7 +48,8 @@ class FileUploader
                 '\DaveBaker\Form\Block\Input\File',
                 null,
                 'fileuploader'
-            )->addClass('js-file-input'),
+            )->addClass('js-file-input')->addAttribute(['multiple' => 'multiple']),
+
 
             $this->createBlock(
                 '\DaveBaker\Form\Block\Button',
