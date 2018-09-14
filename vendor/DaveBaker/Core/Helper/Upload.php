@@ -36,7 +36,7 @@ class Upload extends Base
     /**
      * @return string
      */
-    public function getUploadPath()
+    public function getUploadUrl()
     {
         return trailingslashit(untrailingslashit($this->getBaseUrl()) . DS . self::UPLOAD_DIRECTORY);
     }
@@ -65,6 +65,6 @@ class Upload extends Base
      */
     public function makeUploadUrl(\DaveBaker\Core\Model\Db\Core\Upload $upload)
     {
-        return $this->getBaseUrl() . $upload->getId() . "." . $upload->getExtension();
+        return $this->getUploadUrl() . $upload->getId() . "." . $upload->getExtension();
     }
 }

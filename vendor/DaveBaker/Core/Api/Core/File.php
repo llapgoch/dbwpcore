@@ -81,7 +81,7 @@ class File
             ->setUploadType($this->uploadType);
 
         if($this->getUserHelper()->isLoggedIn()){
-            $fileInstance->setLastUpdatedBy($this->getUserHelper()->getCurrentUserId());
+            $fileInstance->setLastUpdatedById($this->getUserHelper()->getCurrentUserId());
             $fileInstance->setCreatedById($this->getUserHelper()->getCurrentUserId());
         }
 
