@@ -1,0 +1,8 @@
+<?php /** @var \DaveBaker\Core\Block\Components\UploadedFileList $block */ ?>
+<ul <?php echo $this->getAttrs();?>>
+    <?php foreach($block->getFiles() as $file):?>
+        <li>
+            <a href="<?php $file->getUrl();?>"><?php echo $block->escapeHtml($file->getName());?></a>
+        </li>
+    <?php endforeach; ?>
+</ul>

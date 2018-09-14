@@ -17,11 +17,15 @@ class File
     protected $allowedMimeTypes = [];
     /** @var string */
     protected $uploadType;
+    /** @var string  */
+    protected $namespaceCode = 'file_upload_api';
 
     /**
      * @param $params
      * @return array
      * @throws Exception
+     * @throws \DaveBaker\Core\Event\Exception
+     * @throws \DaveBaker\Core\Object\Exception
      */
     public function uploadAction($params)
     {
@@ -34,7 +38,12 @@ class File
         $results = [];
         $results[] = @array_map([$this, 'performUpload'], $_FILES);
 
-        return $results;
+        $context = $this->fireEvent('upload_result', [
+            'results' => $results,
+            'params' => $params
+        ]);
+
+        return $context->getResults();
     }
 
     /**
@@ -85,7 +94,6 @@ class File
             $fileInstance->setCreatedById($this->getUserHelper()->getCurrentUserId());
         }
 
-
         if($existingFile){
             $fileInstance->setFileParentId($existingFile->getId())->save();
         } else {
@@ -93,7 +101,8 @@ class File
 
             move_uploaded_file(
                 $file['tmp_name'],
-                $this->getUploadHelper()->getUploadDir() . $fileInstance->getId() . "." . $pathInfo['extension']
+                $this->getUploadHelper()->getUploadDir() .
+                    $fileInstance->getId() . "." . $pathInfo['extension']
             );
         }
 

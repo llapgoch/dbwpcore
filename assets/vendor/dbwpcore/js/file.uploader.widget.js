@@ -19,7 +19,6 @@
 
 		_create: function(){
 			this._super();
-
 			this.jsData = this.element.data(this.options.jsDataKey);
 
 			if(!this.jsData || !this.jsData[this.options.endpointDataKey]){
@@ -159,9 +158,9 @@
 			this.request = new XMLHttpRequest();
 
 			if(this.request.upload) {
-				this.request.upload.onprogress = function (data) {
+				this.request.upload.addEventListener('progress', function (data) {
 					self.updatePercentage(self.getPercentage(data.loaded, data.total));
-				};
+				});
 
 				this.request.addEventListener('load', function(){
 					self.getFileUpload().val('');
