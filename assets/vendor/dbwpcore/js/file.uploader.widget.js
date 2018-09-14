@@ -145,13 +145,11 @@
 			}
 
 			var uploader = this.getFileUpload().get(0);
-
 			if(!uploader || !uploader.files || !uploader.files[0]){
 				throw 'File not selected';
 			}
 
 			var formData = new FormData();
-
 			for(var i = 0; i < uploader.files.length; i++){
 				formData.append('file_' + i, uploader.files[i]);
 			}
@@ -163,24 +161,26 @@
 					self.updatePercentage(self.getPercentage(data.loaded, data.total));
 				});
 
-				this.request.addEventListener('loadend', function(data){
-					var xhr = data.currentTarget;
+				this.request.addEventListener('loadend', function(ev){
+					var xhr = ev.currentTarget;
 
 					self.getFileUpload().val('');
 					self.showFileUpload().hideProgressBar();
-					console.log(xhr);
+
+					if(xhr.response){
+						xhr.responseJSON = JSON.parse(xhr.response);
+					}
 
 					if(xhr.status !== 200){
-						if(xhr.response){
-							var json = JSON.parse(xhr.response);
-							alert(json.message);
+						if(xhr.responseJSON){
+							alert(xhr.responseJSON.message);
 						}else{
 							alert(self.options.uploadErrorMessage);
 						}
+					}else{
+						$(document).trigger('ajaxSuccess', xhr);
 					}
 				});
-
-
 			}
 
 			this.request.open('POST', this.endpoint, true);

@@ -10,15 +10,20 @@ abstract class Input
     extends \DaveBaker\Form\Block\Base
 {
     /** @var string  */
-    public $inputValue = '';
+    protected $inputValue = '';
+    /** @var bool  */
+    protected $addInputTag = true;
 
     /**
      * @return \DaveBaker\Core\Block\Template|void
      * @throws \DaveBaker\Core\Object\Exception
      */
-    public function _construct()
+    protected function _construct()
     {
-        $this->addTagIdentifier('input');
+        if($this->addInputTag) {
+            $this->addTagIdentifier('input');
+        }
+
         parent::_construct();
     }
 
