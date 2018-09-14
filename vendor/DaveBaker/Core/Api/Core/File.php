@@ -1,6 +1,7 @@
 <?php
 namespace DaveBaker\Core\Api\Core;
 use DaveBaker\Core\Api\Exception;
+use DaveBaker\Core\Definitions\Upload as UploadDefinition;
 
 /**
  * Class File
@@ -11,7 +12,6 @@ class File
     implements \DaveBaker\Core\Api\ControllerInterface
 {
     const ALLOWED_MIME_TYPES_CONFIG_KEY = 'uploadAllowedMimeTypes';
-    const UPLOAD_TYPE_GENERAL = 'general';
 
     /** @var array */
     protected $allowedMimeTypes = [];
@@ -33,12 +33,15 @@ class File
             throw new Exception('No files provided');
         }
 
-        $this->uploadType = isset($params['upload_type']) ? $params['upload_type'] : self::UPLOAD_TYPE_GENERAL;
+        $this->uploadType = isset($params['upload_type']) ? $params['upload_type'] : UploadDefinition::UPLOAD_TYPE_GENERAL;
 
         $results = [];
+        // Do all validation before performing uploads (deny all if any fail)
+        @array_map([$this, 'validateFile'], $_FILES);
+
         $results[] = @array_map([$this, 'performUpload'], $_FILES);
 
-        $context = $this->fireEvent('upload_result', [
+        $context = $this->fireEvent('upload_complete', [
             'results' => $results,
             'params' => $params
         ]);
@@ -67,8 +70,6 @@ class File
      */
     protected function performUpload($file)
     {
-        $this->validateFile($file);
-
         $this->getUploadHelper()->createUploadDir();
         $fileInfo = new \finfo(FILEINFO_MIME_TYPE);
         $mimeType = $fileInfo->file($file['tmp_name']);

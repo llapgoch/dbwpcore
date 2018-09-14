@@ -1,6 +1,8 @@
 <?php
 
 namespace DaveBaker\Core\Helper;
+
+use \DaveBaker\Core\Definitions\Upload as UploadDefinition;
 /**
  * Class Upload
  * @package DaveBaker\Core\Helper
@@ -30,7 +32,7 @@ class Upload extends Base
      */
     public function getUploadDir()
     {
-        return trailingslashit(untrailingslashit($this->getBaseDir()) . DS . self::UPLOAD_DIRECTORY);
+        return trailingslashit(untrailingslashit($this->getBaseDir()) . DS . UploadDefinition::UPLOAD_TYPE_GENERAL);
     }
 
     /**
@@ -55,6 +57,8 @@ class Upload extends Base
 
         return $this;
     }
+
+    public function getUploadCollection($type = Upload, $parentId)
 
     /**
      * @param \DaveBaker\Core\Model\Db\Core\Upload $upload

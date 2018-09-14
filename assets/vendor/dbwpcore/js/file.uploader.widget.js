@@ -10,7 +10,8 @@
 			progressInnerSelector: '.progress-bar',
 			fileUploadSelector: '.js-file-input',
 			buttonUploadSelector: '.js-upload-button',
-			hiddenClass: 'd-none'
+			hiddenClass: 'd-none',
+			uploadErrorMessage: 'An error occurred during the upload'
 		},
 
 		jsData: null,
@@ -162,10 +163,24 @@
 					self.updatePercentage(self.getPercentage(data.loaded, data.total));
 				});
 
-				this.request.addEventListener('load', function(){
+				this.request.addEventListener('loadend', function(data){
+					var xhr = data.currentTarget;
+
 					self.getFileUpload().val('');
 					self.showFileUpload().hideProgressBar();
+					console.log(xhr);
+
+					if(xhr.status !== 200){
+						if(xhr.response){
+							var json = JSON.parse(xhr.response);
+							alert(json.message);
+						}else{
+							alert(self.options.uploadErrorMessage);
+						}
+					}
 				});
+
+
 			}
 
 			this.request.open('POST', this.endpoint, true);
