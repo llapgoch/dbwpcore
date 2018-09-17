@@ -20,6 +20,6 @@ class General
         'dateTimeLocalShortOutputFormat' => 'd/m/Y H:i A',
         'countryCodeDefault' => 'GB',
         'formElementErrorClass' => 'form-input-error',
-        'uploadAllowedMimeTypes' => 'image/jpeg, image/png, image/gif',
+        'uploadAllowedMimeTypes' => 'image/jpeg, image/png, image/gif'
     ];
 }

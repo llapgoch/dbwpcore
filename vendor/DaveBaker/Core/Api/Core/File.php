@@ -182,7 +182,7 @@ class File
         $mimeType = $fileInfo->file($file['tmp_name']);
 
         if(!in_array($mimeType, $mimeTypes)){
-            throw new Exception('Filetype not allowed');
+            throw new Exception('File type not allowed');
         }
     }
 
