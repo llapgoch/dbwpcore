@@ -14,6 +14,8 @@ class Form extends Base
     protected $formAction = '';
     /** @var array  */
     protected $valueFormElementsCache = [];
+    /** @var bool  */
+    protected $isLocked = false;
 
     public function _construct()
     {
@@ -52,6 +54,7 @@ class Form extends Base
      */
     public function lock()
     {
+        $this->setIsLocked(true);
         /** @var ValueSetterInterface $element */
         foreach($this->getValueFormElements() as $element){
             if($element->getIgnoreLock() == false) {
@@ -59,6 +62,32 @@ class Form extends Base
             }
         }
 
+        return $this;
+    }
+
+    /**
+     * @return $this
+     */
+    public function unlock()
+    {
+        $this->setIsLocked(false);
+        /** @var ValueSetterInterface $element */
+        foreach($this->getValueFormElements() as $element){
+            if($element->getIgnoreLock() == false) {
+                $element->setLock(false);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param $value
+     * @return $this
+     */
+    protected function setIsLocked($value)
+    {
+        $this->setData(self::LOCKED_DATA_KEY, (bool) $value);
         return $this;
     }
 

@@ -34,7 +34,6 @@
 
 		_create: function () {
 			this._super();
-
 			this.jsData = this.element.data(this.options.jsDataKey);
 
 			if(!this.jsData){

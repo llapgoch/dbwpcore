@@ -2,9 +2,7 @@
 	var BLOCK_REPLACERS_DATA_KEY = '__block__replacers__';
 
 	$(document).on('ajaxSuccess', function(event, request){
-
 		var response = request.responseJSON;
-		console.log(request);
 
 		if(!response || !response[BLOCK_REPLACERS_DATA_KEY]){
 			return;
@@ -17,7 +15,11 @@
 				continue;
 			}
 
-			$('[data-' + BLOCK_REPLACERS_DATA_KEY + '="' + i + '"]').replaceWith(replacers[i]);
+			$el = $('[data-' + BLOCK_REPLACERS_DATA_KEY + '="' + i + '"]')
+				.trigger('block-replacer-before')
+				.replaceWith(replacers[i])
+				.trigger('block-replacer-after');
+
 		}
 
 	});

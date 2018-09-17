@@ -10,8 +10,6 @@ class Manager extends \DaveBaker\Core\Base
     protected $namespaceCode = "event";
     /** @var array */
     protected $events = [];
-    /** @var \DaveBaker\Core\Event\Context */
-    protected $context;
 
     /**
      * @param array $eventIdentifiers
@@ -20,16 +18,12 @@ class Manager extends \DaveBaker\Core\Base
      * @throws Exception
      * @throws \DaveBaker\Core\Object\Exception
      */
-    public function fire($eventIdentifiers = [], $args = [])
+    public function fire($eventIdentifiers, $args = [])
     {
-        if(!$this->context) {
-            $this->context = $this->getApp()->getObjectManager()->getAppObject('\DaveBaker\Core\Event\Context');
-        }
-
-        $this->context->unsetData();
+        $context = $this->createAppObject('\DaveBaker\Core\Event\Context');
 
         foreach($args as $k => $arg){
-            $this->context->setData($k, $arg);
+            $context->setData($k, $arg);
         }
 
         if(!is_array($eventIdentifiers)){
@@ -41,14 +35,14 @@ class Manager extends \DaveBaker\Core\Base
 
             try {
                 foreach ($events as $event) {
-                    call_user_func($event['callback'], $this->context);
+                    call_user_func($event['callback'], $context);
                 }
             } catch (\Exception $e) {
                 throw new Exception($e->getMessage(), $e->getCode());
             }
         }
 
-        return $this->context;
+        return $context;
     }
 
     /**
