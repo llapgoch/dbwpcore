@@ -46,6 +46,7 @@ class CoreApplication
               `mime_type` VARCHAR(255) DEFAULT NULL,
               `file_parent_id` INT(11) DEFAULT NULL,
               `file_hash` VARCHAR(255) DEFAULT NULL,
+              `temporary_id` VARCHAR(255) DEFAULT NULL,
               `created_by_id` INT(11) DEFAULT NULL,
               `last_updated_by_id` INT(11) DEFAULT NULL,
               `created_at` DATETIME DEFAULT NULL,
@@ -53,6 +54,7 @@ class CoreApplication
               `is_deleted` INT(1) DEFAULT 0,
               PRIMARY KEY (`id`),
               KEY `file_hash` (`file_hash`),
+              KEY `temporary_id` (`temporary_id`),
               KEY `upload_type_parent` (`upload_type`, `parent_id`)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8;"
         );

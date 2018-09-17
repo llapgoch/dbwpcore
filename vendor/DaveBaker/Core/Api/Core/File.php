@@ -71,8 +71,16 @@ class File
             throw new Exception('No files provided');
         }
 
-        $this->uploadType = isset($params['upload_type']) ? $params['upload_type'] : UploadDefinition::UPLOAD_TYPE_GENERAL;
-        $this->parentId = isset($params['parent_id']) ? $params['parent_id'] : null;
+        if(!isset($params['parent_id']) || empty($params['parent_id'])){
+            $params['parent_id'] = uniqid();
+        }
+
+        if(!isset($params['upload_type'])){
+            $params['upload_type'] = UploadDefinition::UPLOAD_TYPE_GENERAL;
+        }
+
+        $this->uploadType = $params['upload_type'];
+        $this->parentId = $params['parent_id'];
 
         $results = [];
         // Do all validation before performing uploads (deny all if any fail)

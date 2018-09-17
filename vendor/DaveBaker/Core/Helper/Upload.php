@@ -10,6 +10,15 @@ use \DaveBaker\Core\Definitions\Upload as UploadDefinition;
 class Upload extends Base
 {
     const UPLOAD_DIRECTORY = 'dbwpcore';
+    const TEMPORARY_PREFIX = 'upload_';
+
+    /**
+     * @return string
+     */
+    public function getTemporaryId()
+    {
+        return uniqid(self::TEMPORARY_PREFIX);
+    }
 
     /**
      * @return string
