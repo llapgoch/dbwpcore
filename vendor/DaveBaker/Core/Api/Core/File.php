@@ -17,8 +17,8 @@ class File
     protected $allowedMimeTypes = [];
     /** @var string */
     protected $uploadType;
-    /** @var int */
-    protected $parentId;
+    /** @var int|string */
+    protected $identifier;
     /** @var string  */
     protected $namespaceCode = 'file_upload_api';
 
@@ -43,27 +43,30 @@ class File
     /**
      * @return int
      */
-    public function getParentId()
+    public function getIdentifier()
     {
-        return $this->parentId;
+        return $this->identifier;
     }
 
     /**
-     * @param int $parentId
+     * @param int|string $identifier
      * @return $this
      */
-    public function setParentId($parentId)
+    public function setIdentifier($identifier)
     {
-        $this->parentId = $parentId;
+        $this->identifier = $identifier;
         return $this;
     }
 
     /**
      * @param $params
-     * @return array
+     * @return mixed
      * @throws Exception
+     * @throws \DaveBaker\Core\Db\Exception
      * @throws \DaveBaker\Core\Event\Exception
+     * @throws \DaveBaker\Core\Helper\Exception
      * @throws \DaveBaker\Core\Object\Exception
+     * @throws \Zend_Db_Adapter_Exception
      */
     public function uploadAction($params)
     {
@@ -71,22 +74,16 @@ class File
             throw new Exception('No files provided');
         }
 
-        if(!isset($params['parent_id']) || empty($params['parent_id'])){
-            $params['parent_id'] = uniqid();
-        }
-
-        if(!isset($params['upload_type'])){
-            $params['upload_type'] = UploadDefinition::UPLOAD_TYPE_GENERAL;
-        }
-
         $this->uploadType = $params['upload_type'];
-        $this->parentId = $params['parent_id'];
+        $this->identifier = isset($params['identifier']) ? $params['identifier'] : null;
 
         $results = [];
         // Do all validation before performing uploads (deny all if any fail)
         @array_map([$this, 'validateFile'], $_FILES);
 
-        $results[] = @array_map([$this, 'performUpload'], $_FILES);
+        foreach($_FILES as $file){
+            $results[] = $this->performUpload($file);
+        }
 
         $context = $this->fireEvent('upload_complete', [
             'results' => $results,
@@ -134,8 +131,13 @@ class File
             ->setFilename($pathInfo['basename'])
             ->setExtension($pathInfo['extension'])
             ->setMimeType($mimeType)
-            ->setUploadType($this->uploadType)
-            ->setParentId($this->parentId);
+            ->setUploadType($this->uploadType);
+
+        if($this->uploadType == UploadDefinition::UPLOAD_TYPE_TEMPORARY){
+            $fileInstance->setTemporaryId($this->identifier);
+        }else{
+            $fileInstance->setParentId($this->identifier);
+        }
 
         if($this->getUserHelper()->isLoggedIn()){
             $fileInstance->setLastUpdatedById($this->getUserHelper()->getCurrentUserId());
@@ -155,7 +157,7 @@ class File
         }
 
         return [
-            'file_id' => $fileInstance->getId(),
+            'fileId' => $fileInstance->getId(),
             'url' => $fileInstance->getUrl()
         ];
     }

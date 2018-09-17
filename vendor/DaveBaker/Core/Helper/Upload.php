@@ -9,15 +9,26 @@ use \DaveBaker\Core\Definitions\Upload as UploadDefinition;
  */
 class Upload extends Base
 {
-    const UPLOAD_DIRECTORY = 'dbwpcore';
-    const TEMPORARY_PREFIX = 'upload_';
+    /** @var string */
+    protected $temporaryId;
 
     /**
      * @return string
+     * @throws \DaveBaker\Core\Object\Exception
+     *
+     * Only generate one per page load, use one that's been posted if available
      */
-    public function getTemporaryId()
+    public function getTemporaryIdForSession()
     {
-        return uniqid(self::TEMPORARY_PREFIX);
+        if($temporaryId  = $this->getRequest()->getPostParam(UploadDefinition::TEMPORARY_IDENTIFIER_ELEMENT_NAME)){
+            return $temporaryId;
+        }
+
+        if(!$this->temporaryId){
+            $this->temporaryId = uniqid(UploadDefinition::TEMPORARY_PREFIX);
+        }
+
+        return $this->temporaryId;
     }
 
     /**
@@ -69,13 +80,13 @@ class Upload extends Base
 
     /**
      * @param string $type
-     * @param null|int $parentId
+     * @param string|int $identifier
      * @return mixed
      * @throws \DaveBaker\Core\Object\Exception
      */
     public function getUploadCollection(
         $type = UploadDefinition::UPLOAD_TYPE_GENERAL,
-        $parentId = null
+        $identifier
     ) {
 
         $userTable = $this->getApp()->getHelper('Db')->getTableName('users', false);
@@ -91,11 +102,38 @@ class Upload extends Base
             ['created_by_name' => 'user_login']
         );
 
-        if($parentId){
-            $collection->where('parent_id=?', $parentId);
+        if($identifier){
+            if($type == UploadDefinition::UPLOAD_TYPE_TEMPORARY){
+                $collection->where('temporary_id=?', $identifier);
+            }else {
+                $collection->where('parent_id=?', $identifier);
+            }
         }
 
         return $collection;
+    }
+
+    /**
+     * @param $identifier
+     * @param $uploadType
+     * @param $parentId
+     * @return $this
+     * @throws \DaveBaker\Core\Object\Exception
+     */
+    public function assignTemporaryUploadsToParent($identifier, $uploadType, $parentId)
+    {
+        $items = $this->getUploadCollection(
+            UploadDefinition::UPLOAD_TYPE_TEMPORARY,
+            $identifier
+        )->load();
+
+        foreach($items as $item){
+            $item->setTemporaryId(null)
+                ->setParentId($parentId)
+                ->setUploadType($uploadType)->save();
+        }
+
+        return $this;
     }
 
     /**

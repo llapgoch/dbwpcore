@@ -115,11 +115,6 @@ class App
             ['jquery']
         );
 
-        wp_enqueue_script(
-            "janl_mustache",
-            $urlHelper->getPluginUrl('assets/vendor/janl/mustache.js'), []
-        );
-
         wp_enqueue_script("{$this->scriptPrefix}block_replacer");
         wp_enqueue_script("jank_mustache");
 

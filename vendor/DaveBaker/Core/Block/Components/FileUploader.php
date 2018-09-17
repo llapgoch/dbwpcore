@@ -2,6 +2,7 @@
 
 namespace DaveBaker\Core\Block\Components;
 use DaveBaker\Core\Definitions\Api;
+use DaveBaker\Core\Definitions\Upload;
 
 /**
  * Class FileUploader
@@ -62,6 +63,15 @@ class FileUploader
                 'fileuploader'
             )->addClass('js-file-input upload-component-input')
                 ->addAttribute(['multiple' => 'multiple', 'id' => $id]),
+
+            $this->createBlock(
+                '\DaveBaker\Form\Block\Input\Hidden',
+                null,
+                'temporaryIdentifier'
+            )->addClass('js-file-ids')
+                ->setElementName(Upload::TEMPORARY_IDENTIFIER_ELEMENT_NAME)
+                ->setElementValue($this->getUploadHelper()->getTemporaryIdForSession()),
+
 
             $this->createBlock(
                 '\DaveBaker\Core\Block\Components\ProgressBar',

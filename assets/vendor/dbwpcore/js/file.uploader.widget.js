@@ -9,6 +9,7 @@
 			progressBarSelector: '.js-progress-bar',
 			progressInnerSelector: '.progress-bar',
 			fileUploadSelector: '.js-file-input',
+			fileUploadIdFieldSelector: '.js-file-ids',
 			labelSelector: '.js-file-label',
 			hiddenClass: 'd-none',
 			uploadErrorMessage: 'An error occurred during the upload'
@@ -91,9 +92,9 @@
 			return $(this.options.progressInnerSelector, this.getProgressBar());
 		},
 
-		checkEnable()
+		getFileUploadIdField: function()
 		{
-			return this;
+			return $(this.options.fileUploadIdFieldSelector, this.element);
 		},
 
 		getPercentage: function(amount, total)
@@ -101,7 +102,7 @@
 			return Math.round((amount / total) * 100);
 		},
 
-		updatePercentage(percentage)
+		updatePercentage: function(percentage)
 		{
 			var $innerBar = this.getInnerProgressBar();
 			percentage = Math.max(0, Math.min(100, percentage)) + '%';
@@ -167,6 +168,8 @@
 					}else{
 						$(document).trigger('ajaxSuccess', xhr);
 					}
+
+
 				}, 10);
 			});
 
