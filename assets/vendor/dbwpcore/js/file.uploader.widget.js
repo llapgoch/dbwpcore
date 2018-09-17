@@ -9,7 +9,7 @@
 			progressBarSelector: '.js-progress-bar',
 			progressInnerSelector: '.progress-bar',
 			fileUploadSelector: '.js-file-input',
-			buttonUploadSelector: '.js-upload-button',
+			labelSelector: '.js-file-label',
 			hiddenClass: 'd-none',
 			uploadErrorMessage: 'An error occurred during the upload'
 		},
@@ -30,7 +30,6 @@
 
 			this.hideProgressBar();
 			this.showFileUpload();
-			this.disableUploadButton();
 			this.addEvents();
 		},
 
@@ -38,29 +37,12 @@
 		{
 			var events = {};
 
-			events['click ' + this.options.buttonUploadSelector] = function(ev) {
-				ev.preventDefault();
-				this.upload();
-			};
-
 			events['change ' + this.options.fileUploadSelector] = function(ev) {
 				ev.preventDefault();
 				this.upload();
 			};
 
 			this._on(events);
-		},
-
-		disableUploadButton: function()
-		{
-			this.getButtonUpload().attr('disabled', 'disabled');
-			return this;
-		},
-
-		enableUploadButton: function()
-		{
-			this.getButtonUpload().removeAttr('disabled');
-			return this;
 		},
 
 		hideProgressBar: function()
@@ -77,12 +59,14 @@
 
 		hideFileUpload: function()
 		{
+			this.getLabel().addClass(this.options.hiddenClass);
 			this.getFileUpload().addClass(this.options.hiddenClass);
 			return this;
 		},
 
 		showFileUpload: function()
 		{
+			this.getLabel().removeClass(this.options.hiddenClass);
 			this.getFileUpload().removeClass(this.options.hiddenClass);
 			return this;
 		},
@@ -97,9 +81,9 @@
 			return $(this.options.fileUploadSelector, this.element);
 		},
 
-		getButtonUpload: function()
+		getLabel: function()
 		{
-			return $(this.options.buttonUploadSelector, this.element);
+			return $(this.options.labelSelector, this.element);
 		},
 
 		getInnerProgressBar: function()
@@ -109,12 +93,6 @@
 
 		checkEnable()
 		{
-			if(this.getFileUpload().val()){
-				this.enableUploadButton()
-			}else{
-				this.disableUploadButton();
-			}
-
 			return this;
 		},
 
@@ -149,6 +127,7 @@
 				throw 'File not selected';
 			}
 
+
 			var formData = new FormData();
 			for(var i = 0; i < uploader.files.length; i++){
 				formData.append('file_' + i, uploader.files[i]);
@@ -160,28 +139,28 @@
 				this.request.upload.addEventListener('progress', function (data) {
 					self.updatePercentage(self.getPercentage(data.loaded, data.total));
 				});
-
-				this.request.addEventListener('loadend', function(ev){
-					var xhr = ev.currentTarget;
-
-					self.getFileUpload().val('');
-					self.showFileUpload().hideProgressBar();
-
-					if(xhr.response){
-						xhr.responseJSON = JSON.parse(xhr.response);
-					}
-
-					if(xhr.status !== 200){
-						if(xhr.responseJSON){
-							alert(xhr.responseJSON.message);
-						}else{
-							alert(self.options.uploadErrorMessage);
-						}
-					}else{
-						$(document).trigger('ajaxSuccess', xhr);
-					}
-				});
 			}
+
+			this.request.addEventListener('loadend', function(ev){
+				var xhr = ev.currentTarget;
+
+				self.getFileUpload().val('');
+				self.showFileUpload().hideProgressBar();
+
+				if(xhr.response){
+					xhr.responseJSON = JSON.parse(xhr.response);
+				}
+
+				if(xhr.status !== 200){
+					if(xhr.responseJSON){
+						alert(xhr.responseJSON.message);
+					}else{
+						alert(self.options.uploadErrorMessage);
+					}
+				}else{
+					$(document).trigger('ajaxSuccess', xhr);
+				}
+			});
 
 			this.request.open('POST', this.endpoint, true);
 			this.request.send(formData);

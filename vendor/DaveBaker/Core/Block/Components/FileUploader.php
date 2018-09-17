@@ -43,26 +43,30 @@ class FileUploader
         parent::_preDispatch();
         wp_enqueue_script('dbwpcore_file_uploader');
 
+        $id = $this->getUtilHelper()->createUrlKeyFromText($this->getName() . "_element", '_');
+
         $this->addChildBlock([
+            $this->createBlock(
+                '\DaveBaker\Form\Block\Label',
+                null,
+                'label'
+            )->addClass('upload-component-label')
+                ->setLabelName('Upload Attachment')
+                ->setForId($id)
+                ->addClass('js-file-label upload-component-label btn btn-sm btn-primary'),
+
             $this->createBlock(
                 '\DaveBaker\Form\Block\Input\File',
                 null,
                 'fileuploader'
-            )->addClass('js-file-input')->addAttribute(['multiple' => 'multiple']),
-
-
-            $this->createBlock(
-                '\DaveBaker\Form\Block\Button',
-                null,
-                'uploadbutton'
-            )->setButtonName('Upload')
-                ->addClass('js-upload-button'),
+            )->addClass('js-file-input upload-component-input')
+                ->addAttribute(['multiple' => 'multiple', 'id' => $id]),
 
             $this->createBlock(
                 '\DaveBaker\Core\Block\Components\ProgressBar',
                 null,
                 'progressbar'
-            )
+            )->addClass('upload-component-progress')
         ]);
     }
 
