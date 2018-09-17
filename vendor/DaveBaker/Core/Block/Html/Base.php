@@ -17,14 +17,15 @@ abstract class Base extends \DaveBaker\Core\Block\Template
 
 
     /**
-     * @return \DaveBaker\Core\Block\Template
+     * @return \DaveBaker\Core\Block\Template|void
+     * @throws \DaveBaker\Core\Event\Exception
      * @throws \DaveBaker\Core\Object\Exception
      */
-    protected function _construct()
+    public function preDispatch()
     {
         $this->addClass($this->getDefaultClassesForElement());
         $this->addAttribute($this->getDefaultAttributesForElement());
-        parent::_construct();
+        parent::preDispatch();
     }
 
     /**

@@ -29,6 +29,7 @@ class Element
             'button-anchor' => '',
             'paginator' => '',
             'file-uploader-component' => 'upload-component js-file-uploader-component',
+            'file-uploader-component-label' => 'horses',
             'progress-bar' => 'progress js-progress-bar'
         ],
         'elementAttributes' => [

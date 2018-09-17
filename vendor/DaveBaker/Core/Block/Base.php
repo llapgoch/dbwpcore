@@ -400,7 +400,7 @@ abstract class Base extends \DaveBaker\Core\Object\Base
      * @throws \DaveBaker\Core\Event\Exception
      * @throws \DaveBaker\Core\Object\Exception
      */
-    public final function preDispatch()
+    public function preDispatch()
     {
         if(!$this->checkAllowed()){
             return;
@@ -438,7 +438,7 @@ abstract class Base extends \DaveBaker\Core\Object\Base
      * @throws \DaveBaker\Core\Event\Exception
      * @throws \DaveBaker\Core\Object\Exception
      */
-    public final function postDispatch()
+    public function postDispatch()
     {
         if(!$this->checkAllowed()){
             return;

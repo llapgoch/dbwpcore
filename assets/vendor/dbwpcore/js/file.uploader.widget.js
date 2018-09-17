@@ -124,9 +124,10 @@
 
 			var uploader = this.getFileUpload().get(0);
 			if(!uploader || !uploader.files || !uploader.files[0]){
-				throw 'File not selected';
+				throw 'No file selected';
 			}
 
+			self.updatePercentage(0);
 
 			var formData = new FormData();
 			for(var i = 0; i < uploader.files.length; i++){
@@ -144,22 +145,29 @@
 			this.request.addEventListener('loadend', function(ev){
 				var xhr = ev.currentTarget;
 
+				self.updatePercentage(100);
 				self.getFileUpload().val('');
 				self.showFileUpload().hideProgressBar();
 
-				if(xhr.response){
-					xhr.responseJSON = JSON.parse(xhr.response);
-				}
-
-				if(xhr.status !== 200){
-					if(xhr.responseJSON){
-						alert(xhr.responseJSON.message);
-					}else{
-						alert(self.options.uploadErrorMessage);
+				window.setTimeout(function(){
+					try {
+						if (xhr.response) {
+							xhr.responseJSON = JSON.parse(xhr.response);
+						}
+					} catch (e){
+						return alert(self.options.uploadErrorMessage);
 					}
-				}else{
-					$(document).trigger('ajaxSuccess', xhr);
-				}
+
+					if(xhr.status !== 200){
+						if(xhr.responseJSON){
+							alert(xhr.responseJSON.message);
+						}else{
+							alert(self.options.uploadErrorMessage);
+						}
+					}else{
+						$(document).trigger('ajaxSuccess', xhr);
+					}
+				}, 10);
 			});
 
 			this.request.open('POST', this.endpoint, true);

@@ -53,7 +53,8 @@ class FileUploader
             )->addClass('upload-component-label')
                 ->setLabelName('Upload Attachment')
                 ->setForId($id)
-                ->addClass('js-file-label upload-component-label btn btn-sm btn-primary'),
+                ->addTagIdentifier('file-uploader-component-label')
+                ->addClass('js-file-label upload-component-label'),
 
             $this->createBlock(
                 '\DaveBaker\Form\Block\Input\File',
