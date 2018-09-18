@@ -8,6 +8,7 @@ namespace DaveBaker\Core\Layout\Handle;
  */
 class Manager extends \DaveBaker\Core\Base
 {
+    const HANDLE_DEFAULT = 'default';
     const HANDLE_HOMEPAGE = 'index';
     const HANDLE_LOGIN = 'login';
     const HANDLE_REGISTER = 'register';
@@ -19,7 +20,7 @@ class Manager extends \DaveBaker\Core\Base
     /** @var array */
     protected $handles = [];
     /** @var array */
-    protected $defaultHandles = ['default'];
+    protected $defaultHandles = [self::HANDLE_DEFAULT];
 
     /**
      * @return $this

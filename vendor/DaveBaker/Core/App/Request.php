@@ -54,10 +54,6 @@ class Request extends \DaveBaker\Core\Base
             }
         }
 
-        if($returnUrl = base64_decode($this->getParam(self::RETURN_URL_PARAM))){
-            $this->getApp()->getGeneralSession()->set(self::RETURN_URL_PARAM, $returnUrl);
-        }
-
         return $this;
     }
 
@@ -94,16 +90,11 @@ class Request extends \DaveBaker\Core\Base
      */
     public function getReturnUrl()
     {
-        return $this->getApp()->getGeneralSession()->get(self::RETURN_URL_PARAM);
-    }
+        if($this->getRequest()->getParam(self::RETURN_URL_PARAM)) {
+            return base64_decode($this->getRequest()->getParam(self::RETURN_URL_PARAM));
+        }
 
-    /**
-     * @return \DaveBaker\Core\Session\General|object
-     * @throws \DaveBaker\Core\Object\Exception
-     */
-    public function unsetRemoveUrl()
-    {
-        return $this->getApp()->getGeneralSession()->clear(self::RETURN_URL_PARAM);
+        return null;
     }
 
     /**
