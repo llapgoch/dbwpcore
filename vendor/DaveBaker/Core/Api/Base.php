@@ -23,11 +23,7 @@ abstract class Base
     public function isAllowed()
     {
         if(!parent::isAllowed()){
-            return new \WP_Error(
-                ControllerInterface::AUTH_FAILED_CODE,
-                __( ControllerInterface::AUTH_FAILED_STRING),
-                ['status' => 403]
-            );
+            return $this->getAccessDeniedError();
         }
 
         return true;
@@ -84,11 +80,18 @@ abstract class Base
         return $this->replacerBlockList;
     }
 
+    /**
+     * @return \WP_Error
+     */
+    protected function getAccessDeniedError()
+    {
+        return new \WP_Error(
+            ControllerInterface::AUTH_FAILED_CODE,
+            __( ControllerInterface::AUTH_FAILED_STRING),
+            ['status' => 403]
+        );
+    }
 
     // Methods in API controllers follow the form <actionName>Action, execute is not required
-
-    /**
-     *
-     */
     public function execute(){}
 }

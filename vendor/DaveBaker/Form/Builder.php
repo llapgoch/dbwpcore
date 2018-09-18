@@ -88,6 +88,15 @@ class Builder extends \DaveBaker\Core\Base
     }
 
     /**
+     * @param $str
+     * @return mixed
+     */
+    public function underscoresToDots($str)
+    {
+        return str_replace('_', '.', $str);
+    }
+
+    /**
      * @param array $scheme
      * @return array
      * @throws Exception
@@ -117,7 +126,9 @@ class Builder extends \DaveBaker\Core\Base
             $scheme['type'] = self::BASE_ELEMENT_NAMESPACE . $scheme['type'];
         }
 
-        $namePrefix =  str_replace("_", ".", $this->formName . "." . $scheme['name']) . ".";
+        $namePrefix =  $this->underscoresToDots(
+            $this->formName . "." . $scheme['name'] . "."
+        );
 
         $inputBlock = $this->getApp()->getBlockManager()->createBlock(
             $scheme['type'],
@@ -204,7 +215,9 @@ class Builder extends \DaveBaker\Core\Base
 
                 $formRow = $this->formRows[$scheme['rowIdentifier']] = $this->getApp()->getBlockManager()->createBlock(
                     self::BASE_ELEMENT_NAMESPACE . self::DEFAULT_ROW_DEFINITION,
-                    $namePrefix . 'form.row'
+                    $this->underscoresToDots(
+                        $this->formName . "." . $scheme['rowIdentifier']
+                    )
                 );
 
                 if(isset($this->rowSettings[$scheme['rowIdentifier']])){

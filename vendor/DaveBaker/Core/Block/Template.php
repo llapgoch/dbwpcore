@@ -11,6 +11,7 @@ class Template
     extends \DaveBaker\Core\Block\Base
     implements \DaveBaker\Core\Block\BlockInterface
 {
+    const JS_DATA_ITEMS_KEY = 'js_data_items';
     /** @var string  */
     protected $template = '';
     /** @var array */
@@ -22,10 +23,8 @@ class Template
      * Replacer blocks are automatically picked up and replaced when performing JS requests
      */
     protected $isReplacerBlock = false;
-    /** @var array  */
-    protected $jsDataItems = [];
     /** @var string  */
-    protected $jsDataKey = 'data-js-data';
+    protected $jsDataKey = 'data-js-data'; // key for the element attribute
 
     /**
      * @param $items
@@ -35,8 +34,30 @@ class Template
      */
     public function addJsDataItems($items)
     {
-        $this->jsDataItems = array_replace_recursive($this->jsDataItems, $items);
+        $this->setJsDataItems(array_replace_recursive($this->getJsDataItems(), $items));
         return $this;
+    }
+
+    /**
+     * @param $items
+     * @return $this
+     */
+    public function setJsDataItems($items)
+    {
+        $this->setData(self::JS_DATA_ITEMS_KEY, $items);
+        return $this;
+    }
+
+    /**
+     * @return array|mixed|null
+     */
+    public function getJsDataItems()
+    {
+        if(!is_array($this->getData(self::JS_DATA_ITEMS_KEY))){
+            $this->setData(self::JS_DATA_ITEMS_KEY, []);
+        }
+
+        return $this->getData(self::JS_DATA_ITEMS_KEY);
     }
 
     /**
@@ -80,13 +101,13 @@ class Template
             $this->removeAttribute("data-" . ControllerInterface::BLOCK_REPLACER_KEY);
         }
 
-        if($this->jsDataItems){
-            $this->addAttribute([$this->jsDataKey => json_encode($this->jsDataItems)]);
+        $attributes = array_replace_recursive($this->getAttributes(), $this->getReplacerAttribute());
+
+        if($jsDataItems = $this->getJsDataItems()) {
+            $attributes[$this->jsDataKey] = json_encode($jsDataItems);
         }
 
-        $this->addAttribute($this->getReplacerAttribute());
-
-        $attrString = $this->makeAttrs($this->getAttributes());
+        $attrString = $this->makeAttrs($attributes);
 
         if($includeClass && $this->classes){
             $attrString .= $this->makeClassString($this->getClasses());
