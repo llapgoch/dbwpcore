@@ -225,6 +225,8 @@ abstract class Base extends \DaveBaker\Core\Base
         foreach($processors as $k => $processor){
             $this->registerOutputProcessor($k, $processor);
         }
+
+        $this->setOutputProcessorsOnItems();
         return $this;
     }
 
@@ -336,10 +338,11 @@ abstract class Base extends \DaveBaker\Core\Base
             /** @var \DaveBaker\Core\Model\Db\Base $item */
             $item = $this->createAppObject($this->dbClass);
             $item->setObjectData($result);
-            $item->addOutputProcessors($this->getOutputProcessors());
 
             $this->items[] = $item;
         }
+
+        $this->setOutputProcessorsOnItems();
 
         $this->fireEvent('after_load');
 
@@ -410,6 +413,18 @@ abstract class Base extends \DaveBaker\Core\Base
     public function resetItems()
     {
         $this->items = [];
+        return $this;
+    }
+
+    /**
+     * @return $this
+     */
+    protected function setOutputProcessorsOnItems()
+    {
+        foreach($this->items as $item){
+            $item->addOutputProcessors($this->getOutputProcessors());
+        }
+
         return $this;
     }
 

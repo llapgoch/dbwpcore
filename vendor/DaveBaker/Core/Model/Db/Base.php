@@ -119,6 +119,7 @@ abstract class Base
         foreach($processors as $k => $processor){
             $this->registerOutputProcessor($k, $processor);
         }
+
         return $this;
     }
 
@@ -191,6 +192,7 @@ abstract class Base
             return;
         }
 
+        $this->beforeSave();
         $this->fireEvent('before_save');
 
         try {
@@ -204,10 +206,14 @@ abstract class Base
             throw new Exception($e->getMessage(), $e->getCode());
         }
 
+        $this->afterSave();
         $this->fireEvent('after_save');
 
         return $this;
     }
+
+    public function beforeSave(){}
+    public function afterSave(){}
 
     /**
      * @return $this
