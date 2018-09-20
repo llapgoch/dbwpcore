@@ -148,4 +148,17 @@ class Upload extends Base
     ) {
         return $this->getUploadUrl() . $upload->getId() . "." . $upload->getExtension();
     }
+
+    /**
+     * @param \DaveBaker\Core\Model\Db\Core\Upload $upload
+     * @return string
+     *
+     * Use the db model's get rather than this method, this simply builds a url path
+     * The getUrl method in the model will check whether the file has a parent, and return the correct path
+     */
+    public function makeUploadPath(
+        \DaveBaker\Core\Model\Db\Core\Upload $upload
+    ) {
+        return $this->getUploadDir() . $upload->getId() . "." . $upload->getExtension();
+    }
 }

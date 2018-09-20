@@ -29,6 +29,8 @@ class Table extends Base
     protected $orderDir = 'ASC';
     /** @var \DaveBaker\Core\Block\Components\Paginator */
     protected $paginator;
+    /** @var array  */
+    protected $thAttrs = [];
 
     /**
      * @return \DaveBaker\Core\Block\Template|void
@@ -39,6 +41,17 @@ class Table extends Base
         $this->setTemplate('html/table.phtml');
         $this->addTagIdentifier('table');
         parent::_construct();
+    }
+
+    /**
+     * @param $headerKey
+     * @param $attributes
+     * @return $this
+     */
+    public function setThAttributes($headerKey, $attributes)
+    {
+        $this->thAttrs[$headerKey] = $attributes;
+        return $this;
     }
 
     /**
@@ -157,6 +170,10 @@ class Table extends Base
         $attributes = [
             TableDefinition::ELEMENT_DATA_KEY_COLUMN_ID => $header
         ];
+
+        if(isset($this->thAttrs[$header])){
+            $attributes = array_merge_recursive($attributes, $this->thAttrs[$header]);
+        }
 
         $attrs = $this->makeAttrs($attributes);
 
