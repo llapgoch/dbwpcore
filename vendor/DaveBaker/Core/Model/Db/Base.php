@@ -181,7 +181,7 @@ abstract class Base
     }
 
     /**
-     * @return $this|Base|void
+     * @return $this
      * @throws Exception
      * @throws \DaveBaker\Core\Event\Exception
      * @throws \DaveBaker\Core\Object\Exception
@@ -189,7 +189,7 @@ abstract class Base
     public function save()
     {
         if(!$this->getData()){
-            return;
+            return $this;
         }
 
         $this->beforeSave();
@@ -197,11 +197,10 @@ abstract class Base
 
         try {
             if ($this->getId()) {
-                return $this->updateSave();
+                $this->updateSave();
+            }else {
+                $this->insertSave();
             }
-
-            return $this->insertSave();
-
         } catch (\Exception $e){
             throw new Exception($e->getMessage(), $e->getCode());
         }
@@ -212,8 +211,8 @@ abstract class Base
         return $this;
     }
 
-    public function beforeSave(){}
-    public function afterSave(){}
+    protected function beforeSave(){}
+    protected function afterSave(){}
 
     /**
      * @return $this
