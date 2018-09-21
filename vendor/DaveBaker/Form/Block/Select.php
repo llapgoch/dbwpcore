@@ -68,7 +68,8 @@ class Select
 
         // Set the template to input and create a hidden input for the element value
         if($this->isLocked()){
-            $this->setTemplate('form/input.phtml');
+            $this->setTemplate('form/input.phtml')
+                ->addAttribute(['readonly' => 'readonly']);
 
             $this->addChildBlock(
                 $this->hiddenInput = $this->createBlock('\DaveBaker\Form\Block\Input\Hidden')

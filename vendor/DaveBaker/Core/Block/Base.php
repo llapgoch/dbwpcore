@@ -191,6 +191,15 @@ abstract class Base extends \DaveBaker\Core\Object\Base
     }
 
     /**
+     * @param $name
+     * @return BlockInterface|null
+     */
+    public function getChildBlock($name)
+    {
+        return $this->childBlocks->get($name);
+    }
+
+    /**
      * @param $shortcode
      * @return $this
      */
