@@ -32,6 +32,7 @@ class Element
             'file-uploader-component-label' => 'horses',
             'progress-bar' => 'progress js-progress-bar'
         ],
+        'hiddenClass' => 'hidden',
         'elementAttributes' => [
             'textarea' => []
         ],

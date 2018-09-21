@@ -23,6 +23,19 @@ class Paginator
 
     /**
      * @return \DaveBaker\Core\Block\Html\Base|void
+     * @throws \DaveBaker\Core\Object\Exception
+     */
+    protected function _preDispatch()
+    {
+        parent::_preDispatch();
+
+        if($this->getTotalRecords() == 0){
+            $this->addClass($this->getConfig()->getConfigValue('hiddenClass'));
+        }
+    }
+
+    /**
+     * @return \DaveBaker\Core\Block\Html\Base|void
      */
     protected function init()
     {
