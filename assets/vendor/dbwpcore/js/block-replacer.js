@@ -15,7 +15,7 @@
 				continue;
 			}
 
-			$el = $('[data-' + BLOCK_REPLACERS_DATA_KEY + '="' + i + '"]')
+			$('[data-' + BLOCK_REPLACERS_DATA_KEY + '="' + i + '"]')
 				.trigger('block-replacer-before')
 				.replaceWith(replacers[i])
 				.trigger('block-replacer-after');

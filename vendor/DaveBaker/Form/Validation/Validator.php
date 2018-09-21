@@ -20,6 +20,8 @@ class Validator extends \DaveBaker\Core\Base
     private $errors = [];
     /** @var array  */
     protected $errorFields = [];
+    /** @var array  */
+    protected $errorMains = [];
 
     /**
      * @param array $values
@@ -118,12 +120,40 @@ class Validator extends \DaveBaker\Core\Base
     }
 
     /**
+     * @return array
+     */
+    public function getErrorFields()
+    {
+        return $this->errorFields;
+    }
+
+    /**
+     * @return array
+     */
+    public function getErrorMains()
+    {
+        return $this->errorMains;
+    }
+
+    /**
+     * @return array
+     */
+    public function getErrorsAsArray()
+    {
+        return [
+            'fields' => $this->getErrorFields(),
+            'main' => $this->getErrorMains()
+        ];
+    }
+
+    /**
      * @return array|bool
      * @throws Exception
      */
     public function validate()
     {
         $this->errors = [];
+        $this->errorMains = [];
 
         if(!is_array($this->getValues())){
             throw new Exception('Values must be set before calling validate');
@@ -139,7 +169,17 @@ class Validator extends \DaveBaker\Core\Base
                 throw new Exception('Rule result did not return a valid response');
             }
 
-            $this->errorFields[$rule->getName()] = $ruleResult->getInputError();
+            if(!isset($this->errorFields[$rule->getName()])){
+                $this->errorFields[$rule->getName()] = [];
+            }
+
+            if(!isset($this->errorMains[$rule->getName()])){
+                $this->errorMains[$rule->getName()] = [];
+            }
+
+            $this->errorFields[$rule->getName()][] = $ruleResult->getInputError();
+            $this->errorMains[$rule->getName()][] = $ruleResult->getMainError();
+
             $this->addError($ruleResult);
 
             if($this->breakAtFirst){
@@ -154,11 +194,5 @@ class Validator extends \DaveBaker\Core\Base
         return true;
     }
 
-    /**
-     * @return array
-     */
-    public function getErrorFields()
-    {
-        return $this->errorFields;
-    }
+
 }

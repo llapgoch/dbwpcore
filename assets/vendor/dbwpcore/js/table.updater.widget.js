@@ -68,18 +68,12 @@
 			this.addEvents();
 		},
 
-		/**
-		 * @param event
-		 * @returns {string}
-		 */
+
 		namespaceEvent: function(event)
 		{
 			return event + "." + event;
 		},
 
-		/**
-		 * @returns {dbwpcore.tableUpdater}
-		 */
 		addEvents: function() {
 			var events = {},
 				self = this;
