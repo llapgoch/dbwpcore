@@ -135,6 +135,10 @@ class Validator extends \DaveBaker\Core\Base
                 continue;
             }
 
+            if($ruleResult == null){
+                throw new Exception('Rule result did not return a valid response');
+            }
+
             $this->errorFields[$rule->getName()] = $ruleResult->getInputError();
             $this->addError($ruleResult);
 
