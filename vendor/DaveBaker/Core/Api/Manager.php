@@ -47,7 +47,6 @@ class Manager extends \DaveBaker\Core\Base
      */
     public function addEvents()
     {
-
         $this->addEvent('rest_request_before_callbacks', function(
             $response,
             $handler,
@@ -213,6 +212,7 @@ class Manager extends \DaveBaker\Core\Base
                 );
             }
 
+            // TODO: ADD array_filter instead of a loop over all. Do to handles too
             foreach(get_class_methods($controller) as $method) {
                 if (preg_match("/Action/", $method)) {
                     $actionTag = $this->getUtilHelper()->camelToUnderscore($method);

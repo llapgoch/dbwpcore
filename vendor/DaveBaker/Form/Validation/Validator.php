@@ -22,6 +22,8 @@ class Validator extends \DaveBaker\Core\Base
     protected $errorFields = [];
     /** @var array  */
     protected $errorMains = [];
+    /** @var int  */
+    protected $numberOfErrors = 0;
 
     /**
      * @param array $values
@@ -47,6 +49,14 @@ class Validator extends \DaveBaker\Core\Base
     public function getErrors()
     {
         return $this->errors;
+    }
+
+    /**
+     * @return int
+     */
+    public function getNumberOfErrors()
+    {
+        return $this->numberOfErrors;
     }
 
     /**
@@ -154,6 +164,7 @@ class Validator extends \DaveBaker\Core\Base
     {
         $this->errors = [];
         $this->errorMains = [];
+        $this->numberOfErrors = 0;
 
         if(!is_array($this->getValues())){
             throw new Exception('Values must be set before calling validate');
@@ -168,6 +179,8 @@ class Validator extends \DaveBaker\Core\Base
             if($ruleResult == null){
                 throw new Exception('Rule result did not return a valid response');
             }
+
+            $this->numberOfErrors++;
 
             if(!isset($this->errorFields[$rule->getName()])){
                 $this->errorFields[$rule->getName()] = [];

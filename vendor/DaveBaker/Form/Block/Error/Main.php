@@ -10,9 +10,8 @@ namespace DaveBaker\Form\Block\Error;
  */
 class Main extends \DaveBaker\Core\Block\Html\Base
 {
-    /**
-     * @var array
-     */
+
+    /** @var array  */
     protected $errors = [];
 
     /**
