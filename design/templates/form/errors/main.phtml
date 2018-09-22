@@ -1,15 +1,14 @@
 <?php
 /** @var \DaveBaker\Form\Block\Error\Main $block */
 /** @var \DaveBaker\Form\Validation\Error\ErrorInterface $error  */
-
-if(!$errors = $block->getErrors()){
-    return;
-}
+$errors = $block->getErrors();
 ?>
 <div <?php echo $block->getAttrs();?>>
+<?php if(count($errors)):?>
     <ul class="alert-list">
     <?php foreach($errors as $error):?>
         <li><?php echo $block->escapeHtml($error->getMainError());?></li>
     <?php endforeach; ?>
     </ul>
+    <?php endif; ?>
 </div>

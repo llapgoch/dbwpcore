@@ -15,6 +15,19 @@ class Main extends \DaveBaker\Core\Block\Html\Base
     protected $errors = [];
 
     /**
+     * @return \DaveBaker\Core\Block\Html\Base|void
+     * @throws \DaveBaker\Core\Object\Exception
+     */
+    protected function _preDispatch()
+    {
+        parent::_preDispatch();
+
+        if(!count($this->getErrors())){
+            $this->addClass($this->getConfig()->getConfigValue('hiddenClass'));
+        }
+    }
+
+    /**
      * @return \DaveBaker\Core\Block\Template|void
      * @throws \DaveBaker\Core\Object\Exception
      */
