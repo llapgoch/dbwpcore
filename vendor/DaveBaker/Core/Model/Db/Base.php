@@ -156,7 +156,7 @@ abstract class Base
     }
 
     /**
-     * @return $this|void
+     * @return $this
      * @throws \DaveBaker\Core\Event\Exception
      * @throws \DaveBaker\Core\Object\Exception
      */

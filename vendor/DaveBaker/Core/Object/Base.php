@@ -170,6 +170,7 @@ class Base extends \DaveBaker\Core\Base
             foreach($key as $k => $item){
                 $this->_data[$k] = $item;
             }
+
             $this->_addFullNames();
         } else {
             $this->_data[$key] = $value;

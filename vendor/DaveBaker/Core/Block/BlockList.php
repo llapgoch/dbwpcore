@@ -52,10 +52,10 @@ class BlockList
     }
 
     /**
-     * @param array $blockNames
+     * @param array|string $blockNames
      * @return $this
      */
-    public function remove($blockNames = [])
+    public function remove($blockNames)
     {
         if(!is_array($blockNames)){
             $blockNames = [$blockNames];

@@ -21,6 +21,6 @@
 				.trigger('block-replacer-after');
 		}
 
-		$(document.trigger('blockReplacerComplete'));
+		$(document).trigger('blockReplacerComplete');
 	});
 }(jQuery));

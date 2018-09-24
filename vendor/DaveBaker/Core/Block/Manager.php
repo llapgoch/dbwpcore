@@ -79,6 +79,16 @@ class Manager
 
     /**
      * @param $blockName
+     * @return $this
+     */
+    public function deleteBlock($blockName)
+    {
+        $this->blockList->remove($blockName)->update();
+        return $this;
+    }
+
+    /**
+     * @param $blockName
      * @return bool
      */
     public function isRemoved($blockName)
