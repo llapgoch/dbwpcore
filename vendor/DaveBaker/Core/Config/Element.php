@@ -30,7 +30,8 @@ class Element
             'paginator' => '',
             'file-uploader-component' => 'upload-component js-file-uploader-component',
             'file-uploader-component-label' => 'horses',
-            'progress-bar' => 'progress js-progress-bar'
+            'progress-bar' => 'progress js-progress-bar',
+            'modal' => 'modal fade'
         ],
         'hiddenClass' => 'hidden',
         'elementAttributes' => [

@@ -19,8 +19,8 @@
 				.trigger('block-replacer-before')
 				.replaceWith(replacers[i])
 				.trigger('block-replacer-after');
-
 		}
 
+		$(document.trigger('blockReplacerComplete'));
 	});
 }(jQuery));

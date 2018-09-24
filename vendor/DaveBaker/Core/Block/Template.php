@@ -2,6 +2,7 @@
 
 namespace DaveBaker\Core\Block;
 use DaveBaker\Core\Api\ControllerInterface;
+use DaveBaker\Core\Config\ConfigInterface;
 
 /**
  * Class Template
@@ -18,6 +19,8 @@ class Template
     protected $attributes = [];
     /** @var array  */
     protected $classes = [];
+    /** @var ConfigInterface */
+    protected $config;
     /**
      * @var bool
      * Replacer blocks are automatically picked up and replaced when performing JS requests
@@ -25,6 +28,93 @@ class Template
     protected $isReplacerBlock = false;
     /** @var string  */
     protected $jsDataKey = 'data-js-data'; // key for the element attribute
+    /** @var string  */
+    protected $tagIdentifiers = [];
+
+    /**
+     * @return \DaveBaker\Core\Block\Template|void
+     * @throws \DaveBaker\Core\Event\Exception
+     * @throws \DaveBaker\Core\Object\Exception
+     */
+    public function preDispatch()
+    {
+        $this->addClass($this->getDefaultClassesForElement());
+        $this->addAttribute($this->getDefaultAttributesForElement());
+        parent::preDispatch();
+    }
+
+
+    /**
+     * @return mixed
+     * @throws \DaveBaker\Core\Object\Exception
+     */
+    public function getDefaultClassesForElement()
+    {
+        return $this->getDefaultClassesForIdentifiers($this->getTagIdentifiers());
+    }
+
+    /**
+     * @param $identifiers
+     * @return array
+     * @throws \DaveBaker\Core\Object\Exception
+     */
+    public function getDefaultClassesForIdentifiers($identifiers)
+    {
+        $classes = [];
+        $defaultClasses = $this->getConfig()->getConfigValue('elementClasses');
+
+        foreach($identifiers as $tagIdentifier){
+            if(isset($defaultClasses[$tagIdentifier])){
+                $classes[] = $defaultClasses[$tagIdentifier];
+            }
+        }
+
+        return $classes;
+    }
+
+    /**
+     * @param $identifiers
+     * @return array
+     * @throws \DaveBaker\Core\Object\Exception
+     */
+    public function getDefaultAttributesForIdentifiers($identifiers)
+    {
+        $attributes = [];
+        $identifiers = (array)$identifiers;
+        $defaultAttributes = $this->getConfig()->getConfigValue('elementAttributes');
+
+        foreach($identifiers as $identifier){
+            if(isset($defaultAttributes[$identifier]) && is_array($defaultAttributes[$identifier])){
+                $attributes = array_merge($attributes, $defaultAttributes[$identifier]);
+            }
+        }
+
+        return $attributes;
+    }
+
+    /**
+     * @return mixed
+     * @throws \DaveBaker\Core\Object\Exception
+     */
+    public function getDefaultAttributesForElement()
+    {
+        $attributes = $this->getDefaultAttributesForIdentifiers($this->getTagIdentifiers());
+
+        return $attributes;
+    }
+
+    /**
+     * @return ConfigInterface|mixed
+     * @throws \DaveBaker\Core\Object\Exception
+     */
+    protected function getConfig()
+    {
+        if(!$this->config){
+            $this->config = $this->createObject('\DaveBaker\Core\Config\Element');
+        }
+
+        return $this->config;
+    }
 
     /**
      * @param $items
@@ -235,6 +325,51 @@ class Template
         }
 
         return $this;
+    }
+
+
+    /**
+     * @param $identifier
+     * @return $this
+     */
+    public function addTagIdentifier($identifier)
+    {
+        if(!is_array($identifier)){
+            $identifier = [$identifier];
+        }
+
+        foreach($identifier as $value){
+            if(!in_array($value, $this->tagIdentifiers)) {
+                $this->tagIdentifiers[] = $value;
+            }
+        }
+
+
+        return $this;
+    }
+
+    /**
+     * @param $identifier
+     * @return $this
+     */
+    public function removeTagIdentifier($identifier)
+    {
+        // Don't put this as part of the conditional, the value comes out incorrect
+        $pos = array_search($identifier, $this->tagIdentifiers);
+
+        if($pos !== false){
+            unset($this->tagIdentifiers[$pos]);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getTagIdentifiers()
+    {
+        return $this->tagIdentifiers;
     }
 
     /**
