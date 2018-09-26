@@ -5,10 +5,12 @@
   * Class Base
   * @package DaveBaker\Core\Session
   */
- class Base extends \DaveBaker\Core\Base
+ abstract class Base extends \DaveBaker\Core\Base
  {
      const MESSAGES_KEY = '___messages___';
+     /** @var string  */
      protected $namespaceCode = 'session';
+     /** @var string  */
      protected $sessionNamespace = '';
 
      /**
@@ -129,6 +131,19 @@
          return $this;
      }
 
+     /**
+      * @param array $arr
+      * @return string
+      * @throws \DaveBaker\Core\Object\Exception
+      */
+     public function createKey($arr)
+     {
+        return $this->getUtilHelper()->createKeyFromArray($arr);
+     }
+
+     /**
+      * @return $this
+      */
      protected function initSessionObject()
      {
         $optionKey = $this->getNamespacedOption('');
@@ -143,5 +158,7 @@
         if(!isset($_SESSION[$optionKey][$this->sessionNamespace][self::MESSAGES_KEY])){
             $_SESSION[$optionKey][$this->sessionNamespace][self::MESSAGES_KEY] = [];
         }
+
+        return $this;
      }
  }

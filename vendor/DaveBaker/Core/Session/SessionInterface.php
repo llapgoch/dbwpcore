@@ -5,6 +5,7 @@ namespace DaveBaker\Core\Session;
  * @package DaveBaker\Core\Session
  */
 interface SessionInterface
+    extends BaseInterface
 {
 
 }

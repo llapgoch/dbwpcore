@@ -11,7 +11,8 @@ class Util extends Base
      * @param $input
      * @return string
      */
-    public function camelToUnderscore($input) {
+    public function camelToUnderscore($input)
+    {
         preg_match_all('!([A-Z][A-Z0-9]*(?=$|[A-Z][a-z0-9])|[A-Za-z][a-z0-9]+)!', $input, $matches);
         $ret = $matches[0];
         foreach ($ret as &$match) {
@@ -41,17 +42,25 @@ class Util extends Base
         // remove duplicate -
         $text = preg_replace('~-+~', $replaceCharacter, $text);
 
-        // lowercase
         return strtolower($text);
     }
 
     /**
      * @param $attr string
-     * @return string|void
+     * @return string
      */
     public function escAttr($attr)
     {
         return esc_attr($attr);
+    }
+
+    /**
+     * @param $arr
+     * @return string
+     */
+    public function createKeyFromArray($arr)
+    {
+        return md5(serialize($arr));
     }
 
     /**
