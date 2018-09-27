@@ -302,14 +302,41 @@ abstract class Base extends \DaveBaker\Core\Object\Base
 
     /**
      * @param string $event
-     * @return array
+     * @return array|string
      */
     public function getNamespacedEvent($event)
+    {
+        return [parent::getNamespacedEvent($event), $this->getBlockNamespacedEvent($event)];
+    }
+
+    /**
+     * @param string $event
+     * @param $callback
+     * @param bool $allowMultiples
+     * @return $this|\DaveBaker\Core\Object\Base
+     * @throws \DaveBaker\Core\Object\Exception
+     */
+    public function addLocalEvent($event, $callback, $allowMultiples = false)
+    {
+        $this->addEvent(
+            $this->getBlockNamespacedEvent($event),
+            $callback,
+            $allowMultiples
+        );
+
+        return $this;
+    }
+
+    /**
+     * @param string $event
+     * @return string
+     */
+    public function getBlockNamespacedEvent($event)
     {
         $blockName = str_replace(".", "_", $this->getName());
         $eventName = parent::getNamespacedEvent($event);
 
-        return [$eventName, $eventName . "_" . $blockName];
+        return $eventName . "_" . $blockName;
     }
 
     /**

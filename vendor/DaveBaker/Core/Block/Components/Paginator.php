@@ -80,14 +80,20 @@ class Paginator
     }
 
     /**
-     * @param int $page
+     * @param $page
      * @return $this
+     * @throws \DaveBaker\Core\Event\Exception
+     * @throws \DaveBaker\Core\Object\Exception
      */
     public function setPage($page)
     {
         $this->page = max(1, min((int)$page, $this->getTotalPages()));
+
+        $this->fireEvent('set_page', ['page' => $page]);
         return $this;
     }
+
+
 
     /**
      * @return int

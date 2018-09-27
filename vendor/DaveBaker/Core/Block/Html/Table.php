@@ -1,6 +1,7 @@
 <?php
 
 namespace DaveBaker\Core\Block\Html;
+use DaveBaker\Core\Block\Components\Paginator;
 use DaveBaker\Core\Block\Exception;
 use DaveBaker\Core\Definitions\General;
 use DaveBaker\Core\Definitions\Table as TableDefinition;
@@ -55,7 +56,7 @@ class Table extends Base
     }
 
     /**
-     * @param $paginator
+     * @param Paginator $paginator
      * @return $this
      */
     public function setPaginator($paginator)

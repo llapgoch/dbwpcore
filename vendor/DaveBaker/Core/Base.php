@@ -50,6 +50,26 @@ abstract class Base
     }
 
     /**
+     * @param string $event
+     * @param $callback
+     * @param bool $allowMultiples
+     * @return $this
+     * @throws Object\Exception
+     *
+     * Adds an event local to this object, using it's namespace. Use to callback to a specific object
+     */
+    public function addLocalEvent($event, $callback, $allowMultiples = false)
+    {
+        $this->getApp()->getEventManager()->add(
+            $this->getNamespacedEvent($event),
+            $callback,
+            $allowMultiples
+        );
+
+        return $this;
+    }
+
+    /**
      * @param $event
      * @param array $params
      * @return Event\Context
@@ -64,7 +84,6 @@ abstract class Base
             $this->getNamespacedEvent($event),
             $params
         );
-        
     }
 
     /**
