@@ -418,6 +418,8 @@ abstract class Base extends \DaveBaker\Core\Object\Base
             return;
         }
 
+        $this->fireEvent('prerender');
+
         $this->preDispatch();
         $this->_preRender();
 
@@ -426,6 +428,8 @@ abstract class Base extends \DaveBaker\Core\Object\Base
             'render',
              ["html" => $this->_render()]
         );
+
+        $this->fireEvent('postrender');
 
         return $context->getHtml();
     }

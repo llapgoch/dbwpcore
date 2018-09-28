@@ -14,13 +14,6 @@ class Collection
 
     protected function _preRender()
     {
-
-        if($this->collection && $this->orderColumn){
-            $this->collection->getSelect()->reset(\Zend_Db_Select::ORDER);
-            $this->collection->order($this->orderColumn . " " . $this->orderDir);
-        }
-
-        $this->setRecords($this->collection);
         if($this->paginator && $this->collection){
             $this->paginator->setTotalRecords(count($this->collection->getItems()));
             $this->collection->resetItems();
@@ -47,7 +40,7 @@ class Collection
 
     /**
      * @param $records
-     * @return $this
+     * @return $this|\DaveBaker\Core\Block\Html\Table
      * @throws Exception
      */
     public function setRecords($records)
@@ -81,4 +74,26 @@ class Collection
         return $this->collection;
     }
 
+    /**
+     * @param $column
+     * @param string $dir
+     * @return $this|\DaveBaker\Core\Block\Html\Table
+     * @throws Exception
+     * @throws \DaveBaker\Core\Object\Exception
+     * @throws \Zend_Db_Adapter_Exception
+     */
+    public function setColumnOrder($column, $dir = 'ASC')
+    {
+        parent::setColumnOrder($column, $dir);
+        $this->collection->resetItems();
+
+        if($this->collection && $this->orderColumn){
+            $this->collection->getSelect()->reset(\Zend_Db_Select::ORDER);
+            $this->collection->order($this->orderColumn . " " . $this->orderDir);
+        }
+
+        $this->setRecords($this->collection);
+
+        return $this;
+    }
 }

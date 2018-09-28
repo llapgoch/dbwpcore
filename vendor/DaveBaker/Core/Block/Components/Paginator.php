@@ -25,9 +25,9 @@ class Paginator
      * @return \DaveBaker\Core\Block\Html\Base|void
      * @throws \DaveBaker\Core\Object\Exception
      */
-    protected function _preDispatch()
+    protected function _preRender()
     {
-        parent::_preDispatch();
+        parent::_preRender();
 
         if($this->getTotalRecords() == 0){
             $this->addClass($this->getConfig()->getConfigValue('hiddenClass'));
@@ -88,12 +88,9 @@ class Paginator
     public function setPage($page)
     {
         $this->page = max(1, min((int)$page, $this->getTotalPages()));
-
         $this->fireEvent('set_page', ['page' => $page]);
         return $this;
     }
-
-
 
     /**
      * @return int
