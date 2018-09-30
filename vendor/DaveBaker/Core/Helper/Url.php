@@ -125,10 +125,11 @@ class Url extends Base
         $url = '';
 
         if($this->getRefererUrl() && $this->getRequest()->isRest() || $this->getRequest()->isAjax()){
-            $url = $this->getRefererUrl();
+            return $this->getRefererUrl();
         }else{
             if($withQueryString && isset($_SERVER['QUERY_STRING'])) {
-                $url = add_query_arg($_SERVER['QUERY_STRING'], '', $wp->request);
+                $url = add_query_arg($_SERVER['QUERY_STRING'], '', $_SERVER['REQUEST_URI']);
+
             }
         }
 
