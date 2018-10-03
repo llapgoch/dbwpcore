@@ -14,7 +14,7 @@ class Heading extends Tag
     protected function _construct()
     {
         $this->setTag('h2');
-        $this->addTagIdentifier('heading');
+        $this->addTagIdentifier('main-heading');
         parent::_construct();
     }
 

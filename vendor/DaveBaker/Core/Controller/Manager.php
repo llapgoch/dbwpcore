@@ -12,7 +12,7 @@ class Manager extends \DaveBaker\Core\Base
     /** @var  \WP_Post */
     protected $post;
     /** @var string */
-    protected $namespaceCode = "controller_manager";
+    protected $namespaceCode = "controller";
     /** @var array */
     protected $controllers = [];
 
@@ -54,6 +54,8 @@ class Manager extends \DaveBaker\Core\Base
             foreach($this->getControllersForHandle($handle) as $controller){
                 $controller->preDispatch();
             }
+
+            $this->fireEvent($handle . "_predispatch");
         }
 
         $this->fireEvent('predispatch_after');
@@ -76,6 +78,8 @@ class Manager extends \DaveBaker\Core\Base
             foreach($this->getControllersForHandle($handle) as $controller){
                 $controller->execute();
             }
+
+            $this->fireEvent($handle . "_execute");
         }
         $this->fireEvent('execute_after');
         return $this;
@@ -94,9 +98,11 @@ class Manager extends \DaveBaker\Core\Base
 
         foreach($handles as $handle){
             /** @var \DaveBaker\Core\Controller\ControllerInterface $controller */
-            foreach($this->getControllersForHandle($handle) as $controller){
+            foreach($this->getControllersForHandle($handle) as $key => $controller){
                 $controller->postDispatch();
             }
+
+            $this->fireEvent($handle . "_postdispatch");
         }
 
         $this->fireEvent('postdispatch_after');
