@@ -79,6 +79,24 @@ class User extends Base
     }
 
     /**
+     * @param bool $wp
+     * @return mixed|string
+     * @throws \DaveBaker\Core\Object\Exception
+     */
+    public function getCurrentUser($wp = false)
+    {
+        if(!$this->getCurrentUserId()){
+            return false;
+        }
+
+        if($wp){
+            return get_current_user();
+        }
+
+        return $this->getUser($this->getCurrentUserId());
+    }
+
+    /**
      * @return bool
      */
     public function isLoggedIn()
