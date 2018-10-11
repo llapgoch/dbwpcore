@@ -35,6 +35,8 @@ class Collection
             ]);
         }
 
+//        echo $this->collection->getSelect();
+
         parent::_preRender();
     }
 
