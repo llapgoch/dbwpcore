@@ -60,7 +60,7 @@ class App
         global $wpdb;
         $wpdb->show_errors(false);
 
-        setlocale(LC_ALL, get_locale());
+        setlocale(LC_ALL, get_locale() . 'utf8', get_locale());
 
         $this->namespace = $namespace . "_";
         $this->objectManager = new $objectManagerClassName($this, new $objectManagerConfigClassName);
