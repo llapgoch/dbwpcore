@@ -56,7 +56,7 @@ class CoreApplication
               KEY `file_hash` (`file_hash`),
               KEY `temporary_id` (`temporary_id`),
               KEY `upload_type_parent` (`upload_type`, `parent_id`)
-            ) ENGINE=InnoDB DEFAULT CHARSET=utf8;"
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_bin;"
         );
 
 

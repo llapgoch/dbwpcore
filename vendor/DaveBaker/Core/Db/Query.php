@@ -53,7 +53,7 @@ class Query extends \DaveBaker\Core\Base
         );
 
         if(!$returnVal){
-            throw new Exception('An error occurrec inserting');
+            throw new Exception('An error occurred inserting');
         }
 
         $this->checkError();
