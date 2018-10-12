@@ -244,8 +244,8 @@ abstract class Base
             }
         }
 
-        $res = $this->getDb()->insert(
-            $this->getTableName(),
+        $res = $this->getQuery()->insert(
+            $this->tableName,
             $data
         );
 
@@ -262,6 +262,7 @@ abstract class Base
 
     /**
      * @return $this
+     * @throws \DaveBaker\Core\Db\Exception
      * @throws \DaveBaker\Core\Event\Exception
      * @throws \DaveBaker\Core\Object\Exception
      */
@@ -278,8 +279,8 @@ abstract class Base
             $data[self::DEFAULT_UPDATED_AT_COLUMN] = $this->getDateHelper()->utcTimestampToDb();
         }
 
-        $this->getDb()->update(
-            $this->getTableName(),
+        $this->getQuery()->update(
+            $this->tableName,
             $data,
             [$this->idColumn => $this->getId()]
         );
