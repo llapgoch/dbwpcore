@@ -47,10 +47,15 @@ class Query extends \DaveBaker\Core\Base
      */
     public function insert($tableName, $data)
     {
-        $this->getDb()->insert(
+        $returnVal = $this->getDb()->insert(
             $this->getTableName($tableName),
             $data
         );
+
+        if(!$returnVal){
+            throw new Exception('An error occurrec inserting');
+        }
+
         $this->checkError();
 
         return $this;
@@ -68,13 +73,17 @@ class Query extends \DaveBaker\Core\Base
      */
     public function update($tableName, $data, $where, $format = null, $whereFormat = null)
     {
-        $this->getDb()->update(
+        $returnVal = $this->getDb()->update(
             $this->getTableName($tableName),
             $data,
             $where,
             $format,
             $whereFormat
         );
+
+        if(!$returnVal){
+            throw new Exception('An error occurred updating');
+        }
 
         $this->checkError();
         return $this;
