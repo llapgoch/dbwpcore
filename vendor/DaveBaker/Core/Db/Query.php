@@ -52,7 +52,7 @@ class Query extends \DaveBaker\Core\Base
             $data
         );
 
-        if(!$returnVal){
+        if($returnVal === false){
             throw new Exception('An error occurred inserting');
         }
 
@@ -81,7 +81,7 @@ class Query extends \DaveBaker\Core\Base
             $whereFormat
         );
 
-        if(!$returnVal){
+        if($returnVal === false){
             throw new Exception('An error occurred updating');
         }
 
