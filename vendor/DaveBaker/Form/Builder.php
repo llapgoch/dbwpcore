@@ -127,7 +127,7 @@ class Builder extends \DaveBaker\Core\Base
         }
 
         $namePrefix =  $this->underscoresToDots(
-            $this->formName . "." . $scheme['name'] . "."
+            $this->formName . "." . (isset($scheme['blockName']) ? $scheme['blockName'] : $scheme['name'])  . "."
         );
 
         $inputBlock = $this->getApp()->getBlockManager()->createBlock(
