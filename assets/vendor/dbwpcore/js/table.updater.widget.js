@@ -20,7 +20,13 @@
 			paginatorPageDataKey: 'pageId',
 			sortableAscClass: 'sort-asc',
 			sortableDescClass: 'sort-desc',
-			updateErrorMessage: 'An error occurred in updating the table'
+			updateErrorMessage: 'An error occurred in updating the table',
+			loaderClass: 'js-loader',
+			loaderStandaloneClass: 'js-loader-standalone',
+			loaderOnClass: 'js-show-loader',
+			loaderContainerSelector: '.table-responsive',
+			doScrollEvent: true,
+			scrollUpdateInt: 100
 		},
 
 		jsData: null,
@@ -34,6 +40,8 @@
 
 		_create: function () {
 			this._super();
+			this.showLoader();
+			
 			this.jsData = this.element.data(this.options.jsDataKey);
 
 			if(!this.jsData){
@@ -66,11 +74,14 @@
 			}
 
 			this.addEvents();
+			this.hideLoader();
+
+			if(this.options.doScrollEvent){
+				this.updateLoaderPosition();
+			}
 		},
 
-
-		namespaceEvent: function(event)
-		{
+		namespaceEvent: function(event) {
 			return event + "." + event;
 		},
 
@@ -84,26 +95,26 @@
 				var $target = $(ev.target),
 					header = $target.data(self.options.elementColumnIdDataKey);
 
-				this.sortColumn = header;
+				self.sortColumn = header;
 
-				var isAsc = $target.hasClass(this.options.sortableAscClass);
-				var isDesc = $target.hasClass(this.options.sortableDescClass);
+				var isAsc = $target.hasClass(self.options.sortableAscClass);
+				var isDesc = $target.hasClass(self.options.sortableDescClass);
 
 				if(!isAsc || !isDesc){
 					self.sortDirection = SORT_DIR_ASC;
-					$target.addClass(this.options.sortableAscClass);
+					$target.addClass(self.options.sortableAscClass);
 				}
 
 				if(isAsc){
 					self.sortDirection = SORT_DIR_DESC;
-					$target.addClass(this.options.sortableDescClass);
+					$target.addClass(self.options.sortableDescClass);
 				}
 
 				if(isDesc){
-					this.sortColumn = '';
-					this.sortDirection = '';
+					self.sortColumn = '';
+					self.sortDirection = '';
 				}else{
-					this.sortColumn = header;
+					self.sortColumn = header;
 				}
 
 				self.update();
@@ -133,8 +144,59 @@
 				);
 			}
 
+			if(this.options.doScrollEvent){
+				var timeout;
+
+				this.getLoaderContainer().on('scroll.impresariotableupdater', function(ev){
+					if(!timeout){
+						timeout = window.setTimeout(function(){
+							self.updateLoaderPosition();
+							window.clearTimeout(timeout);
+							timeout = null;
+						}, 5);
+					}
+				});
+			}
+
 			this._on(events);
 			return this;
+		},
+
+		updateLoaderPosition: function() {
+			var $loaderContainer = this.getLoaderContainer(),
+				$loaderElement = this.getLoaderElement();
+		
+			if(!$loaderContainer.size() || !$loaderElement.size()){
+				return;
+			}
+
+			$loaderElement.css('left', $loaderContainer.scrollLeft());
+		},
+
+		showLoader: function() {
+			this.createLoader();
+			this.getLoaderElement().addClass(this.options.loaderOnClass);
+
+			this._trigger('loader-added');
+		},
+
+		hideLoader: function() {
+			this.getLoaderElement().removeClass(this.options.loaderOnClass);
+		},
+
+		createLoader: function() {
+			var $loaderElement = $("." + this.options.loaderClass, this.getLoaderContainer());
+			
+			if($loaderElement.size()){
+				return;
+			}
+
+			$loaderElement = $('<div></div>');
+			$loaderElement.addClass(this.options.loaderClass).addClass(this.options.loaderStandaloneClass);
+
+			this.getLoaderContainer().append($loaderElement);
+
+			return $loaderElement;
 		},
 
 		/**
@@ -151,6 +213,20 @@
 
 			return this;
 		},
+
+		getLoaderElement: function() {
+			var $loaderElement = $("." + this.options.loaderClass, this.getLoaderContainer());
+
+			if($loaderElement.size()){
+				return $loaderElement;
+			}
+			
+			return this.createLoader();
+		}, 
+
+		getLoaderContainer: function() {
+			return this.element.closest(this.options.loaderContainerSelector);
+		}, 
 
 		/**
 		 * @returns {dbwpcore.tableUpdater}
@@ -188,6 +264,8 @@
 		update: function() {
 			var self = this;
 
+			this.showLoader();
+
 			if(this.request){
 				try {
 					this.request.abort();
@@ -204,6 +282,7 @@
 						if(request.status == 200){
 							initialise();
 						}
+						self.hideLoader();
 					},
 					error: function(request){
 						if(request.status !== 0) {
