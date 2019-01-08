@@ -21,6 +21,7 @@ class User extends Base
      * @param $role
      * @return mixed
      * @throws \DaveBaker\Core\Object\Exception
+     * TODO: Look at this - prob need to take out the getNamespacedOption for default WP roles
      */
     public function getUsersForRole($role)
     {

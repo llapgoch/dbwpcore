@@ -3,6 +3,7 @@
 namespace DaveBaker\Core\Installer;
 
 use DaveBaker\Core\Definitions\General as GeneralDefinition;
+use DaveBaker\Core\Definitions\Roles;
 /**
  * Class Manager
  * @package DaveBaker\Core\Installer
@@ -59,6 +60,20 @@ class CoreApplication
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_bin;"
         );
 
+        // Allow administrators to upload files by default
+        $this->getUserHelper()->addCapability(
+            Roles::ROLE_ADMINISTRATOR,
+            Roles::CAP_UPLOAD_FILE_ADD,
+            true,
+            false
+        );
+
+        $this->getUserHelper()->addCapability(
+            Roles::ROLE_ADMINISTRATOR,
+            Roles::CAP_UPLOAD_FILE_REMOVE,
+            true,
+            false
+        );
 
     }
 }

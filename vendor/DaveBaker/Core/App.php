@@ -192,8 +192,13 @@ class App
     protected function registerApiActions()
     {
         $this->getApiManager()->addRoute(
-            'core/file',
-            '\DaveBaker\Core\Api\Core\File'
+            'core/file/upload',
+            '\DaveBaker\Core\Api\Core\File\Upload'
+        );
+
+        $this->getApiManager()->addRoute(
+            'core/file/remove',
+            '\DaveBaker\Core\Api\Core\File\Remove'
         );
 
         return $this;

@@ -1,13 +1,15 @@
 <?php
-namespace DaveBaker\Core\Api\Core;
+namespace DaveBaker\Core\Api\Core\File;
 use DaveBaker\Core\Api\Exception;
 use DaveBaker\Core\Definitions\Upload as UploadDefinition;
+
+use DaveBaker\Core\Definitions\Roles;
 
 /**
  * Class File
  * @package DaveBaker\Core\Api
  */
-class File
+class Upload
     extends \DaveBaker\Core\Api\Base
     implements \DaveBaker\Core\Api\ControllerInterface
 {
@@ -21,6 +23,8 @@ class File
     protected $identifier;
     /** @var string  */
     protected $namespaceCode = 'file_upload_api';
+    /** @var array */
+    protected $capabilities = [Roles::CAP_UPLOAD_FILE_ADD];
 
     /**
      * @return string
@@ -68,7 +72,7 @@ class File
      * @throws \DaveBaker\Core\Object\Exception
      * @throws \Zend_Db_Adapter_Exception
      */
-    public function uploadAction($params)
+    public function executeAction($params)
     {
         if(!$_FILES || !count($_FILES)){
             throw new Exception('No files provided');
