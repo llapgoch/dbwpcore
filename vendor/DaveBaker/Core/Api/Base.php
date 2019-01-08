@@ -30,6 +30,26 @@ abstract class Base
     }
 
     /**
+     *
+     * @param array $required
+     * @param array $params
+     * @return bool
+     * @throws Exception
+     */
+    public function validateRequiredParameters(
+        $required = [], 
+        $params = []
+    ) {
+        foreach($required as $req){
+            if(!isset($params[$req])){
+                throw new Exception("Required parameter not provided");
+            }
+        }
+
+        return true;
+    }
+
+    /**
      * @return array
      * @throws \DaveBaker\Core\Object\Exception
      */

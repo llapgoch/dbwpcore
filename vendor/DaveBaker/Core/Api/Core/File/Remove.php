@@ -9,7 +9,7 @@ use DaveBaker\Core\Definitions\Roles;
  * Class File
  * @package DaveBaker\Core\Api
  */
-class Upload
+class Remove
     extends \DaveBaker\Core\Api\Base
     implements \DaveBaker\Core\Api\ControllerInterface
 {
@@ -23,7 +23,43 @@ class Upload
 
     public function executeAction($params)
     {
-       
+        // Check there's an ID present 
+        $this->validateRequiredParameters(
+            ['id'],
+            $params
+        );
+
+        /** @var \DaveBaker\Core\Model\Db\Core\Upload $model */
+        $model = $this->createAppObject('\DaveBaker\Core\Model\Db\Core\Upload')->load($params['id']);
+
+        if(!$model->getId() || $model->getIsDeleted()){
+            throw new Exception("File could not be found");
+        }
+        
+        $currentUser = $this->getUserHelper()->getCurrentUser();
+
+        if(($currentUser->getId() !== $model->getCreatedById()) 
+            && $this->getUserHelper()->hasCapability(Roles::CAP_UPLOAD_FILE_REMOVE_ANY) == false){
+                throw new Exception('Permission denied');
+        }
+
+        // Check whether any other items are using this file via the hash
+        $existingCollection = $this->getFileCollection()
+          ->where('file_hash=?', $model->getFileHash())
+          ->where('is_deleted=?', 0)
+          ->where('id<>?', $model->getId());
+
+        $existingItems = $existingCollection->load();
+        $model->setIsDeleted(1)->save();
+
+        // If no other entries are using the file, unlink it
+        if(count($existingItems) == 0){
+            if(file_exists($model->getFilePath())){
+                unlink($model->getFilePath());
+            }
+        }
+
+        return true;
     }
 
     /**
@@ -35,5 +71,4 @@ class Upload
         return $this->createAppObject('\DaveBaker\Core\Model\Db\Core\Upload\Collection');
     }
 
-  
 }

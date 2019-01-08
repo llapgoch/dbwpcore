@@ -74,6 +74,11 @@ class Upload
      */
     public function executeAction($params)
     {
+        $this->validateRequiredParameters(
+            ['upload_type', 'identifier'],
+            $params
+        );
+
         if(!$_FILES || !count($_FILES)){
             throw new Exception('No files provided');
         }

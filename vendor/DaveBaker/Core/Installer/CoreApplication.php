@@ -75,5 +75,12 @@ class CoreApplication
             false
         );
 
+        $this->getUserHelper()->addCapability(
+            Roles::ROLE_ADMINISTRATOR,
+            Roles::CAP_UPLOAD_FILE_REMOVE_ANY,
+            true,
+            false
+        );
+
     }
 }
