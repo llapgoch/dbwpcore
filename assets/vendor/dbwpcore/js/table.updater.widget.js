@@ -273,12 +273,17 @@
 					// For darling IE
 				}
 			}
-
+			
 			this.request = $.ajax(
 				this.endpoint, {
 					method: 'POST',
 					data: this.getUpdateData(),
+					success: function(){
+						self._trigger('success');
+					},
 					complete: function(request){
+						self._trigger('complete');
+
 						if(request.status == 200){
 							initialise();
 						}
@@ -288,6 +293,7 @@
 						if(request.status !== 0) {
 							alert(self.options.updateErrorMessage);
 						}
+						self._trigger('error');
 					}
 				}
 			);
