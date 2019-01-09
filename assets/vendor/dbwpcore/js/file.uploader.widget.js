@@ -167,6 +167,7 @@
 						}
 					}else{
 						$(document).trigger('ajaxSuccess', xhr);
+						self._trigger('success');
 					}
 
 

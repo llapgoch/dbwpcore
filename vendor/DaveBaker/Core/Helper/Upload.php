@@ -86,7 +86,7 @@ class Upload extends Base
      */
     public function getUploadCollection(
         $type = UploadDefinition::UPLOAD_TYPE_GENERAL,
-        $identifier
+        $identifier = null
     ) {
 
         $userTable = $this->getApp()->getHelper('Db')->getTableName('users', false);
