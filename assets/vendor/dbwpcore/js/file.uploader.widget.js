@@ -186,7 +186,7 @@
 		$(DEFAULT_INIT_SELECTOR).fileUploader();
 	}
 
-	$(document).on('ready.dbwpcorefileuploader', function(){
+	$(function() {
 		initialise();
 	});
 }(jQuery));

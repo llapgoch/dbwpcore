@@ -17,8 +17,7 @@
 
 			var newBlock = $(replacers[i]);
 
-			console.log(newBlock);
-
+			// Trigger an event on the old block, pass in the new block so that any setup can be init'd
 			$('[data-' + BLOCK_REPLACERS_DATA_KEY + '="' + i + '"]')
 				.trigger('block-replacer-before', {newBlock:newBlock})
 				.replaceWith(newBlock);

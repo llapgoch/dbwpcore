@@ -69,7 +69,7 @@
 			this.endpoint = this.jsData[this.options.endpointDataKey];
 			this.$paginator = $(this.jsData[this.options.paginatorSelectorDataKey]);
 
-			if(!this.$paginator.size()){
+			if(!this.$paginator.length){
 				this.$paginator = null;
 			}
 
@@ -166,7 +166,7 @@
 			var $loaderContainer = this.getLoaderContainer(),
 				$loaderElement = this.getLoaderElement();
 		
-			if(!$loaderContainer.size() || !$loaderElement.size()){
+			if(!$loaderContainer.length || !$loaderElement.length){
 				return;
 			}
 
@@ -187,7 +187,7 @@
 		createLoader: function() {
 			var $loaderElement = $("." + this.options.loaderClass, this.getLoaderContainer());
 			
-			if($loaderElement.size()){
+			if($loaderElement.length){
 				return;
 			}
 
@@ -203,7 +203,7 @@
 		 * @param page
 		 * @returns {dbwpcore.tableUpdater}
 		 */
-		gotoPage: function(page) {
+		gotoPage: function(page, force) {
 			var pageNumber = Math.max(1, page);
 
 			if(pageNumber !== this.pageNumber){
@@ -217,7 +217,7 @@
 		getLoaderElement: function() {
 			var $loaderElement = $("." + this.options.loaderClass, this.getLoaderContainer());
 
-			if($loaderElement.size()){
+			if($loaderElement.length){
 				return $loaderElement;
 			}
 			
@@ -306,7 +306,7 @@
 		$(DEFAULT_INIT_SELECTOR).tableUpdater();
 	}
 
-	$(document).on('ready.dbwpcoretableupdater', function(){
+	$(function() {
 		initialise();
 	});
 }(jQuery));
