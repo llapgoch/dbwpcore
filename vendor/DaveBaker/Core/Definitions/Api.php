@@ -8,5 +8,5 @@ namespace DaveBaker\Core\Definitions;
 class Api
 {
     const ENDPOINT_FILE_UPLOAD = 'core/file/upload/execute';
-    const ENDPOINT_FILE_UPLOAD_REMOVE = 'core/file/upload/remove';
+    const ENDPOINT_FILE_UPLOAD_REMOVE = 'core/file/remove/execute';
 }

@@ -30,8 +30,13 @@ class Manager
      * @return \DaveBaker\Core\Block\BlockInterface
      * @throws Exception
      */
-    public function createBlock($class, $name, $asName = '')
+    public function createBlock($class, $name = '', $asName = '')
     {
+        if(!$name){
+            $name = "anonymous.block.{$this->anonymousCounter}";
+            $this->anonymousCounter++;
+        }
+        
         try{
             /** @var \DaveBaker\Core\Block\BlockInterface $block */
             $block = $this->app->getObjectManager()->get($class, [$name, $asName, $this->app]);
