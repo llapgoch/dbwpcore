@@ -15,10 +15,13 @@
 				continue;
 			}
 
+			var newBlock = $(replacers[i]);
+
+			console.log(newBlock);
+
 			$('[data-' + BLOCK_REPLACERS_DATA_KEY + '="' + i + '"]')
-				.trigger('block-replacer-before')
-				.replaceWith(replacers[i])
-				.trigger('block-replacer-after');
+				.trigger('block-replacer-before', {newBlock:newBlock})
+				.replaceWith(newBlock);
 		}
 
 		$(document).trigger('blockReplacerComplete');
