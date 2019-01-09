@@ -56,7 +56,7 @@
 				this.pageNumber = parseInt(this.jsData['pageNumber'], 10);
 			}
 
-			var orderSettings = this.jsData['order'];
+			var orderSettings = this.jsData['order'] || {};
 
 			if(orderSettings['dir']){
 				this.sortDirection = orderSettings['dir'];
