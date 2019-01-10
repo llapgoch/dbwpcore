@@ -44,6 +44,8 @@ abstract class Base extends \DaveBaker\Core\Base
 
     protected abstract function init();
 
+    
+
     /**
      * @return $this
      * @throws \DaveBaker\Core\Object\Exception
@@ -57,6 +59,23 @@ abstract class Base extends \DaveBaker\Core\Base
         }
 
         return $this;
+    }
+
+    /**
+     * @return \DaveBaker\Core\Model\Db\BaseInterface
+     */
+    protected function getBaseObject()
+    {
+        return $this->baseObject;
+    }
+
+    /**
+     *
+     * @return array
+     */
+    public function getSchema($force = false)
+    {
+        return $this->getBaseObject()->getSchema($force);
     }
 
     /**

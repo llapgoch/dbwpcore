@@ -413,7 +413,7 @@ abstract class Base
      *
      * TODO: Add caching
      */
-    protected function getSchema($force = false)
+    public function getSchema($force = false)
     {
         if(!$this->schema || $force) {
             $rows = $this->getDb()->get_results(
