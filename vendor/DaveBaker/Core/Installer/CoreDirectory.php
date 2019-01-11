@@ -275,7 +275,7 @@ class CoreDirectory
               `country_name` varchar(255) DEFAULT NULL,
               PRIMARY KEY (`id`),
               KEY `country_code` (`country_code`)
-            ) ENGINE=InnoDB AUTO_INCREMENT=246 DEFAULT CHARSET=utf8;'
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_ci;'
         );
 
         $this->getQuery()->run(

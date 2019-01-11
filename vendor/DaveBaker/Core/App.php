@@ -1,6 +1,9 @@
 <?php
 
 namespace DaveBaker\Core;
+
+use DaveBaker\Core\Block\Template;
+
 /**
  * Class App
  * @package DaveBaker\Core
@@ -61,13 +64,16 @@ class App
         $wpdb->show_errors(false);
 
         setlocale(LC_ALL, get_locale() . '.utf8', get_locale());
-
+        
+        // Set up error logging & display. Outputs an error block if display_errors=0
+        $this->initErrorHandler();
+        
         $this->namespace = $namespace . "_";
         $this->objectManager = new $objectManagerClassName($this, new $objectManagerConfigClassName);
 
         $this->registerApp($this->namespace, $this);
         $this->main = $this->getObjectManager()->createAppObject($mainClassName);
-
+        
         // For any singleton objects, they'll be stored against the namespace, allowing for multiple
         // singletons across different app definitions
         $this->objectManager->setNamespace($this->getNamespace());
@@ -103,11 +109,56 @@ class App
     }
 
     /**
+     * Sets up exception handling, displays a nice  
+     * output if display_errors is off
+     *
+     * @return $this
+     */
+    protected function initErrorHandler()
+    {
+        $outputError = function(){
+            $imgBase = $this->getHelper('Url')->getPluginUrl('assets/vendor/dbwpcore/img/error/');
+            echo $this->getBlockManager()->createBlock(Template::class)
+                ->setTemplate('error/500.phtml')
+                ->setImgBase($imgBase)
+                ->render();
+        };
+
+        $handler = function($e) use ($outputError) {
+            if(!ini_get('display_errors')){
+                error_log($e);
+                $outputError();
+                exit;
+            }
+            
+            throw $e;
+        };
+        
+        register_shutdown_function(function() use ($outputError){
+            $error = error_get_last();
+            
+            if ($error['type'] === E_ERROR) {
+                // fatal error
+                if(!ini_get('display_errors')){
+                    $outputError();
+                }
+                exit;
+            }
+        });
+
+        set_exception_handler($handler);
+
+        return $this;
+    }
+
+    /**
      * @throws Object\Exception
      */
     protected function addScripts()
     {
         $urlHelper = $this->getHelper('Url');
+
+    
 
         wp_enqueue_script(
             "{$this->scriptPrefix}block_replacer",
@@ -220,7 +271,7 @@ class App
         }
 
         $this->applicationInitialised = true;
-
+        
         $this->addScripts();
 
         $this->getHandleManager()->registerHandles();
@@ -235,6 +286,7 @@ class App
             ->preDispatch();
 
         $this->getContollerManager()->execute();
+        
 
         return $this;
     }
