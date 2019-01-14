@@ -145,6 +145,13 @@ abstract class Base extends \DaveBaker\Core\Base
         return $this;
     }
 
+    public function columns($cols = '*', $correlationName = null)
+    {
+        $cols = $this->replaceTablesIn($cols);
+        $this->getSelect()->columns($cols, $correlationName);
+        return $this;
+    }
+
 
     /**
      * @param $name
