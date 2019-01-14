@@ -170,7 +170,6 @@
 				return;
 			}
 
-			$loaderElement.css('left', $loaderContainer.scrollLeft());
 		},
 
 		showLoader: function() {
