@@ -15,7 +15,7 @@ class Collection
     protected function _preRender()
     {
         if($this->paginator && $this->collection){
-            $this->paginator->setTotalRecords(count($this->collection->getItems()));
+            $this->paginator->setTotalRecords(count($this->getRecords()));
             $this->collection->resetItems();
             $this->collection->getSelect()->limit(
                 $this->paginator->getRecordsPerPage(),
@@ -34,8 +34,6 @@ class Collection
                 ]
             ]);
         }
-
-//        echo $this->collection->getSelect();
 
         parent::_preRender();
     }
@@ -65,6 +63,15 @@ class Collection
      */
     public function getRecords()
     {
+        // If there's an error getting items, reset the order
+        // The most likely cause is a column which no longer exists
+        try{
+            $this->collection->getItems();
+        }catch(\Exception $e){
+            $this->collection->getSelect()->reset(\Zend_Db_Select::ORDER);
+            $this->setColumnOrder('', '');
+        }
+
         return $this->collection->getItems();
     }
 
