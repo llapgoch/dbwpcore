@@ -1,0 +1,8 @@
+{
+    "extends": "/Users/dave/.eslintrc",
+    "rules": {
+        "func-names": ["warn", "never"],
+        "no-extra-semi": "off",
+        "no-var": "off"
+    }
+}
