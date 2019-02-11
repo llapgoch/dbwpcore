@@ -1,8 +1,23 @@
 {
-    "extends": "/Users/dave/.eslintrc",
+    "extends": "eslint:recommended",
+    "env": {
+        "browser": true,
+        "jquery": true
+    },
+    "parserOptions": {
+        "ecmaVersion": 2015
+    },
     "rules": {
-        "func-names": ["warn", "never"],
-        "no-extra-semi": "off",
-        "no-var": "off"
-    }
+        "indent": ["error", 4],
+        "no-console": "warn",
+        "no-unused-vars": "off",
+        "no-undef": "error",
+        "arrow-body-style": "off",
+        "prefer-const": "warn",
+        "no-var": "off",
+        "vars-on-top": "off",
+        "eol-last": "off",
+        "no-extra-semi": "off"
+    },
+    "plugins": ["html"]
 }
