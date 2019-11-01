@@ -31,7 +31,8 @@ class Element
             'file-uploader-component' => 'upload-component js-file-uploader-component',
             'file-uploader-component-label' => 'horses',
             'progress-bar' => 'progress js-progress-bar',
-            'modal' => 'modal fade'
+            'modal' => 'modal fade',
+            'filter-set' => 'filter-set-container'
         ],
         'hiddenClass' => 'hidden',
         'elementAttributes' => [

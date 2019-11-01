@@ -52,9 +52,6 @@ class Select
     public function _preDispatch()
     {
         parent::_preDispatch();
-
-
-
     }
 
     /**

@@ -37,6 +37,7 @@
         sortColumn: '',
         sortDirection: '',
         pageNumber: 1,
+        customData: {},
 
         _create: function () {
             this._super();
@@ -162,6 +163,10 @@
             return this;
         },
 
+        addCustomData: function(key, data) {
+            this.customData[key] = data;
+        },
+
         updateLoaderPosition: function() {
             var $loaderContainer = this.getLoaderContainer(),
                 $loaderElement = this.getLoaderElement();
@@ -253,7 +258,8 @@
                     'dir' : this.sortDirection,
                     'column': this.sortColumn
                 },
-                'pageNumber': this.pageNumber
+                'pageNumber': this.pageNumber,
+                'customData': this.customData
             }
         },
 

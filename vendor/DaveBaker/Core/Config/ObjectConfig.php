@@ -7,7 +7,7 @@ namespace DaveBaker\Core\Config;
  *
  * class should be extended locally
  */
-class Object extends Base
+class ObjectConfig extends Base
 {
     /** @var array  */
     protected $config = [
@@ -21,7 +21,7 @@ class Object extends Base
         '\DaveBaker\Core\Config\Layout' => [
             'singleton' => true
         ],
-        '\DaveBaker\Core\Config\Object' => [
+        '\DaveBaker\Core\Config\ObjectConfig' => [
             'singleton' => true
         ],
         '\DaveBaker\Core\Config\Page' => [

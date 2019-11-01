@@ -36,7 +36,7 @@ new DaveBaker\Core\App(
     "custom_application_namespace",
     new \Namespace\Application\Main,
     new \DaveBaker\Core\Object\Manager(
-        new \SuttonBaker\Impresario\Config\Object
+        new \SuttonBaker\Impresario\Config\ObjectConfig
     )
 );
 */
