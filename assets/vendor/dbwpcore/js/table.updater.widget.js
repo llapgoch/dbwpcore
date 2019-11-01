@@ -1,4 +1,4 @@
-;(function($){
+; (function ($) {
     var DEFAULT_INIT_SELECTOR = '.js-table-updater',
         SORT_DIR_ASC = 'asc',
         SORT_DIR_DESC = 'desc';
@@ -26,71 +26,74 @@
             loaderOnClass: 'js-show-loader',
             loaderContainerSelector: '.table-responsive',
             doScrollEvent: true,
-            scrollUpdateInt: 100
+            scrollUpdateInt: 100,
+            updateDebounceInt: 400
         },
 
         jsData: null,
         endpoint: '',
         request: null,
         $paginator: null,
+        updateInt: null,
 
         sortColumn: '',
         sortDirection: '',
         pageNumber: 1,
         customData: {},
 
+
         _create: function () {
             this._super();
             this.showLoader();
-			
+
             this.jsData = this.element.data(this.options.jsDataKey);
 
-            if(!this.jsData){
+            if (!this.jsData) {
                 throw 'No js-data params have been set';
             }
 
-            if(!this.jsData[this.options.endpointDataKey]){
+            if (!this.jsData[this.options.endpointDataKey]) {
                 throw 'Table must have an updater endpoint in its data array'
             }
 
-            if(this.jsData['pageNumber']){
+            if (this.jsData['pageNumber']) {
                 this.pageNumber = parseInt(this.jsData['pageNumber'], 10);
             }
 
             var orderSettings = this.jsData['order'] || {};
 
-            if(orderSettings['dir']){
+            if (orderSettings['dir']) {
                 this.sortDirection = orderSettings['dir'];
             }
 
-            if(orderSettings['column']){
+            if (orderSettings['column']) {
                 this.sortColumn = orderSettings['column'];
             }
 
             this.endpoint = this.jsData[this.options.endpointDataKey];
             this.$paginator = $(this.jsData[this.options.paginatorSelectorDataKey]);
 
-            if(!this.$paginator.length){
+            if (!this.$paginator.length) {
                 this.$paginator = null;
             }
 
             this.addEvents();
             this.hideLoader();
 
-            if(this.options.doScrollEvent){
+            if (this.options.doScrollEvent) {
                 this.updateLoaderPosition();
             }
         },
 
-        namespaceEvent: function(event) {
+        namespaceEvent: function (event) {
             return event + "." + event;
         },
 
-        addEvents: function() {
+        addEvents: function () {
             var events = {},
                 self = this;
 
-            events['click ' + this.options.sortableHeaderSelector] = function(ev){
+            events['click ' + this.options.sortableHeaderSelector] = function (ev) {
                 ev.preventDefault();
 
                 var $target = $(ev.target),
@@ -101,29 +104,29 @@
                 var isAsc = $target.hasClass(self.options.sortableAscClass);
                 var isDesc = $target.hasClass(self.options.sortableDescClass);
 
-                if(!isAsc || !isDesc){
+                if (!isAsc || !isDesc) {
                     self.sortDirection = SORT_DIR_ASC;
                     $target.addClass(self.options.sortableAscClass);
                 }
 
-                if(isAsc){
+                if (isAsc) {
                     self.sortDirection = SORT_DIR_DESC;
                     $target.addClass(self.options.sortableDescClass);
                 }
 
-                if(isDesc){
+                if (isDesc) {
                     self.sortColumn = '';
                     self.sortDirection = '';
-                }else{
+                } else {
                     self.sortColumn = header;
                 }
 
                 self.update();
             };
 
-            if(this.$paginator){
+            if (this.$paginator) {
                 $(this.options.paginatorPageButtonSelector, this.$paginator).on(
-                    this.namespaceEvent('click'), function(ev){
+                    this.namespaceEvent('click'), function (ev) {
                         ev.preventDefault();
                         var $this = $(ev.target);
                         self.gotoPage($this.data(self.options.paginatorPageDataKey));
@@ -131,26 +134,26 @@
                 );
 
                 $(this.options.paginatorPreviousSelector, this.$paginator).on(
-                    this.namespaceEvent('click'), function(ev){
+                    this.namespaceEvent('click'), function (ev) {
                         ev.preventDefault();
                         self.gotoPreviousPage();
                     }
                 );
 
                 $(this.options.paginatorNextSelector, this.$paginator).on(
-                    this.namespaceEvent('click'), function(ev){
+                    this.namespaceEvent('click'), function (ev) {
                         ev.preventDefault();
                         self.gotoNextPage();
                     }
                 );
             }
 
-            if(this.options.doScrollEvent){
+            if (this.options.doScrollEvent) {
                 var timeout;
 
-                this.getLoaderContainer().on('scroll.impresariotableupdater', function(ev){
-                    if(!timeout){
-                        timeout = window.setTimeout(function(){
+                this.getLoaderContainer().on('scroll.impresariotableupdater', function (ev) {
+                    if (!timeout) {
+                        timeout = window.setTimeout(function () {
                             self.updateLoaderPosition();
                             window.clearTimeout(timeout);
                             timeout = null;
@@ -163,35 +166,36 @@
             return this;
         },
 
-        addCustomData: function(key, data) {
+        addCustomData: function (key, data) {
             this.customData[key] = data;
+            this.debounceUpdate();
         },
 
-        updateLoaderPosition: function() {
+        updateLoaderPosition: function () {
             var $loaderContainer = this.getLoaderContainer(),
                 $loaderElement = this.getLoaderElement();
-		
-            if(!$loaderContainer.length || !$loaderElement.length){
+
+            if (!$loaderContainer.length || !$loaderElement.length) {
                 return;
             }
 
         },
 
-        showLoader: function() {
+        showLoader: function () {
             this.createLoader();
             this.getLoaderElement().addClass(this.options.loaderOnClass);
 
             this._trigger('loader-added');
         },
 
-        hideLoader: function() {
+        hideLoader: function () {
             this.getLoaderElement().removeClass(this.options.loaderOnClass);
         },
 
-        createLoader: function() {
+        createLoader: function () {
             var $loaderElement = $("." + this.options.loaderClass, this.getLoaderContainer());
-			
-            if($loaderElement.length){
+
+            if ($loaderElement.length) {
                 return;
             }
 
@@ -207,10 +211,10 @@
 		 * @param page
 		 * @returns {dbwpcore.tableUpdater}
 		 */
-        gotoPage: function(page, force) {
+        gotoPage: function (page, force) {
             var pageNumber = Math.max(1, page);
 
-            if(pageNumber !== this.pageNumber){
+            if (pageNumber !== this.pageNumber) {
                 this.pageNumber = pageNumber;
                 this.update();
             }
@@ -218,24 +222,24 @@
             return this;
         },
 
-        getLoaderElement: function() {
+        getLoaderElement: function () {
             var $loaderElement = $("." + this.options.loaderClass, this.getLoaderContainer());
 
-            if($loaderElement.length){
+            if ($loaderElement.length) {
                 return $loaderElement;
             }
-			
-            return this.createLoader();
-        }, 
 
-        getLoaderContainer: function() {
+            return this.createLoader();
+        },
+
+        getLoaderContainer: function () {
             return this.element.closest(this.options.loaderContainerSelector);
-        }, 
+        },
 
         /**
 		 * @returns {dbwpcore.tableUpdater}
 		 */
-        gotoPreviousPage: function() {
+        gotoPreviousPage: function () {
             this.gotoPage(this.pageNumber - 1);
             return this;
         },
@@ -252,10 +256,10 @@
 		 *
 		 * @returns {{order: {dir: (string|*), column: string, pageNumber: *}}}
 		 */
-        getUpdateData: function(){
+        getUpdateData: function () {
             return {
                 'order': {
-                    'dir' : this.sortDirection,
+                    'dir': this.sortDirection,
                     'column': this.sortColumn
                 },
                 'pageNumber': this.pageNumber,
@@ -263,55 +267,71 @@
             }
         },
 
+        debounceUpdate: function () {
+            var self = this;
+            
+            if (this.updateInt) {
+                window.clearTimeout(this.updateInt);
+            }
+
+            this.updateInt = window.setTimeout(function () {
+                self.update();
+                window.clearTimeout(self.updateInt);
+                self.updateInt = null;
+            }, this.options.updateDebounceInt);
+
+        },
+
         /**
 		 * @returns {dbwpcore.tableUpdater}
 		 */
-        update: function() {
+        update: function () {
             var self = this;
 
             this.showLoader();
+            console.log("UPDATE");
 
-            if(this.request){
+            if (this.request) {
                 try {
                     this.request.abort();
-                } catch (e){
+                } catch (e) {
                     // For darling IE
                 }
             }
-			
+
             this.request = $.ajax(
                 this.endpoint, {
-                    method: 'POST',
-                    data: this.getUpdateData(),
-                    success: function(){
-                        self._trigger('success');
-                    },
-                    complete: function(request){
-                        self._trigger('complete');
+                method: 'POST',
+                data: this.getUpdateData(),
+                success: function () {
+                    self._trigger('success');
+                },
+                complete: function (request) {
+                    self._trigger('complete');
 
-                        if(request.status == 200){
-                            initialise();
-                        }
-                        self.hideLoader();
-                    },
-                    error: function(request){
-                        if(request.status !== 0) {
-                            alert(self.options.updateErrorMessage);
-                        }
-                        self._trigger('error');
+                    if (request.status == 200) {
+                        initialise();
                     }
+                    self.hideLoader();
+                },
+                error: function (request) {
+                    if (request.status !== 0) {
+                        alert(self.options.updateErrorMessage);
+                    }
+                    self._trigger('error');
                 }
+            }
             );
 
             return this;
         }
     });
 
-    function initialise(){
+    function initialise() {
         $(DEFAULT_INIT_SELECTOR).tableUpdater();
     }
 
-    $(function() {
+    $(function () {
         initialise();
     });
 }(jQuery));
