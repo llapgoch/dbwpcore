@@ -269,7 +269,7 @@
 
         debounceUpdate: function () {
             var self = this;
-            
+
             if (this.updateInt) {
                 window.clearTimeout(this.updateInt);
             }
@@ -289,7 +289,6 @@
             var self = this;
 
             this.showLoader();
-            console.log("UPDATE");
 
             if (this.request) {
                 try {
@@ -301,26 +300,26 @@
 
             this.request = $.ajax(
                 this.endpoint, {
-                method: 'POST',
-                data: this.getUpdateData(),
-                success: function () {
-                    self._trigger('success');
-                },
-                complete: function (request) {
-                    self._trigger('complete');
+                    method: 'POST',
+                    data: this.getUpdateData(),
+                    success: function () {
+                        self._trigger('success');
+                    },
+                    complete: function (request) {
+                        self._trigger('complete');
 
-                    if (request.status == 200) {
-                        initialise();
+                        if (request.status == 200) {
+                            initialise();
+                        }
+                        self.hideLoader();
+                    },
+                    error: function (request) {
+                        if (request.status !== 0) {
+                            alert(self.options.updateErrorMessage);
+                        }
+                        self._trigger('error');
                     }
-                    self.hideLoader();
-                },
-                error: function (request) {
-                    if (request.status !== 0) {
-                        alert(self.options.updateErrorMessage);
-                    }
-                    self._trigger('error');
                 }
-            }
             );
 
             return this;
