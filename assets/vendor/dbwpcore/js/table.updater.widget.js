@@ -92,10 +92,10 @@
         addEvents: function () {
             var events = {},
                 self = this;
-
+            
             events['click ' + this.options.sortableHeaderSelector] = function (ev) {
                 ev.preventDefault();
-
+                
                 var $target = $(ev.target),
                     header = $target.data(self.options.elementColumnIdDataKey);
 
@@ -166,9 +166,13 @@
             return this;
         },
 
-        addCustomData: function (key, data) {
+        addCustomData: function (key, data, update) {
+            update = update === false ? false : true;
             this.customData[key] = data;
-            this.debounceUpdate();
+
+            if(update) {
+                this.debounceUpdate();
+            }
         },
 
         updateLoaderPosition: function () {
@@ -211,12 +215,16 @@
 		 * @param page
 		 * @returns {dbwpcore.tableUpdater}
 		 */
-        gotoPage: function (page, force) {
+        gotoPage: function (page, update) {
             var pageNumber = Math.max(1, page);
+            update = update === false ? false : true;
 
             if (pageNumber !== this.pageNumber) {
                 this.pageNumber = pageNumber;
-                this.update();
+                
+                if(update){
+                    this.update();
+                }
             }
 
             return this;
@@ -287,7 +295,8 @@
 		 */
         update: function () {
             var self = this;
-
+            self._trigger('beforeupdate');
+            
             this.showLoader();
 
             if (this.request) {

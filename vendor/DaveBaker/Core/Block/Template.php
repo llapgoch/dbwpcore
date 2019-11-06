@@ -217,7 +217,7 @@ class Template
         }
 
         $attrString  = implode(' ', array_map(function($k, $v){
-            return $this->escapeHtml($k) . "=" . $this->escAttr($v);
+            return $this->escapeHtml($k) . "=\"" . $this->escAttr($v) . "\"";
         }, array_keys($attrs), $attrs));
 
         return $attrString;

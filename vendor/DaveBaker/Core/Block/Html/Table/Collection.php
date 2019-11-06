@@ -15,7 +15,10 @@ class Collection
     protected function _preRender()
     {
         if($this->paginator && $this->collection){
-            $this->paginator->setTotalRecords(count($this->getRecords()));
+            if(!$this->paginator->getTotalRecords()){
+                $this->paginator->setTotalRecords(count($this->getRecords()));
+            }
+            
             $this->collection->resetItems();
             $this->collection->getSelect()->limit(
                 $this->paginator->getRecordsPerPage(),
@@ -69,6 +72,7 @@ class Collection
             $this->collection->getItems();
         }catch(\Exception $e){
             $this->collection->getSelect()->reset(\Zend_Db_Select::ORDER);
+            $this->collection->getSelect()->reset(\Zend_Db_Select::WHERE);
             $this->setColumnOrder('', '');
         }
 
