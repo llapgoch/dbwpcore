@@ -19,7 +19,12 @@ interface BaseInterface
     public function addChildBlock($blocks);
     public function getChildBlocks();
 
-    // Actions and shortcodes are only used by blocks registered with the layout manager
+    /**
+     * @param string $shortcode
+     * @return \DaveBaker\Core\Block\BlockInterface
+     * 
+     * Actions and shortcodes are only used by blocks registered with the layout manager
+     */
     public function setShortcode($shortcode);
     public function getShortcode();
     public function getAction();

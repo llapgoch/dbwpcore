@@ -136,6 +136,10 @@ class Table extends Base
                 $classes[] = $this->getConfig()->getConfigValue(TableDefinition::CONFIG_SORTABLE_TH_ALPHA_CLASS);
             }
 
+            if(in_array(TableDefinition::HEADER_SORTABLE_NUMERIC, $columns[$header])){
+                $classes[] = $this->getConfig()->getConfigValue(TableDefinition::CONFIG_SORTABLE_TH_NUMERIC_CLASS);
+            }
+            
             if($this->jsUpdater){
                 $classes[] = $this->getConfig()->getConfigValue(TableDefinition::CONFIG_SORTABLE_TH_JS_CLASS);
             }

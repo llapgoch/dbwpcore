@@ -45,6 +45,7 @@ class Element
         'sortableThDescClass' => 'sort-desc',
         'sortableTableClass' => 'table-sortable',
         'sortableThAlphaClass' => 'sort-alpha',
+        'sortableThNumericClass' => 'sort-numeric',
         'sortableTableJsClass' => 'js-table-updater',
         'sortableThJsClass' => 'js-is-sortable'
     ];
