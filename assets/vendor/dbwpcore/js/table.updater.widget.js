@@ -104,6 +104,8 @@
                 var isAsc = $target.hasClass(self.options.sortableAscClass);
                 var isDesc = $target.hasClass(self.options.sortableDescClass);
 
+                
+
                 if (!isAsc || !isDesc) {
                     self.sortDirection = SORT_DIR_ASC;
                     $target.addClass(self.options.sortableAscClass);

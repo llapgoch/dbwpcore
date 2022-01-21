@@ -120,7 +120,7 @@ class Base extends \DaveBaker\Core\Base
 
         if(!($pageManager->isOnRegisterPage() || $pageManager->isOnLoginPage())){
             if($this->requiresLogin && !($this->getUserHelper()->isLoggedIn())){
-                return false;
+                // return false;
             }
         }
 

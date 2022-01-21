@@ -32,6 +32,8 @@ class Table extends Base
     protected $paginator;
     /** @var array  */
     protected $thAttrs = [];
+    /** @var bool */
+    protected $showEmptyTable = true;
 
     /**
      * @return \DaveBaker\Core\Block\Template|void
@@ -42,6 +44,26 @@ class Table extends Base
         $this->setTemplate('html/table.phtml');
         $this->addTagIdentifier('table');
         parent::_construct();
+    }
+
+    /**
+     *
+     * @return bool
+     */
+    public function getShowEmptyTable()
+    {
+        return $this->showEmptyTable;
+    }
+
+    /**
+     *
+     * @param bool $showEmptyTable
+     * @return self
+     */
+    public function setShowEmptyTable($showEmptyTable)
+    {
+        $this->showEmptyTable = (bool) $showEmptyTable;
+        return $this;
     }
 
     /**
