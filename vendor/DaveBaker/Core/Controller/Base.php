@@ -1,6 +1,7 @@
 <?php
 
 namespace DaveBaker\Core\Controller;
+
 /**
  * Class Base
  * @package DaveBaker\Core\Controller
@@ -118,9 +119,9 @@ class Base extends \DaveBaker\Core\Base
     {
         $pageManager = $this->getApp()->getPageManager();
 
-        if(!($pageManager->isOnRegisterPage() || $pageManager->isOnLoginPage())){
-            if($this->requiresLogin && !($this->getUserHelper()->isLoggedIn())){
-                // return false;
+        if (!($pageManager->isOnRegisterPage() || $pageManager->isOnLoginPage())) {
+            if ($this->requiresLogin && !($this->getUserHelper()->isLoggedIn())) {
+                return false;
             }
         }
 
@@ -142,7 +143,7 @@ class Base extends \DaveBaker\Core\Base
      */
     public function isCapabilityAllowed()
     {
-        if($this->capabilities && !$this->getUserHelper()->hasCapability($this->capabilities)){
+        if ($this->capabilities && !$this->getUserHelper()->hasCapability($this->capabilities)) {
             return false;
         }
 
@@ -155,11 +156,11 @@ class Base extends \DaveBaker\Core\Base
      */
     public function checkAllowed()
     {
-       if(!$this->isAuthAllowed()){
-           return auth_redirect();
-       }
+        if (!$this->isAuthAllowed()) {
+            return auth_redirect();
+        }
 
-        if(!$this->isCapabilityAllowed()){
+        if (!$this->isCapabilityAllowed()) {
             return $this->redirect($this->getUrlHelper()->getUrl($this->capabilityFailUrl));
         }
 
