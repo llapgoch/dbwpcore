@@ -16,10 +16,9 @@ class Locale extends Base
             $locale = get_locale();
         }
 
-        return money_format(
-            $includeSymbol ? "%n" : "%!n",
-            $amount
-        );
+        $fmt = new \NumberFormatter( 'en_GB', \NumberFormatter::CURRENCY );
+
+        return $fmt->formatCurrency($amount, "GBP");
     }
 
     /**
