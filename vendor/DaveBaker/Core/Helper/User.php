@@ -49,7 +49,7 @@ class User extends Base
      */
     public function getUserTableName()
     {
-        return $userTable = $this->getDbHelper()->getTableName('users', false);
+        return $this->getDbHelper()->getTableName('users', false);
     }
 
     /**
@@ -58,7 +58,7 @@ class User extends Base
      */
     public function getUserMetaTableName()
     {
-        return $userTable = $this->getDbHelper()->getTableName('usermeta', false);
+        return $this->getDbHelper()->getTableName('usermeta', false);
     }
 
     /**

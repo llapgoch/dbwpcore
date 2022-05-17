@@ -137,7 +137,7 @@ class App
         register_shutdown_function(function() use ($outputError){
             $error = error_get_last();
             
-            if ($error['type'] === E_ERROR) {
+            if ($error && $error['type'] === E_ERROR) {
                 // fatal error
                 if(!ini_get('display_errors')){
                     $outputError();

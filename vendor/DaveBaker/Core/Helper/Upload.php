@@ -71,7 +71,7 @@ class Upload extends Base
     {
         if(!file_exists($this->getUploadDir())){
             if(!mkdir($this->getUploadDir())){
-                throw new Exception('Could not create upload directory');
+                throw new Exception('Could not create upload directory ' . $this->getUploadDir());
             }
         }
 
