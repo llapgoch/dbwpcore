@@ -318,6 +318,17 @@ abstract class Base extends \DaveBaker\Core\Base
     }
 
     /**
+     *
+     * @param array $items
+     * @return $this
+     */
+    public function setItems($items)
+    {
+        $this->items = $items;
+        return $this;
+    }
+
+    /**
      * @param string $event
      * @return string
      * @throws \DaveBaker\Core\Object\Exception
