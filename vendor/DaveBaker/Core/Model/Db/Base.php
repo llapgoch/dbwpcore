@@ -103,11 +103,19 @@ abstract class Base
      */
     public function getOutputData($key = '')
     {
-        if(isset($this->outputProcessors[$key])){
-            return $this->outputProcessors[$key]->process($this->getData($key));
+        $method = 'get' . ucfirst($key);
+
+        if(method_exists($this, $method)) {
+            $data = $this->$method();
+        } else {
+            $data = $this->getData($key);
         }
 
-        return $this->getData($key);
+        if(isset($this->outputProcessors[$key])){
+            return $this->outputProcessors[$key]->process($data);
+        }
+
+        return $data;
     }
 
     /**
