@@ -3,14 +3,15 @@
 namespace DaveBaker\Core\Helper;
 
 use \DaveBaker\Core\Definitions\Upload as UploadDefinition;
+
 /**
  * Class Upload
  * @package DaveBaker\Core\Helper
  */
 class Upload extends Base
 {
-    /** @var string */
-    protected $temporaryId;
+    /** @var array */
+    protected $temporaryIds;
 
     /**
      * @return string
@@ -18,17 +19,17 @@ class Upload extends Base
      *
      * Only generate one per page load, use one that's been posted if available
      */
-    public function getTemporaryIdForSession()
+    public function getTemporaryIdForSession($prefix = UploadDefinition::TEMPORARY_PREFIX)
     {
-        if($temporaryId  = $this->getRequest()->getPostParam(UploadDefinition::TEMPORARY_IDENTIFIER_ELEMENT_NAME)){
+        if ($temporaryId  = $this->getRequest()->getPostParam(UploadDefinition::TEMPORARY_IDENTIFIER_ELEMENT_NAME)) {
             return $temporaryId;
         }
 
-        if(!$this->temporaryId){
-            $this->temporaryId = uniqid(UploadDefinition::TEMPORARY_PREFIX);
+        if (!$this->temporaryIds[$prefix]) {
+            $this->temporaryIds[$prefix] = uniqid($prefix);
         }
 
-        return $this->temporaryId;
+        return $this->temporaryIds[$prefix];
     }
 
     /**
@@ -44,7 +45,7 @@ class Upload extends Base
      */
     public function getBaseUrl()
     {
-       return wp_upload_dir()['baseurl'];
+        return wp_upload_dir()['baseurl'];
     }
 
     /**
@@ -69,8 +70,8 @@ class Upload extends Base
      */
     public function createUploadDir()
     {
-        if(!file_exists($this->getUploadDir())){
-            if(!mkdir($this->getUploadDir())){
+        if (!file_exists($this->getUploadDir())) {
+            if (!mkdir($this->getUploadDir())) {
                 throw new Exception('Could not create upload directory ' . $this->getUploadDir());
             }
         }
@@ -102,10 +103,10 @@ class Upload extends Base
             ['created_by_name' => 'user_login']
         );
 
-        if($identifier){
-            if($type == UploadDefinition::UPLOAD_TYPE_TEMPORARY){
+        if ($identifier) {
+            if ($type == UploadDefinition::UPLOAD_TYPE_TEMPORARY) {
                 $collection->where('temporary_id=?', $identifier);
-            }else {
+            } else {
                 $collection->where('parent_id=?', $identifier);
             }
         }
@@ -127,7 +128,7 @@ class Upload extends Base
             $identifier
         )->load();
 
-        foreach($items as $item){
+        foreach ($items as $item) {
             $item->setTemporaryId(null)
                 ->setParentId($parentId)
                 ->setUploadType($uploadType)->save();
