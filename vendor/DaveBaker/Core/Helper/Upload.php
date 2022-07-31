@@ -19,10 +19,24 @@ class Upload extends Base
      *
      * Only generate one per page load, use one that's been posted if available
      */
-    public function getTemporaryIdForSession($prefix = UploadDefinition::TEMPORARY_PREFIX)
-    {
-        if ($temporaryId  = $this->getRequest()->getPostParam(UploadDefinition::TEMPORARY_IDENTIFIER_ELEMENT_NAME)) {
-            return $temporaryId;
+    public function getTemporaryIdForSession(
+        $prefix = UploadDefinition::TEMPORARY_PREFIX,
+        $postActualType = null,
+        $getFromPostIfSubmitted = true
+    ) {
+        /** @var $postTemporaryIds array */
+        if ($getFromPostIfSubmitted && ($postTemporaryIds  = $this->getRequest()->getPostParam(UploadDefinition::TEMPORARY_IDENTIFIER_ELEMENT_NAME))) {
+            if (!$postActualType) {
+                throw new Exception("Post actual type must be provided");
+            }
+
+            foreach ($postTemporaryIds as $postKey => $postTemporaryId) {
+                if ($postTemporaryId === $postActualType) {
+                    return $postKey;
+                }
+            }
+
+            return $postTemporaryIds;
         }
 
         if (!$this->temporaryIds[$prefix]) {
