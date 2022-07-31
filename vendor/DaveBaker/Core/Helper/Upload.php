@@ -24,6 +24,8 @@ class Upload extends Base
         $postActualType = null,
         $getFromPostIfSubmitted = true
     ) {
+
+        // Get the temporary ID from the post if we're in that context. Match using the actual key to the temporary ID
         /** @var $postTemporaryIds array */
         if ($getFromPostIfSubmitted && ($postTemporaryIds  = $this->getRequest()->getPostParam(UploadDefinition::TEMPORARY_IDENTIFIER_ELEMENT_NAME))) {
             if (!$postActualType) {
