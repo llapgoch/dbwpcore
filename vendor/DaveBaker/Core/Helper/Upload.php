@@ -108,7 +108,7 @@ class Upload extends Base
 
         $userTable = $this->getApp()->getHelper('Db')->getTableName('users', false);
         $collection = $this->createAppObject(
-            '\DaveBaker\Core\Model\Db\Core\Upload\Collection'
+            \DaveBaker\Core\Model\Db\Core\Upload\Collection::class
         )->where('is_deleted=?', 0)
             ->where('upload_type=?', $type)
             ->order('created_at DESC');
