@@ -17,6 +17,27 @@ extends \DaveBaker\Core\Block\Html\Base
     protected $actualType;
     /** @var string */
     protected $identifier;
+    /** @var bool */
+    protected $isTemporary = true;
+
+    /**
+     *
+     * @return bool
+     */
+    public function getIsTemporary()
+    {
+        return $this->isTemporary;
+    }
+
+    /**
+     * @param bool $isTemporary
+     * @return $this
+     */
+    public function setIsTemporary($isTemporary)
+    {
+        $this->isTemporary = (bool) $isTemporary;
+        return $this;
+    }
 
     /**
      * @return \DaveBaker\Core\Block\Template|void
@@ -113,21 +134,27 @@ extends \DaveBaker\Core\Block\Html\Base
                 'fileuploader'
             )->addClass('js-file-input upload-component-input')
                 ->addAttribute(['multiple' => 'multiple', 'id' => $id]),
+        ]);
 
-            $this->createBlock(
-                '\DaveBaker\Form\Block\Input\Hidden',
-                null,
-                'temporaryIdentifier'
-            )->addClass('js-file-ids')
-                ->setElementName(Upload::TEMPORARY_IDENTIFIER_ELEMENT_NAME . '[' . $this->getIdentifier() . ']')
-                ->setElementValue($this->getActualType()),
+        
+        if ($this->getIsTemporary()) {
+            $this->addChildBlock(
+                $this->createBlock(
+                    '\DaveBaker\Form\Block\Input\Hidden',
+                    null,
+                    'temporaryIdentifier'
+                )->addClass('js-file-ids')
+                    ->setElementName(Upload::TEMPORARY_IDENTIFIER_ELEMENT_NAME . '[' . $this->getIdentifier() . ']')
+                    ->setElementValue($this->getActualType())
+            );
+        }
 
-
+        $this->addChildBlock(
             $this->createBlock(
                 '\DaveBaker\Core\Block\Components\ProgressBar',
                 null,
                 'progressbar'
             )->addClass('upload-component-progress')
-        ]);
+        );
     }
 }
