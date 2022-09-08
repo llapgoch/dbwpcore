@@ -160,7 +160,9 @@ class Select
      */
     public function getSelectedAttribute($optionValue)
     {
-        if($this->getElementValue() == $optionValue){
+        // What should be nulls from the DB come through as empty strings. We need to keep the type away from the selected check (==) for backwards compatibility
+        // as numbers and strings are evaluated together
+        if($this->getElementValue() !== '' && $this->getElementValue() == $optionValue){
             return "selected='selected'";
         }
 

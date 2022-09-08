@@ -2,7 +2,7 @@
 
 namespace DaveBaker\Form\Validation\Rule\NumericCompare;
 
-class GreaterEqual
+class LessEqual
     extends Base
     implements \DaveBaker\Form\Validation\Rule\RuleInterface
 {

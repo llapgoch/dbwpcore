@@ -14,7 +14,9 @@ class Required
      */
     public function validate()
     {
-        if(empty(trim($this->getValue()))){
+        $val = trim($this->getValue());
+
+        if(strlen($val) <= 0){
             return $this->createError();
         }
 

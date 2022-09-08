@@ -3,14 +3,15 @@
 namespace DaveBaker\Core\Helper;
 
 use \DaveBaker\Core\Definitions\Upload as UploadDefinition;
+
 /**
  * Class Upload
  * @package DaveBaker\Core\Helper
  */
 class Upload extends Base
 {
-    /** @var string */
-    protected $temporaryId;
+    /** @var array */
+    protected $temporaryIds;
 
     /**
      * @return string
@@ -18,17 +19,33 @@ class Upload extends Base
      *
      * Only generate one per page load, use one that's been posted if available
      */
-    public function getTemporaryIdForSession()
-    {
-        if($temporaryId  = $this->getRequest()->getPostParam(UploadDefinition::TEMPORARY_IDENTIFIER_ELEMENT_NAME)){
-            return $temporaryId;
+    public function getTemporaryIdForSession(
+        $prefix = UploadDefinition::TEMPORARY_PREFIX,
+        $postActualType = null,
+        $getFromPostIfSubmitted = true
+    ) {
+
+        // Get the temporary ID from the post if we're in that context. Match using the actual key to the temporary ID
+        /** @var $postTemporaryIds array */
+        if ($getFromPostIfSubmitted && ($postTemporaryIds  = $this->getRequest()->getPostParam(UploadDefinition::TEMPORARY_IDENTIFIER_ELEMENT_NAME))) {
+            if (!$postActualType) {
+                throw new Exception("Post actual type must be provided");
+            }
+
+            foreach ($postTemporaryIds as $postKey => $postTemporaryId) {
+                if ($postTemporaryId === $postActualType) {
+                    return $postKey;
+                }
+            }
+
+            return $postTemporaryIds;
         }
 
-        if(!$this->temporaryId){
-            $this->temporaryId = uniqid(UploadDefinition::TEMPORARY_PREFIX);
+        if (!$this->temporaryIds[$prefix]) {
+            $this->temporaryIds[$prefix] = uniqid($prefix);
         }
 
-        return $this->temporaryId;
+        return $this->temporaryIds[$prefix];
     }
 
     /**
@@ -44,7 +61,7 @@ class Upload extends Base
      */
     public function getBaseUrl()
     {
-       return wp_upload_dir()['baseurl'];
+        return wp_upload_dir()['baseurl'];
     }
 
     /**
@@ -69,8 +86,8 @@ class Upload extends Base
      */
     public function createUploadDir()
     {
-        if(!file_exists($this->getUploadDir())){
-            if(!mkdir($this->getUploadDir())){
+        if (!file_exists($this->getUploadDir())) {
+            if (!mkdir($this->getUploadDir())) {
                 throw new Exception('Could not create upload directory ' . $this->getUploadDir());
             }
         }
@@ -91,7 +108,7 @@ class Upload extends Base
 
         $userTable = $this->getApp()->getHelper('Db')->getTableName('users', false);
         $collection = $this->createAppObject(
-            '\DaveBaker\Core\Model\Db\Core\Upload\Collection'
+            \DaveBaker\Core\Model\Db\Core\Upload\Collection::class
         )->where('is_deleted=?', 0)
             ->where('upload_type=?', $type)
             ->order('created_at DESC');
@@ -102,10 +119,10 @@ class Upload extends Base
             ['created_by_name' => 'user_login']
         );
 
-        if($identifier){
-            if($type == UploadDefinition::UPLOAD_TYPE_TEMPORARY){
+        if ($identifier) {
+            if ($type == UploadDefinition::UPLOAD_TYPE_TEMPORARY) {
                 $collection->where('temporary_id=?', $identifier);
-            }else {
+            } else {
                 $collection->where('parent_id=?', $identifier);
             }
         }
@@ -127,7 +144,7 @@ class Upload extends Base
             $identifier
         )->load();
 
-        foreach($items as $item){
+        foreach ($items as $item) {
             $item->setTemporaryId(null)
                 ->setParentId($parentId)
                 ->setUploadType($uploadType)->save();
