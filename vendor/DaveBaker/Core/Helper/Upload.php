@@ -11,7 +11,7 @@ use \DaveBaker\Core\Definitions\Upload as UploadDefinition;
 class Upload extends Base
 {
     /** @var array */
-    protected $temporaryIds;
+    protected $temporaryIds = [];
 
     /**
      * @return string
@@ -41,7 +41,7 @@ class Upload extends Base
             return $postTemporaryIds;
         }
 
-        if (!$this->temporaryIds[$prefix]) {
+        if (!isset($this->temporaryIds[$prefix])) {
             $this->temporaryIds[$prefix] = uniqid($prefix);
         }
 
