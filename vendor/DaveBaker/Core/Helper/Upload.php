@@ -41,7 +41,7 @@ class Upload extends Base
             return $postTemporaryIds;
         }
 
-        if (!$this->temporaryIds[$prefix]) {
+        if (!isset($this->temporaryIds[$prefix])) {
             $this->temporaryIds[$prefix] = uniqid($prefix);
         }
 
