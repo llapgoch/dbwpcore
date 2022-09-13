@@ -11,7 +11,7 @@ use \DaveBaker\Core\Definitions\Upload as UploadDefinition;
 class Upload extends Base
 {
     /** @var array */
-    protected $temporaryIds;
+    protected $temporaryIds = [];
 
     /**
      * @return string
