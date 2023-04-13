@@ -43,21 +43,25 @@ class Remove
                 throw new Exception('Permission denied');
         }
 
-        // Check whether any other items are using this file via the hash
-        $existingCollection = $this->getFileCollection()
-          ->where('file_hash=?', $model->getFileHash())
-          ->where('is_deleted=?', 0)
-          ->where('id<>?', $model->getId());
-
-        $existingItems = $existingCollection->load();
+        // Don't unlink files anymore, multiple entries can now share the same hash dependent on deleted flags or upload_type=temporary
+        // Just update the entry to have the deleted flag
         $model->setIsDeleted(1)->save();
 
+        // Check whether any other items are using this file via the hash
+        // $existingCollection = $this->getFileCollection()
+        //   ->where('file_hash=?', $model->getFileHash())
+        //   ->where('is_deleted=?', 0)
+        //   ->where('id<>?', $model->getId());
+
+        // $existingItems = $existingCollection->load();
+        
+
         // If no other entries are using the file, unlink it
-        if(count($existingItems) == 0){
-            if(file_exists($model->getFilePath())){
-                unlink($model->getFilePath());
-            }
-        }
+        // if(count($existingItems) == 0){
+        //     if(file_exists($model->getFilePath())){
+        //         unlink($model->getFilePath());
+        //     }
+        // }
 
         return true;
     }

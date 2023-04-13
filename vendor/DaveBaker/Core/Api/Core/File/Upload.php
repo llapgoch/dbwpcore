@@ -127,11 +127,15 @@ class Upload
         $mimeType = $fileInfo->file($file['tmp_name']);
 
         $hashedFile = hash_file('md5', $file['tmp_name']);
-        $existingCollection = $this->getFileCollection()
-            ->where('file_hash=?', $hashedFile)
-            ->where('file_parent_id IS NULL');
 
-        $existingFile = $existingCollection->firstItem();
+        // Remove the ability to create parent ids based on existing uploads. It's confusing when a parent exists in a different subfolder.
+        // $existingCollection = $this->getFileCollection()
+        //     ->where('file_hash=?', $hashedFile)
+        //     ->where('upload_type<>?', UploadDefinition::UPLOAD_TYPE_TEMPORARY)
+        //     ->where('file_parent_id IS NULL')
+        //     ->where('is_deleted<>1');
+
+        // $existingFile = $existingCollection->firstItem();
 
         $pathInfo = pathinfo($file['name']);
         // Use the already uploaded file
@@ -153,17 +157,14 @@ class Upload
             $fileInstance->setCreatedById($this->getUserHelper()->getCurrentUserId());
         }
 
-        if($existingFile){
-            $fileInstance->setFileParentId($existingFile->getId())->save();
-        } else {
-            $fileInstance->save();
+        $fileInstance->save();
 
-            move_uploaded_file(
-                $file['tmp_name'],
-                $this->getUploadHelper()->getUploadDir() .
-                    $fileInstance->getId() . "." . $pathInfo['extension']
-            );
-        }
+        move_uploaded_file(
+            $file['tmp_name'],
+            $this->getUploadHelper()->getUploadDir() .
+                $fileInstance->getId() . "." . $pathInfo['extension']
+        );
+
 
         return [
             'fileId' => $fileInstance->getId(),
