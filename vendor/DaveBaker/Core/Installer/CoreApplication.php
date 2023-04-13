@@ -41,6 +41,7 @@ class CoreApplication
             "CREATE TABLE `{{tableName}}` (
               `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
               `filename` varchar(255) DEFAULT NULL,
+              `mode` varchar(255) DEFAULT 'original',
               `extension` varchar(20) DEFAULT NULL,
               `upload_type` varchar(20) DEFAULT NULL,
               `parent_id` INT(11) DEFAULT NULL,

@@ -82,13 +82,15 @@ class Upload extends Base
 
     /**
      * @return $this
+     * @param string $type
      * @throws Exception
      */
-    public function createUploadDir()
+    public function createUploadDir($type)
     {
-        if (!file_exists($this->getUploadDir())) {
-            if (!mkdir($this->getUploadDir())) {
-                throw new Exception('Could not create upload directory ' . $this->getUploadDir());
+        $uploadDir = $this->getUploadDir() . DS . $type;
+        if (!file_exists($uploadDir)) {
+            if (!mkdir($uploadDir, 0777, true)) {
+                throw new Exception('Could not create upload directory ' . $uploadDir);
             }
         }
 
@@ -163,7 +165,24 @@ class Upload extends Base
     public function makeUploadUrl(
         \DaveBaker\Core\Model\Db\Core\Upload $upload
     ) {
-        return $this->getUploadUrl() . $upload->getId() . "." . $upload->getExtension();
+        
+        if($upload->isModeOriginal()) {
+            return $this->getUploadUrl() . $upload->getId() . "." . $upload->getExtension();
+        }
+
+        // V2
+        return $this->getUploadUrl() . $upload->getUploadType() . "/" . $this->getUploadFilename($upload);
+    }
+
+    /**
+     *
+     * @param \DaveBaker\Core\Model\Db\Core\Upload $upload
+     * @return string
+     */
+    public function getUploadFilename(
+        \DaveBaker\Core\Model\Db\Core\Upload $upload
+    ) {
+        return $upload->getFileHash() . "_" . $upload->getId() . "." . $upload->getExtension();
     }
 
     /**
@@ -176,6 +195,11 @@ class Upload extends Base
     public function makeUploadPath(
         \DaveBaker\Core\Model\Db\Core\Upload $upload
     ) {
-        return $this->getUploadDir() . $upload->getId() . "." . $upload->getExtension();
+        if($upload->isModeOriginal()) {
+            return $this->getUploadDir() . $upload->getId() . "." . $upload->getExtension();
+        }
+
+        // V2 
+        return $this->getUploadDir() . $upload->getUploadType() . DS . $this->getUploadFilename($upload);
     }
 }
