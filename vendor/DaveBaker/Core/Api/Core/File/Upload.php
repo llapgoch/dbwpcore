@@ -122,7 +122,9 @@ class Upload
      */
     protected function performUpload($file = [])
     {
-        $this->getUploadHelper()->createUploadDir();
+        // Create the upload dir with the subdirectory 
+        $this->getUploadHelper()->createUploadDir($this->uploadType);
+
         $fileInfo = new \finfo(FILEINFO_MIME_TYPE);
         $mimeType = $fileInfo->file($file['tmp_name']);
 
@@ -140,6 +142,7 @@ class Upload
             ->setFilename($pathInfo['basename'])
             ->setExtension($pathInfo['extension'])
             ->setMimeType($mimeType)
+            ->setMode(UploadDefinition::MODE_V2)
             ->setUploadType($this->uploadType);
 
         if($this->uploadType == UploadDefinition::UPLOAD_TYPE_TEMPORARY){
