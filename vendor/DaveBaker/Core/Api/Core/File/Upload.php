@@ -1,5 +1,7 @@
 <?php
+
 namespace DaveBaker\Core\Api\Core\File;
+
 use DaveBaker\Core\Api\Exception;
 use DaveBaker\Core\Definitions\Upload as UploadDefinition;
 
@@ -10,8 +12,8 @@ use DaveBaker\Core\Definitions\Roles;
  * @package DaveBaker\Core\Api
  */
 class Upload
-    extends \DaveBaker\Core\Api\Base
-    implements \DaveBaker\Core\Api\ControllerInterface
+extends \DaveBaker\Core\Api\Base
+implements \DaveBaker\Core\Api\ControllerInterface
 {
     const ALLOWED_MIME_TYPES_CONFIG_KEY = 'uploadAllowedMimeTypes';
 
@@ -79,7 +81,7 @@ class Upload
             $params
         );
 
-        if(!$_FILES || !count($_FILES)){
+        if (!$_FILES || !count($_FILES)) {
             throw new Exception('No files provided');
         }
 
@@ -90,7 +92,7 @@ class Upload
         // Do all validation before performing uploads (deny all if any fail)
         @array_map([$this, 'validateFile'], $_FILES);
 
-        foreach($_FILES as $file){
+        foreach ($_FILES as $file) {
             $results[] = $this->performUpload($file);
         }
 
@@ -149,13 +151,13 @@ class Upload
             ->setMode(UploadDefinition::MODE_V2)
             ->setUploadType($this->uploadType);
 
-        if($this->uploadType == UploadDefinition::UPLOAD_TYPE_TEMPORARY){
+        if ($this->uploadType == UploadDefinition::UPLOAD_TYPE_TEMPORARY) {
             $fileInstance->setTemporaryId($this->identifier);
-        }else{
+        } else {
             $fileInstance->setParentId($this->identifier);
         }
 
-        if($this->getUserHelper()->isLoggedIn()){
+        if ($this->getUserHelper()->isLoggedIn()) {
             $fileInstance->setLastUpdatedById($this->getUserHelper()->getCurrentUserId());
             $fileInstance->setCreatedById($this->getUserHelper()->getCurrentUserId());
         }
@@ -165,7 +167,7 @@ class Upload
         move_uploaded_file(
             $file['tmp_name'],
             $this->getUploadHelper()->getUploadDir() . DS . $this->uploadType . DS .
-                $fileInstance->getFileHash() . "_" . $fileInstance->getId() . "." . $pathInfo['extension']
+                $this->getUploadHelper()->getUploadFilename($fileInstance)
         );
 
 
@@ -182,7 +184,7 @@ class Upload
      */
     protected function validateFile($file)
     {
-        if(isset($file['error'])) {
+        if (isset($file['error'])) {
             switch ($file['error']) {
                 case UPLOAD_ERR_OK:
                     break;
@@ -197,14 +199,14 @@ class Upload
         }
 
         // Check mime types
-        if(!($mimeTypes = $this->getAllowedMimeTypes())){
+        if (!($mimeTypes = $this->getAllowedMimeTypes())) {
             throw new Exception('Allowed mime types not set');
         }
 
         $fileInfo = new \finfo(FILEINFO_MIME_TYPE);
         $mimeType = $fileInfo->file($file['tmp_name']);
 
-        if(!in_array($mimeType, $mimeTypes)){
+        if (!in_array($mimeType, $mimeTypes)) {
             throw new Exception('File type not allowed');
         }
     }
@@ -215,11 +217,13 @@ class Upload
      */
     protected function getAllowedMimeTypes()
     {
-        if(!$this->allowedMimeTypes){
+        if (!$this->allowedMimeTypes) {
             $this->allowedMimeTypes = array_map('trim', explode(
-                ',', $this->getApp()->getGeneralConfig()->getConfigValue(
-                self::ALLOWED_MIME_TYPES_CONFIG_KEY
-            )));
+                ',',
+                $this->getApp()->getGeneralConfig()->getConfigValue(
+                    self::ALLOWED_MIME_TYPES_CONFIG_KEY
+                )
+            ));
         }
 
         return $this->allowedMimeTypes;
