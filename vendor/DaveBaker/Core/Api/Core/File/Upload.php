@@ -164,8 +164,8 @@ class Upload
 
         move_uploaded_file(
             $file['tmp_name'],
-            $this->getUploadHelper()->getUploadDir() .
-                $fileInstance->getId() . "." . $pathInfo['extension']
+            $this->getUploadHelper()->getUploadDir() . DS . $this->uploadType . DS .
+                $fileInstance->getFileHash() . "_" . $fileInstance->getId() . "." . $pathInfo['extension']
         );
 
 
