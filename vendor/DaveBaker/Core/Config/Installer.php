@@ -9,7 +9,7 @@ namespace DaveBaker\Core\Config;
  */
 class Installer extends Base {
     protected $config = [
-        'core_application' => '0.1.12',
+        'core_application' => '0.1.13',
         'core_directory' => '0.0.6'
     ];
 }
