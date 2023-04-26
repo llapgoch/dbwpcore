@@ -3,6 +3,7 @@
 namespace DaveBaker\Core\Helper;
 
 use \DaveBaker\Core\Definitions\Upload as UploadDefinition;
+use DaveBaker\Core\Model\Db\Core\Upload as CoreUpload;
 
 /**
  * Class Upload
@@ -88,6 +89,7 @@ class Upload extends Base
     public function createUploadDir($type)
     {
         $uploadDir = $this->getUploadDir() . DS . $type;
+        
         if (!file_exists($uploadDir)) {
             if (!mkdir($uploadDir, 0777, true)) {
                 throw new Exception('Could not create upload directory ' . $uploadDir);
@@ -146,10 +148,27 @@ class Upload extends Base
             $identifier
         )->load();
 
+        /** @var CoreUpload $item */
         foreach ($items as $item) {
+            $originalName = $item->getFilePath();
+
             $item->setTemporaryId(null)
                 ->setParentId($parentId)
-                ->setUploadType($uploadType)->save();
+                ->setUploadType($uploadType)
+                ->save();
+
+            $newName = $item->getFilePath();
+
+            $this->createUploadDir($uploadType);
+            
+            // Move the temp file to the new correct location
+            if (!file_exists($originalName)) {
+                throw new Exception("File not found");
+            }
+
+            if (!rename($originalName, $newName)) {
+                throw new Exception("The file upload failed: $originalName, $newName");
+            }
         }
 
         return $this;
@@ -165,8 +184,8 @@ class Upload extends Base
     public function makeUploadUrl(
         \DaveBaker\Core\Model\Db\Core\Upload $upload
     ) {
-        
-        if($upload->isModeOriginal()) {
+
+        if ($upload->isModeOriginal()) {
             return $this->getUploadUrl() . $upload->getId() . "." . $upload->getExtension();
         }
 
@@ -195,7 +214,7 @@ class Upload extends Base
     public function makeUploadPath(
         \DaveBaker\Core\Model\Db\Core\Upload $upload
     ) {
-        if($upload->isModeOriginal()) {
+        if ($upload->isModeOriginal()) {
             return $this->getUploadDir() . $upload->getId() . "." . $upload->getExtension();
         }
 
