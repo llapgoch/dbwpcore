@@ -1,6 +1,8 @@
 <?php
 
 namespace DaveBaker\Core\Model\Db\Core;
+
+use DaveBaker\Core\Definitions\Upload as DefinitionsUpload;
 use DaveBaker\Core\Model\Db\Exception;
 
 /**
@@ -22,11 +24,23 @@ class Upload extends \DaveBaker\Core\Model\Db\Base
      */
     public function getUrl()
     {
-        if($parent = $this->getParentModel()){
-            return $this->getUploadHelper()->makeUploadUrl($parent);
-        }
+        return $this->getUploadHelper()->makeUploadUrl($this);
+    }
 
-        return $this->getUploadHelper()->makeUploadUrl(($this));
+    /**
+     * @return bool
+     */
+    public function isModeOriginal()
+    {
+        return $this->getMode() === DefinitionsUpload::MODE_ORIGINAL;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isModeV2()
+    {
+        return $this->getMode() === DefinitionsUpload::MODE_V2;
     }
 
     /**
@@ -36,31 +50,15 @@ class Upload extends \DaveBaker\Core\Model\Db\Base
      */
     public function getFilePath()
     {
-        if($parent = $this->getParentModel()){
-            return $this->getUploadHelper()->makeUploadPath($parent);
-        }
-
         return $this->getUploadHelper()->makeUploadPath($this);
     }
 
     /**
+     * Deprecated since moving to v2. Upload parents are no longer used
      * @return null
-     * @throws Exception
-     * @throws \DaveBaker\Core\Object\Exception
      */
     public function getParentModel()
     {
-        if($parent = $this->getFileParentId()) {
-            $parent = $this->createAppObject('\DaveBaker\Core\Model\Db\Core\Upload')
-                ->load($this->getFileParentId());
-
-            if(!$parent->getId()){
-                throw new Exception('The file parent does not exist');
-            }
-
-            return $parent;
-        }
-
         return null;
     }
 }

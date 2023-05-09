@@ -14,4 +14,7 @@ class Upload
     const UPLOAD_DIRECTORY = 'dbwpcore';
     const TEMPORARY_IDENTIFIER_ELEMENT_NAME = 'temporary_identifier';
     const TEMPORARY_PREFIX = 'upload_tmp_';
+
+    const MODE_ORIGINAL = 'original';
+    const MODE_V2 = 'v2';
 }
