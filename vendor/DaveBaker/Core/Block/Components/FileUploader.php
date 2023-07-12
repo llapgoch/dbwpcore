@@ -136,7 +136,7 @@ extends \DaveBaker\Core\Block\Html\Base
                 ->addAttribute(['multiple' => 'multiple', 'id' => $id]),
         ]);
 
-        
+
         if ($this->getIsTemporary()) {
             $this->addChildBlock(
                 $this->createBlock(
