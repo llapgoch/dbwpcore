@@ -1,6 +1,7 @@
 <?php
 
 namespace DaveBaker\Core\Block\Html;
+
 use DaveBaker\Core\Block\Components\Paginator;
 use DaveBaker\Core\Block\Exception;
 use DaveBaker\Core\Definitions\General;
@@ -95,6 +96,12 @@ class Table extends Base
         return $this->paginator;
     }
 
+    public function setJsUpdater(bool $jsUpdater): self
+    {
+        $this->jsUpdater = $jsUpdater;
+        return $this;
+    }
+
     /**
      * @param $column
      * @param string $dir
@@ -103,12 +110,12 @@ class Table extends Base
      */
     public function setColumnOrder($column, $dir = 'ASC')
     {
-        if(!$column){
+        if (!$column) {
             $this->orderColumn = '';
             return $this;
         }
 
-        if(!in_array($column, $this->getHeaderKeys())){
+        if (!in_array($column, $this->getHeaderKeys())) {
             throw new Exception('Column does not exist');
         }
 
@@ -124,13 +131,13 @@ class Table extends Base
      */
     protected function _preRender()
     {
-        if($this->getSortableColumns()){
+        if ($this->getSortableColumns()) {
             $this->addClass(
                 $this->getConfig()->getConfigValue(TableDefinition::CONFIG_SORTABLE_TABLE_CLASS)
             );
         }
 
-        if($this->jsUpdater && $this->getJsDataItems()){
+        if ($this->jsUpdater && $this->getJsDataItems()) {
             $this->addClass(
                 $this->getConfig()->getConfigValue(TableDefinition::CONFIG_TABLE_UPDATER_JS_CLASS)
             );
@@ -149,24 +156,24 @@ class Table extends Base
         $columns = $this->getSortableColumns();
         $classes = [];
 
-        if(isset($columns[$header])){
+        if (isset($columns[$header])) {
             $ascClass = $this->getConfig()->getConfigValue(TableDefinition::CONFIG_SORTABLE_TH_ASC_CLASS);
             $descClass = $this->getConfig()->getConfigValue(TableDefinition::CONFIG_SORTABLE_TH_DESC_CLASS);
             $classes[] = $this->getConfig()->getConfigValue(TableDefinition::CONFIG_SORTABLE_TH_CLASS);
 
-            if(in_array(TableDefinition::HEADER_SORTABLE_ALPHA, $columns[$header])){
+            if (in_array(TableDefinition::HEADER_SORTABLE_ALPHA, $columns[$header])) {
                 $classes[] = $this->getConfig()->getConfigValue(TableDefinition::CONFIG_SORTABLE_TH_ALPHA_CLASS);
             }
 
-            if(in_array(TableDefinition::HEADER_SORTABLE_NUMERIC, $columns[$header])){
+            if (in_array(TableDefinition::HEADER_SORTABLE_NUMERIC, $columns[$header])) {
                 $classes[] = $this->getConfig()->getConfigValue(TableDefinition::CONFIG_SORTABLE_TH_NUMERIC_CLASS);
             }
-            
-            if($this->jsUpdater){
+
+            if ($this->jsUpdater) {
                 $classes[] = $this->getConfig()->getConfigValue(TableDefinition::CONFIG_SORTABLE_TH_JS_CLASS);
             }
 
-            if(in_array( TableDefinition::HEADER_SORTABLE_ASC, $columns[$header])){
+            if (in_array(TableDefinition::HEADER_SORTABLE_ASC, $columns[$header])) {
                 $classes[] = $ascClass;
             } else {
                 if (in_array(TableDefinition::HEADER_SORTABLE_DESC, $columns[$header])) {
@@ -174,10 +181,10 @@ class Table extends Base
                 }
             }
 
-            if($this->orderColumn == $header){
-                if($this->orderDir == self::ORDER_ASC){
+            if ($this->orderColumn == $header) {
+                if ($this->orderDir == self::ORDER_ASC) {
                     $classes[] = $ascClass;
-                }else{
+                } else {
                     $classes[] = $descClass;
                 }
             }
@@ -198,13 +205,13 @@ class Table extends Base
             TableDefinition::ELEMENT_DATA_KEY_COLUMN_ID => $header
         ];
 
-        if(isset($this->thAttrs[$header])){
+        if (isset($this->thAttrs[$header])) {
             $attributes = array_merge_recursive($attributes, $this->thAttrs[$header]);
         }
 
         $attrs = $this->makeAttrs($attributes);
 
-        if($includeClasses){
+        if ($includeClasses) {
             $attrs .= $this->getThClasses($header);
         }
 
@@ -219,7 +226,8 @@ class Table extends Base
     {
         $columns = (array)$columns;
 
-        $this->setData(self::SORTABLE_COLUMNS_DATA_KEY,
+        $this->setData(
+            self::SORTABLE_COLUMNS_DATA_KEY,
             array_merge_recursive($columns, $this->getSortableColumns())
         );
 
@@ -231,7 +239,7 @@ class Table extends Base
      */
     public function getSortableColumns()
     {
-        if(!$this->getData(self::SORTABLE_COLUMNS_DATA_KEY)){
+        if (!$this->getData(self::SORTABLE_COLUMNS_DATA_KEY)) {
             $this->setData(self::SORTABLE_COLUMNS_DATA_KEY, []);
         }
 
@@ -272,7 +280,7 @@ class Table extends Base
     {
         $headers = (array)$headers;
 
-        foreach($headers as $header) {
+        foreach ($headers as $header) {
             if (isset($this->headers[$header])) {
                 unset($this->headers[$header]);
             }
